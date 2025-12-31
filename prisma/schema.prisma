@@ -1,0 +1,667 @@
+// prisma/schema.prisma
+// Schéma de base de données SANDJA
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTICATION & USERS
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          UserRole  @default(USER)
+  
+  // Gamification
+  level         Int       @default(1)
+  xp            Int       @default(0)
+  sandjaCoin    Float     @default(0)
+  streak        Int       @default(0)
+  lastLoginAt   DateTime?
+  
+  // Wallet Cardano
+  walletAddress String?
+  
+  // Préférences
+  locale        String    @default("fr")
+  
+  // Relations Better Auth
+  sessions      Session[]
+  accounts      Account[]
+  
+  // Relations Application
+  orders        Order[]
+  nfts          NFT[]
+  quizResults   QuizResult[]
+  achievements  UserAchievement[]
+  designs       Design[]
+  reviews       Review[]
+  tickets       Ticket[]
+  symbolViews   SymbolView[]
+  pagneScans    PagneScan[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum UserRole {
+  USER
+  ARTISAN
+  ADMIN
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ============================================
+// KNOWLEDGE BASE - SYMBOLS
+// ============================================
+
+model Symbol {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  
+  // Multilingue via clés i18n
+  nameKey         String
+  descriptionKey  String
+  meaningKey      String
+  historyKey      String?
+  
+  // Médias
+  images          String[]
+  audioUrl        String?
+  videoUrl        String?
+  
+  // Classification
+  category        SymbolCategory
+  themes          SymbolTheme[]
+  
+  // Géographie
+  region          Region          @relation(fields: [regionId], references: [id])
+  regionId        String
+  
+  // Relations
+  pagneSymbols    PagneSymbol[]
+  quizQuestions   QuizQuestion[]
+  views           SymbolView[]
+  
+  // État
+  isPublished     Boolean         @default(false)
+  isFeatured      Boolean         @default(false)
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  @@index([category])
+  @@index([regionId])
+  @@index([isPublished])
+}
+
+enum SymbolCategory {
+  GEOMETRIC
+  ANIMAL
+  PLANT
+  HUMAN
+  ABSTRACT
+  CELESTIAL
+  OBJECT
+}
+
+enum SymbolTheme {
+  MARRIAGE
+  FUNERAL
+  ROYALTY
+  INITIATION
+  FERTILITY
+  WISDOM
+  POWER
+  FRIENDSHIP
+  WAR
+  BIRTH
+  DEATH
+  FESTIVAL
+  PROTECTION
+  PROSPERITY
+  LOVE
+  UNITY
+}
+
+model SymbolView {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  symbol    Symbol   @relation(fields: [symbolId], references: [id], onDelete: Cascade)
+  symbolId  String
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, symbolId])
+}
+
+// ============================================
+// REGIONS
+// ============================================
+
+model Region {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  
+  nameKey         String
+  descriptionKey  String
+  
+  country         String
+  area            String?
+  coordinates     Json?     // { lat: number, lng: number }
+  
+  imageUrl        String?
+  flagUrl         String?
+  
+  // Relations
+  symbols         Symbol[]
+  pagnes          Pagne[]
+  
+  isPublished     Boolean   @default(false)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// ============================================
+// PAGNES
+// ============================================
+
+model Pagne {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  
+  nameKey         String
+  descriptionKey  String
+  storyKey        String?
+  
+  // Médias
+  images          String[]
+  model3dUrl      String?
+  audioUrl        String?
+  
+  // Classification
+  ceremonies      SymbolTheme[]
+  
+  // Relations
+  region          Region          @relation(fields: [regionId], references: [id])
+  regionId        String
+  symbols         PagneSymbol[]
+  products        Product[]
+  nfts            NFT[]
+  scans           PagneScan[]
+  
+  // État
+  isPublished     Boolean         @default(false)
+  isFeatured      Boolean         @default(false)
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  @@index([regionId])
+  @@index([isPublished])
+}
+
+model PagneSymbol {
+  id        String  @id @default(cuid())
+  pagne     Pagne   @relation(fields: [pagneId], references: [id], onDelete: Cascade)
+  pagneId   String
+  symbol    Symbol  @relation(fields: [symbolId], references: [id], onDelete: Cascade)
+  symbolId  String
+  position  Json?   // { x: number, y: number }
+  
+  @@unique([pagneId, symbolId])
+}
+
+model PagneScan {
+  id          String    @id @default(cuid())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  pagne       Pagne?    @relation(fields: [pagneId], references: [id], onDelete: SetNull)
+  pagneId     String?
+  
+  imageUrl    String?
+  confidence  Float?
+  
+  createdAt   DateTime  @default(now())
+}
+
+// ============================================
+// DESIGNS (Artisans)
+// ============================================
+
+model Design {
+  id              String        @id @default(cuid())
+  
+  name            String
+  description     String?
+  
+  imageUrl        String
+  designFileUrl   String?
+  
+  // Artisan
+  artisan         User          @relation(fields: [artisanId], references: [id])
+  artisanId       String
+  
+  // État
+  status          DesignStatus  @default(PENDING)
+  rejectionReason String?
+  
+  // Relations
+  nft             NFT?
+  products        Product[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([artisanId])
+  @@index([status])
+}
+
+enum DesignStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ============================================
+// MARKETPLACE
+// ============================================
+
+model Product {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  
+  nameKey         String
+  descriptionKey  String
+  
+  price           Float
+  currency        String        @default("ADA")
+  
+  type            ProductType
+  images          String[]
+  
+  // Relations
+  pagne           Pagne?        @relation(fields: [pagneId], references: [id])
+  pagneId         String?
+  design          Design?       @relation(fields: [designId], references: [id])
+  designId        String?
+  
+  // Stock (null pour digital)
+  stock           Int?
+  
+  // État
+  isAvailable     Boolean       @default(true)
+  isFeatured      Boolean       @default(false)
+  
+  // Relations
+  orderItems      OrderItem[]
+  reviews         Review[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([type])
+  @@index([isAvailable])
+}
+
+enum ProductType {
+  PHYSICAL_PAGNE
+  DIGITAL_DESIGN
+  NFT
+  PRINT_LICENSE
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  
+  user            User          @relation(fields: [userId], references: [id])
+  userId          String
+  
+  items           OrderItem[]
+  
+  subtotal        Float
+  shipping        Float         @default(0)
+  discount        Float         @default(0)
+  total           Float
+  
+  status          OrderStatus   @default(PENDING)
+  
+  // Adresse de livraison (JSON)
+  shippingAddress Json?
+  
+  // Paiement
+  paymentMethod   String?
+  paymentTxHash   String?       // Hash de transaction Cardano
+  
+  // Notes
+  notes           String?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model OrderItem {
+  id          String    @id @default(cuid())
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String
+  quantity    Int
+  price       Float
+  
+  @@unique([orderId, productId])
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  rating      Int       // 1-5
+  comment     String?
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String
+  
+  isApproved  Boolean   @default(false)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@unique([userId, productId])
+}
+
+// ============================================
+// NFT & BLOCKCHAIN
+// ============================================
+
+model NFT {
+  id              String    @id @default(cuid())
+  
+  name            String
+  description     String?
+  imageUrl        String
+  metadataUrl     String    // IPFS URL
+  
+  // Blockchain
+  policyId        String?
+  assetName       String?
+  txHash          String?
+  
+  // Relations
+  owner           User      @relation(fields: [ownerId], references: [id])
+  ownerId         String
+  pagne           Pagne?    @relation(fields: [pagneId], references: [id])
+  pagneId         String?
+  design          Design?   @relation(fields: [designId], references: [id])
+  designId        String?   @unique
+  
+  // État
+  isMinted        Boolean   @default(false)
+  isListed        Boolean   @default(false)
+  listingPrice    Float?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([ownerId])
+  @@index([isMinted])
+}
+
+// ============================================
+// EVENTS & TICKETS
+// ============================================
+
+model Event {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  
+  nameKey         String
+  descriptionKey  String
+  
+  imageUrl        String?
+  location        String
+  coordinates     Json?
+  
+  startDate       DateTime
+  endDate         DateTime?
+  
+  ticketPrice     Float?
+  maxTickets      Int?
+  
+  // Relations
+  tickets         Ticket[]
+  
+  isPublished     Boolean   @default(false)
+  isFeatured      Boolean   @default(false)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Ticket {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  
+  event           Event     @relation(fields: [eventId], references: [id])
+  eventId         String
+  user            User      @relation(fields: [userId], references: [id])
+  userId          String
+  
+  // NFT ticket
+  nftPolicyId     String?
+  nftAssetName    String?
+  
+  // État
+  isUsed          Boolean   @default(false)
+  usedAt          DateTime?
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([eventId])
+  @@index([userId])
+}
+
+// ============================================
+// GAMIFICATION
+// ============================================
+
+model Quiz {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  
+  nameKey         String
+  descriptionKey  String
+  
+  difficulty      QuizDifficulty
+  xpReward        Int
+  coinReward      Float
+  
+  // Relations
+  questions       QuizQuestion[]
+  results         QuizResult[]
+  
+  isPublished     Boolean         @default(false)
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+enum QuizDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+model QuizQuestion {
+  id              String    @id @default(cuid())
+  
+  questionKey     String
+  options         Json      // Array de clés i18n
+  correctAnswer   Int       // Index de la bonne réponse
+  explanationKey  String?
+  imageUrl        String?
+  
+  quiz            Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId          String
+  symbol          Symbol?   @relation(fields: [symbolId], references: [id])
+  symbolId        String?
+  
+  createdAt       DateTime  @default(now())
+}
+
+model QuizResult {
+  id              String    @id @default(cuid())
+  
+  score           Int
+  totalQuestions  Int
+  timeSpent       Int       // En secondes
+  xpEarned        Int
+  coinsEarned     Float
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  quiz            Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId          String
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([userId])
+  @@index([quizId])
+}
+
+model Achievement {
+  id              String              @id @default(cuid())
+  
+  nameKey         String
+  descriptionKey  String
+  iconUrl         String
+  
+  type            AchievementType
+  requirement     Int
+  xpReward        Int
+  coinReward      Float
+  rarity          AchievementRarity   @default(COMMON)
+  
+  // Relations
+  users           UserAchievement[]
+  
+  createdAt       DateTime            @default(now())
+}
+
+enum AchievementType {
+  QUIZ_COMPLETED
+  SYMBOLS_LEARNED
+  PAGNES_SCANNED
+  PURCHASES_MADE
+  LEVEL_REACHED
+  STREAK_DAYS
+  REVIEWS_WRITTEN
+  NFTS_COLLECTED
+  EVENTS_ATTENDED
+}
+
+enum AchievementRarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+model UserAchievement {
+  id              String      @id @default(cuid())
+  
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  achievement     Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  achievementId   String
+  
+  unlockedAt      DateTime    @default(now())
+  
+  @@unique([userId, achievementId])
+}
+
+// ============================================
+// CONTACT & SUPPORT
+// ============================================
+
+model ContactMessage {
+  id        String    @id @default(cuid())
+  
+  name      String
+  email     String
+  subject   String
+  message   String
+  
+  isRead    Boolean   @default(false)
+  
+  createdAt DateTime  @default(now())
+}
