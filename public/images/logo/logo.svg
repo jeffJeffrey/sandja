@@ -1,0 +1,26 @@
+<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icône -->
+  <rect x="2" y="10" width="30" height="30" rx="8" fill="url(#gradient1)"/>
+  <circle cx="17" cy="25" r="8" fill="white" fill-opacity="0.3"/>
+  <circle cx="17" cy="25" r="4" fill="white"/>
+  
+  <!-- Texte SANDJA -->
+  <text x="45" y="33" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#8B4513">
+    SANDJA
+  </text>
+  
+  <!-- Sous-ligne décorative -->
+  <line x1="45" y1="40" x2="145" y2="40" stroke="url(#gradient2)" stroke-width="2" stroke-linecap="round"/>
+  
+  <defs>
+    <linearGradient id="gradient1" x1="2" y1="10" x2="32" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B4513"/>
+      <stop offset="1" stop-color="#D2691E"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="45" y1="40" x2="145" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DAA520"/>
+      <stop offset="0.5" stop-color="#8B4513"/>
+      <stop offset="1" stop-color="#DAA520"/>
+    </linearGradient>
+  </defs>
+</svg>

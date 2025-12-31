@@ -1,148 +1,241 @@
-// src/lib/utils.ts
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 /**
- * Combine et fusionne les classes CSS avec Tailwind
+ * Combine les classes CSS avec tailwind-merge
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 /**
- * Formater un prix avec devise
+ * Formate un prix avec la devise
  */
 export function formatPrice(
-  amount: number,
+  price: number,
   currency: string = "ADA",
   locale: string = "fr-FR"
 ): string {
-  if (currency === "ADA") {
-    return `${amount.toFixed(2)} ₳`;
+  // Devises spéciales (crypto)
+  const cryptoCurrencies: Record<string, { symbol: string; position: "before" | "after" }> = {
+    ADA: { symbol: "₳", position: "after" },
+    ETH: { symbol: "Ξ", position: "after" },
+    BTC: { symbol: "₿", position: "before" },
+    SANDJA: { symbol: "🪙", position: "after" },
+  };
+
+  // Si c'est une crypto-monnaie
+  if (cryptoCurrencies[currency]) {
+    const { symbol, position } = cryptoCurrencies[currency];
+    const formattedNumber = new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(price);
+
+    return position === "before" 
+      ? `${symbol}${formattedNumber}` 
+      : `${formattedNumber} ${symbol}`;
   }
-  
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: currency,
-  }).format(amount);
+
+  // Devises classiques (EUR, USD, XAF, etc.)
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(price);
+  } catch {
+    // Fallback si la devise n'est pas reconnue
+    return `${price} ${currency}`;
+  }
 }
 
 /**
- * Formater une date
+ * Formate un nombre avec séparateurs
+ */
+export function formatNumber(
+  value: number,
+  locale: string = "fr-FR"
+): string {
+  return new Intl.NumberFormat(locale).format(value);
+}
+
+/**
+ * Formate une date relative (il y a 2 jours, etc.)
+ */
+export function formatRelativeDate(
+  date: Date,
+  locale: string = "fr-FR"
+): string {
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+
+  if (diffInSeconds < 60) {
+    return rtf.format(-diffInSeconds, "second");
+  } else if (diffInSeconds < 3600) {
+    return rtf.format(-Math.floor(diffInSeconds / 60), "minute");
+  } else if (diffInSeconds < 86400) {
+    return rtf.format(-Math.floor(diffInSeconds / 3600), "hour");
+  } else if (diffInSeconds < 2592000) {
+    return rtf.format(-Math.floor(diffInSeconds / 86400), "day");
+  } else if (diffInSeconds < 31536000) {
+    return rtf.format(-Math.floor(diffInSeconds / 2592000), "month");
+  } else {
+    return rtf.format(-Math.floor(diffInSeconds / 31536000), "year");
+  }
+}
+
+/**
+ * Formate une date complète
  */
 export function formatDate(
-  date: Date | string,
+  date: Date,
   locale: string = "fr-FR",
   options?: Intl.DateTimeFormatOptions
 ): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleDateString(locale, {
-    year: "numeric",
-    month: "long",
+  const defaultOptions: Intl.DateTimeFormatOptions = {
     day: "numeric",
-    ...options,
-  });
+    month: "long",
+    year: "numeric",
+  };
+
+  return new Intl.DateTimeFormat(locale, options || defaultOptions).format(date);
 }
 
 /**
- * Formater une date relative (il y a X jours)
+ * Tronque un texte avec ellipsis
  */
-export function formatRelativeDate(
-  date: Date | string,
-  locale: string = "fr-FR"
-): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
-  
-  if (diffDays === 0) {
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    if (diffHours === 0) {
-      const diffMinutes = Math.floor(diffMs / (1000 * 60));
-      return rtf.format(-diffMinutes, "minute");
-    }
-    return rtf.format(-diffHours, "hour");
-  }
-  
-  if (diffDays < 7) {
-    return rtf.format(-diffDays, "day");
-  }
-  
-  if (diffDays < 30) {
-    return rtf.format(-Math.floor(diffDays / 7), "week");
-  }
-  
-  if (diffDays < 365) {
-    return rtf.format(-Math.floor(diffDays / 30), "month");
-  }
-  
-  return rtf.format(-Math.floor(diffDays / 365), "year");
+export function truncate(str: string, length: number): string {
+  if (str.length <= length) return str;
+  return str.slice(0, length).trim() + "...";
 }
 
 /**
- * Générer un slug à partir d'une chaîne
+ * Génère un slug à partir d'une chaîne
  */
-export function slugify(text: string): string {
-  return text
-    .toString()
+export function slugify(str: string): string {
+  return str
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u0300-\u036f]/g, "") // Supprime les accents
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
 }
 
 /**
- * Générer un ID unique
+ * Capitalise la première lettre
+ */
+export function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+/**
+ * Génère un ID unique
  */
 export function generateId(prefix: string = ""): string {
   const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 8);
+  const random = Math.random().toString(36).substring(2, 9);
   return prefix ? `${prefix}_${timestamp}${random}` : `${timestamp}${random}`;
 }
 
 /**
- * Générer un numéro de commande
+ * Délai asynchrone
  */
-export function generateOrderNumber(): string {
-  const date = new Date();
-  const year = date.getFullYear().toString().slice(-2);
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `SNDJ-${year}${month}${day}-${random}`;
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
- * Tronquer un texte
- */
-export function truncate(text: string, length: number = 100): string {
-  if (text.length <= length) return text;
-  return text.substring(0, length).trim() + "...";
-}
-
-/**
- * Capitaliser la première lettre
- */
-export function capitalize(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-/**
- * Vérifier si on est côté client
+ * Vérifie si on est côté client
  */
 export function isClient(): boolean {
   return typeof window !== "undefined";
 }
 
 /**
- * Délai (promesse)
+ * Récupère un paramètre d'URL
  */
-export function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+export function getQueryParam(param: string): string | null {
+  if (!isClient()) return null;
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+/**
+ * Copie du texte dans le presse-papiers
+ */
+export async function copyToClipboard(text: string): Promise<boolean> {
+  if (!isClient()) return false;
+  
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    // Fallback pour les anciens navigateurs
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.select();
+    
+    try {
+      document.execCommand("copy");
+      return true;
+    } catch {
+      return false;
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  }
+}
+
+/**
+ * Valide une adresse email
+ */
+export function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
+ * Valide une adresse Cardano
+ */
+export function isValidCardanoAddress(address: string): boolean {
+  // Adresses Cardano commencent par addr (mainnet) ou addr_test (testnet)
+  return /^addr(_test)?1[a-z0-9]+$/.test(address);
+}
+
+/**
+ * Formate une adresse (tronquée)
+ */
+export function formatAddress(address: string, chars: number = 6): string {
+  if (address.length <= chars * 2) return address;
+  return `${address.slice(0, chars)}...${address.slice(-chars)}`;
+}
+
+/**
+ * Calcule le pourcentage
+ */
+export function calculatePercentage(value: number, total: number): number {
+  if (total === 0) return 0;
+  return Math.round((value / total) * 100);
+}
+
+/**
+ * Convertit des octets en taille lisible
+ */
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return "0 B";
+  
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 
 /**
@@ -153,7 +246,7 @@ export function debounce<T extends (...args: any[]) => any>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
-  
+
   return (...args: Parameters<T>) => {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
@@ -168,7 +261,7 @@ export function throttle<T extends (...args: any[]) => any>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle = false;
-  
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);
@@ -179,71 +272,7 @@ export function throttle<T extends (...args: any[]) => any>(
 }
 
 /**
- * Copier dans le presse-papiers
- */
-export async function copyToClipboard(text: string): Promise<boolean> {
-  if (!isClient()) return false;
-  
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Fallback pour les navigateurs plus anciens
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
-    document.body.appendChild(textarea);
-    textarea.select();
-    
-    try {
-      document.execCommand("copy");
-      return true;
-    } catch {
-      return false;
-    } finally {
-      document.body.removeChild(textarea);
-    }
-  }
-}
-
-/**
- * Obtenir les initiales d'un nom
- */
-export function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part.charAt(0))
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
-
-/**
- * Valider un email
- */
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-/**
- * Formater un nombre avec séparateurs
- */
-export function formatNumber(num: number, locale: string = "fr-FR"): string {
-  return new Intl.NumberFormat(locale).format(num);
-}
-
-/**
- * Calculer le pourcentage
- */
-export function calculatePercentage(value: number, total: number): number {
-  if (total === 0) return 0;
-  return Math.round((value / total) * 100);
-}
-
-/**
- * Mélanger un tableau (Fisher-Yates)
+ * Mélange un tableau (Fisher-Yates)
  */
 export function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -255,7 +284,7 @@ export function shuffleArray<T>(array: T[]): T[] {
 }
 
 /**
- * Obtenir un élément aléatoire d'un tableau
+ * Récupère un élément aléatoire d'un tableau
  */
 export function getRandomElement<T>(array: T[]): T | undefined {
   if (array.length === 0) return undefined;
@@ -263,65 +292,31 @@ export function getRandomElement<T>(array: T[]): T | undefined {
 }
 
 /**
- * Grouper un tableau par une clé
+ * Groupe un tableau par clé
  */
-export function groupBy<T, K extends keyof any>(
-  array: T[],
-  getKey: (item: T) => K
-): Record<K, T[]> {
+export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
   return array.reduce((result, item) => {
-    const key = getKey(item);
-    if (!result[key]) {
-      result[key] = [];
+    const groupKey = String(item[key]);
+    if (!result[groupKey]) {
+      result[groupKey] = [];
     }
-    result[key].push(item);
+    result[groupKey].push(item);
     return result;
-  }, {} as Record<K, T[]>);
+  }, {} as Record<string, T[]>);
 }
 
 /**
- * Retirer les doublons d'un tableau
+ * Supprime les doublons d'un tableau
  */
-export function uniqueBy<T, K>(array: T[], getKey: (item: T) => K): T[] {
-  const seen = new Set<K>();
-  return array.filter((item) => {
-    const key = getKey(item);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
-/**
- * Convertir des bytes en taille lisible
- */
-export function formatBytes(bytes: number, decimals: number = 2): string {
-  if (bytes === 0) return "0 Bytes";
-  
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + " " + sizes[i];
-}
-
-/**
- * Vérifier si une URL est valide
- */
-export function isValidUrl(string: string): boolean {
-  try {
-    new URL(string);
-    return true;
-  } catch {
-    return false;
+export function uniqueArray<T>(array: T[], key?: keyof T): T[] {
+  if (key) {
+    const seen = new Set();
+    return array.filter((item) => {
+      const value = item[key];
+      if (seen.has(value)) return false;
+      seen.add(value);
+      return true;
+    });
   }
-}
-
-/**
- * Obtenir le paramètre d'URL
- */
-export function getUrlParam(param: string): string | null {
-  if (!isClient()) return null;
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
+  return [...new Set(array)];
 }

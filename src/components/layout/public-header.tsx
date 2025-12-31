@@ -6,8 +6,9 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { Button } from "../ui/button";
 
 export function PublicHeader() {
   const t = useTranslations("nav");
@@ -28,6 +29,15 @@ export function PublicHeader() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Fermer le menu langue si on clique ailleurs
+  useEffect(() => {
+    const handleClickOutside = () => setIsLangMenuOpen(false);
+    if (isLangMenuOpen) {
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
+    }
+  }, [isLangMenuOpen]);
+
   const navLinks = [
     { href: "/explore", label: t("explore") },
     { href: "/marketplace", label: t("marketplace") },
@@ -45,18 +55,27 @@ export function PublicHeader() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm"
-          : "bg-transparent"
+          ? "bg-white/95 backdrop-blur-md shadow-sm py-2"
+          : "bg-transparent py-4"
       )}
     >
       <div className="container mx-auto px-4">
-        <nav className="flex items-center justify-between h-16 md:h-20">
+        <nav className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-xl">
-              S
-            </div>
-            <span className="font-heading text-xl font-bold text-gray-900">
+          <Link href="/" className="flex items-center gap-2 group">
+            <motion.div
+              whileHover={{ rotate: [0, -10, 10, 0] }}
+              transition={{ duration: 0.5 }}
+            >
+              <Image
+                src="/images/logo/logo-icon.svg"
+                alt="SANDJA"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
+            </motion.div>
+            <span className="font-heading text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
               SANDJA
             </span>
           </Link>
@@ -68,13 +87,19 @@ export function PublicHeader() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary-600",
+                  "relative text-sm font-medium transition-colors hover:text-primary-600 py-2",
                   pathname === link.href
                     ? "text-primary-600"
                     : "text-gray-600"
                 )}
               >
                 {link.label}
+                {pathname === link.href && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary-500 rounded-full"
+                  />
+                )}
               </Link>
             ))}
           </div>
@@ -84,20 +109,27 @@ export function PublicHeader() {
             {/* Sélecteur de langue */}
             <div className="relative">
               <button
-                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsLangMenuOpen(!isLangMenuOpen);
+                }}
                 className="flex items-center gap-1 p-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <Globe className="w-5 h-5 text-gray-600" />
-                <ChevronDown className="w-4 h-4 text-gray-400" />
+                <ChevronDown className={cn(
+                  "w-4 h-4 text-gray-400 transition-transform",
+                  isLangMenuOpen && "rotate-180"
+                )} />
               </button>
 
               <AnimatePresence>
                 {isLangMenuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden min-w-[150px]"
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden min-w-37.5"
                   >
                     {languages.map((lang) => (
                       <Link
@@ -105,10 +137,10 @@ export function PublicHeader() {
                         href={pathname}
                         locale={lang.code}
                         onClick={() => setIsLangMenuOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 transition-colors"
                       >
-                        <span>{lang.flag}</span>
-                        <span className="text-sm">{lang.label}</span>
+                        <span className="text-lg">{lang.flag}</span>
+                        <span className="text-sm font-medium">{lang.label}</span>
                       </Link>
                     ))}
                   </motion.div>
@@ -131,11 +163,15 @@ export function PublicHeader() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              <motion.div
+                animate={isMobileMenuOpen ? "open" : "closed"}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </motion.div>
             </button>
           </div>
         </nav>
@@ -148,41 +184,60 @@ export function PublicHeader() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-gray-100"
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
           >
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-2">
-                {navLinks.map((link) => (
-                  <Link
+                {navLinks.map((link, index) => (
+                  <motion.div
                     key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
-                      pathname === link.href
-                        ? "bg-primary-50 text-primary-600"
-                        : "text-gray-600 hover:bg-gray-50"
-                    )}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
                   >
-                    {link.label}
-                  </Link>
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                        pathname === link.href
+                          ? "bg-primary-50 text-primary-600"
+                          : "text-gray-600 hover:bg-gray-50"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 ))}
                 
                 <div className="border-t border-gray-100 my-2" />
                 
-                <Link
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  {tAuth("login")}
-                </Link>
-                
-                <Button asChild variant="african" className="mt-2">
-                  <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                    {tAuth("register")}
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    {tAuth("login")}
                   </Link>
-                </Button>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <Button asChild variant="african" className="w-full mt-2">
+                    <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                      {tAuth("register")}
+                    </Link>
+                  </Button>
+                </motion.div>
               </div>
             </div>
           </motion.div>

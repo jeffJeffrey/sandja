@@ -125,7 +125,7 @@ export const useWalletStore = create<WalletStore>()(
     }),
     {
       name: "sandja-wallet",
-      partialize: (state) => ({
+      partialize: (state: { walletName: any; }) => ({
         walletName: state.walletName,
         // Ne pas persister les données sensibles
       }),

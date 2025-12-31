@@ -1,45 +1,4 @@
 {
-  "site": {
-    "name": "SANDJA",
-    "tagline": "Restoring meaning and value to African cloth",
-    "description": "Cultural and technological platform for the preservation of African textile heritage"
-  },
-  
-  "nav": {
-    "home": "Home",
-    "explore": "Explore",
-    "scanner": "Scanner",
-    "ceremony": "Ceremonies",
-    "learn": "Learn",
-    "map": "Map",
-    "marketplace": "Shop",
-    "wallet": "Wallet",
-    "events": "Events",
-    "profile": "Profile",
-    "about": "About",
-    "contact": "Contact",
-    "learn.quiz": "Quiz",
-    "learn.stories": "Stories",
-    "learn.puzzles": "Puzzles",
-    "profile.overview": "Overview",
-    "profile.orders": "Orders",
-    "profile.collection": "My Collection",
-    "profile.settings": "Settings",
-    "artisan.dashboard": "Dashboard",
-    "artisan.designs": "My Designs",
-    "artisan.sales": "Sales",
-    "artisan.earnings": "Earnings",
-    "admin.dashboard": "Dashboard",
-    "admin.symbols": "Symbols",
-    "admin.pagnes": "Pagnes",
-    "admin.users": "Users",
-    "admin.orders": "Orders",
-    "admin.events": "Events",
-    "admin.analytics": "Analytics",
-    "admin.messages": "Messages",
-    "admin.settings": "Settings"
-  },
-  
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
@@ -48,7 +7,11 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "create": "Create",
+    "view": "View",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
     "search": "Search",
     "filter": "Filter",
     "sort": "Sort",
@@ -56,401 +19,333 @@
     "none": "None",
     "yes": "Yes",
     "no": "No",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "close": "Close",
-    "open": "Open",
-    "more": "More",
-    "less": "Less",
-    "seeAll": "See all",
-    "learnMore": "Learn more",
-    "getStarted": "Get Started",
-    "continue": "Continue",
-    "submit": "Submit",
-    "send": "Send",
-    "download": "Download",
-    "share": "Share",
-    "copy": "Copy",
-    "copied": "Copied!",
-    "new": "New",
-    "featured": "Featured",
-    "popular": "Popular",
-    "recent": "Recent",
-    "viewDetails": "View details"
+    "or": "or",
+    "and": "and"
   },
-  
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "ceremonies": "Ceremonies",
+    "marketplace": "Shop",
+    "learn": "Learn",
+    "map": "Map",
+    "about": "About",
+    "scanner": "Scanner",
+    "profile": "Profile"
+  },
   "auth": {
     "login": "Login",
-    "logout": "Logout",
     "register": "Sign up",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Welcome back!",
+    "subtitle": "Sign in to continue your exploration",
+    "email": "Email address",
+    "password": "Password",
     "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
-    "email": "Email",
+    "rememberMe": "Remember me",
+    "submit": "Sign in",
+    "orContinueWith": "Or continue with",
+    "noAccount": "Don't have an account?",
+    "signUp": "Create account"
+  },
+  "register": {
+    "title": "Join SANDJA",
+    "subtitle": "Create your account and explore African heritage",
+    "name": "Full name",
+    "email": "Email address",
     "password": "Password",
     "confirmPassword": "Confirm password",
-    "name": "Full name",
-    "rememberMe": "Remember me",
+    "acceptTerms": "I accept the",
+    "termsLink": "terms of service",
+    "and": "and the",
+    "privacyLink": "privacy policy",
+    "submit": "Create account",
     "orContinueWith": "Or continue with",
-    "alreadyHaveAccount": "Already have an account?",
-    "dontHaveAccount": "Don't have an account?",
-    "createAccount": "Create account",
-    "welcomeBack": "Welcome back!",
-    "welcomeNew": "Welcome to SANDJA",
-    "loginSubtitle": "Sign in to access your space",
-    "registerSubtitle": "Join our cultural community",
-    "errors": {
-      "invalidCredentials": "Invalid email or password",
-      "emailExists": "This email is already in use",
-      "weakPassword": "Password must be at least 8 characters",
-      "passwordMismatch": "Passwords do not match",
-      "required": "This field is required",
-      "invalidEmail": "Invalid email"
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "errors": {
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email",
+    "passwordRequired": "Password is required",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordMismatch": "Passwords do not match",
+    "nameRequired": "Name is required",
+    "acceptTermsRequired": "You must accept the terms",
+    "loginFailed": "Login failed. Check your credentials.",
+    "registerFailed": "Registration failed. Please try again.",
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist.",
+      "backHome": "Back to home"
+    },
+    "serverError": {
+      "title": "Server error",
+      "description": "An unexpected error occurred.",
+      "retry": "Retry"
     }
   },
-  
   "landing": {
     "hero": {
-      "title": "The Cloth of the Future",
-      "subtitle": "Let's bring African ancestral symbols back to life through technology",
-      "cta": "Discover the platform",
-      "ctaSecondary": "Watch video"
+      "badge": "Powered by Cardano",
+      "title": "Rediscover the Soul of African Textile",
+      "subtitle": "A unique platform combining blockchain technology and cultural heritage to preserve and valorize traditional African textiles.",
+      "cta": "Start exploring",
+      "ctaSecondary": "Watch demo"
     },
     "problem": {
-      "title": "Heritage in Danger",
-      "subtitle": "African cloth is losing its meaning",
+      "badge": "The issue",
+      "title": "Heritage at Risk",
+      "subtitle": "Traditional African textiles face major challenges threatening their survival",
+      "description": "Facing globalization and industrialization, ancestral textile knowledge is being lost. Younger generations no longer know the meaning of the patterns their ancestors wore.",
       "stat1": "70%",
-      "stat1Label": "of African textiles are imported",
-      "stat2": "$82B",
-      "stat2Label": "African textile market in 2024",
-      "description": "Once a carrier of messages, rituals, and traditions, African cloth has been reduced to a mere decorative object, emptied of its cultural substance."
+      "stat1Label": "of textiles in our markets are imports",
+      "stat2": "Loss",
+      "stat2Label": "of cultural meaning behind patterns",
+      "problems": {
+        "imports": {
+          "title": "Import invasion",
+          "description": "Cheap industrial textiles flood our markets"
+        },
+        "meaning": {
+          "title": "Loss of meaning",
+          "description": "Symbol meanings are lost across generations"
+        },
+        "value": {
+          "title": "Devaluation",
+          "description": "Local artisans struggle to make a living"
+        }
+      }
     },
     "solution": {
-      "title": "SANDJA, the Solution",
-      "subtitle": "Technology at the service of culture",
+      "badge": "Our solution",
+      "title": "SANDJA: The Textile of the Future",
+      "subtitle": "An innovative approach combining tradition and technology to preserve and valorize African textile heritage",
       "feature1": {
-        "title": "Knowledge Base",
-        "description": "The largest dictionary of African textile symbols"
+        "title": "Interactive Education",
+        "description": "Discover the history and deep meaning of each textile symbol"
       },
       "feature2": {
-        "title": "Smart Scanner",
-        "description": "Identify and discover the history of any cloth"
+        "title": "AI Scanner",
+        "description": "Identify patterns instantly with your smartphone camera"
       },
       "feature3": {
-        "title": "NFT Certification",
-        "description": "Guaranteed authenticity on the Cardano blockchain"
+        "title": "Blockchain Certification",
+        "description": "Authenticate your textiles with NFTs on Cardano blockchain"
       },
       "feature4": {
-        "title": "Fun Learning",
-        "description": "Quizzes, puzzles, and stories to learn while having fun"
+        "title": "Gamified Learning",
+        "description": "Earn rewards and badges while exploring heritage"
+      },
+      "features": {
+        "education": {
+          "title": "Interactive Education",
+          "description": "Discover the history and meaning of each symbol"
+        },
+        "scanner": {
+          "title": "AI Scanner",
+          "description": "Identify patterns instantly with your camera"
+        },
+        "blockchain": {
+          "title": "Blockchain Certification",
+          "description": "Authenticate your textiles with NFTs on Cardano"
+        },
+        "gamification": {
+          "title": "Gamified Learning",
+          "description": "Earn rewards while exploring heritage"
+        }
       }
     },
     "features": {
-      "title": "A Complete Experience",
-      "subtitle": "Everything you need to rediscover African cloth"
+      "badge": "Features",
+      "title": "Everything you need",
+      "subtitle": "A complete platform to explore, learn and preserve African textile heritage",
+      "explore": {
+        "title": "Explore Symbols",
+        "description": "Complete library of African textile patterns"
+      },
+      "scanner": {
+        "title": "AI Scanner",
+        "description": "Instant pattern recognition via camera"
+      },
+      "ar": {
+        "title": "Augmented Reality",
+        "description": "Visualize textiles on yourself in real-time"
+      },
+      "map": {
+        "title": "Interactive Map",
+        "description": "Discover the geographic origin of textiles"
+      },
+      "quiz": {
+        "title": "Quiz & Challenges",
+        "description": "Test your knowledge and earn points"
+      },
+      "marketplace": {
+        "title": "Marketplace",
+        "description": "Buy certified authentic textiles"
+      },
+      "wallet": {
+        "title": "NFT Wallet",
+        "description": "Manage your authenticity certificates"
+      },
+      "events": {
+        "title": "Events",
+        "description": "Join festivals and workshops"
+      },
+      "gamification": {
+        "title": "Gamification",
+        "description": "Unlock badges and level up"
+      }
+    },
+    "stats": {
+      "title": "SANDJA in numbers",
+      "subtitle": "A growing community of enthusiasts",
+      "symbols": "Symbols",
+      "pagnes": "Textiles",
+      "users": "Users",
+      "regions": "Regions"
+    },
+    "testimonials": {
+      "title": "What they say",
+      "subtitle": "Discover testimonials from our community"
     },
     "cta": {
-      "title": "Ready to Rediscover Your Roots?",
-      "subtitle": "Join thousands of users preserving African heritage",
-      "button": "Create my free account"
-    },
-    "stats": {
-      "symbols": "Documented symbols",
-      "pagnes": "Certified cloths",
-      "users": "Active users",
-      "regions": "African regions"
+      "title": "Ready to explore?",
+      "subtitle": "Join the SANDJA community and participate in preserving African textile heritage",
+      "button": "Create free account",
+      "trust": "Joined by over 1000 enthusiasts"
     }
   },
-  
-  "home": {
-    "welcome": "Welcome, {name}!",
-    "welcomeDefault": "Welcome!",
-    "subtitle": "What would you like to explore today?",
-    "quickActions": {
-      "title": "Quick actions",
-      "scan": "Scan a cloth",
-      "explore": "Explore symbols",
-      "quiz": "Take a quiz",
-      "shop": "Shop"
+  "explore": {
+    "hero": {
+      "title": "Explore African Symbols",
+      "subtitle": "Dive into the fascinating world of African textile patterns. Each symbol tells a thousand-year-old story.",
+      "searchPlaceholder": "Search for a symbol, theme, region...",
+      "searchButton": "Search"
+    },
+    "filters": {
+      "title": "Filters",
+      "activeFilters": "Active filters",
+      "clearAll": "Clear all",
+      "categoryTitle": "Categories",
+      "themeTitle": "Themes & Meanings",
+      "regionTitle": "Regions",
+      "categories": {
+        "geometric": "Geometric",
+        "animal": "Animal",
+        "plant": "Plant",
+        "human": "Human",
+        "abstract": "Abstract",
+        "celestial": "Celestial",
+        "object": "Object"
+      },
+      "themes": {
+        "marriage": "Marriage",
+        "funeral": "Funeral",
+        "royalty": "Royalty",
+        "initiation": "Initiation",
+        "fertility": "Fertility",
+        "wisdom": "Wisdom",
+        "power": "Power",
+        "protection": "Protection",
+        "unity": "Unity",
+        "prosperity": "Prosperity"
+      }
+    },
+    "results": {
+      "title": "Symbols",
+      "count": "results",
+      "loadMore": "Load more",
+      "noResults": "No symbols found",
+      "tryAgain": "Try different filters"
+    },
+    "regions": {
+      "title": "Explore by Region",
+      "subtitle": "Discover the unique textile traditions of each African region",
+      "viewAll": "View map"
+    }
+  },
+  "symbolDetail": {
+    "tabs": {
+      "meaning": "Meaning",
+      "history": "History",
+      "usage": "Usage"
+    },
+    "actions": {
+      "learnMore": "Learn more",
+      "download": "Download",
+      "share": "Share",
+      "favorite": "Add to favorites"
+    },
+    "relatedPagnes": "Textiles with this symbol",
+    "relatedSymbols": "Similar symbols",
+    "viewAll": "View all",
+    "pronunciation": "Pronunciation",
+    "origin": "Origin",
+    "category": "Category",
+    "themes": "Themes"
+  },
+  "marketplace": {
+    "hero": {
+      "badge": "Blockchain certified authenticity",
+      "title": "African Textile Marketplace",
+      "subtitle": "Discover and buy authentic textiles, directly from artisans. Each piece is certified on the Cardano blockchain.",
+      "features": {
+        "authentic": "100% Authentic",
+        "shipping": "Worldwide shipping",
+        "payment": "Secure payment",
+        "nft": "NFT included"
+      }
     },
     "featured": {
-      "title": "Featured cloths",
-      "seeAll": "See all cloths"
-    },
-    "progress": {
-      "title": "Your progress",
-      "level": "Level {level}",
-      "xp": "{current} / {next} XP",
-      "nextLevel": "Next level"
-    },
-    "recentSymbols": {
-      "title": "Recently viewed symbols",
-      "empty": "You haven't viewed any symbols yet"
-    }
-  },
-  
-  "explore": {
-    "title": "Explore Symbols",
-    "subtitle": "Discover the richness of African symbols",
-    "search": "Search for a symbol...",
-    "filters": {
-      "category": "Category",
-      "region": "Region",
-      "theme": "Theme"
-    },
-    "categories": {
-      "geometric": "Geometric",
-      "animal": "Animal",
-      "plant": "Plant",
-      "human": "Human",
-      "abstract": "Abstract",
-      "celestial": "Celestial",
-      "object": "Object"
-    },
-    "empty": "No symbols found",
-    "symbolDetail": {
-      "meaning": "Meaning",
-      "origin": "Origin",
-      "usage": "Usage",
-      "relatedPagnes": "Related cloths",
-      "listenStory": "Listen to the story"
-    }
-  },
-  
-  "ceremonies": {
-    "title": "Ceremony Guide",
-    "subtitle": "Find the perfect cloth for every occasion",
-    "selectCeremony": "Select a ceremony",
-    "marriage": "Marriage",
-    "funeral": "Funeral",
-    "royalty": "Royalty",
-    "initiation": "Initiation",
-    "birth": "Birth",
-    "festival": "Festival",
-    "everyday": "Everyday",
-    "results": {
-      "title": "Recommended cloths for {ceremony}",
-      "empty": "No cloths found for this ceremony"
-    }
-  },
-  
-  "scanner": {
-    "title": "Scan a Cloth",
-    "subtitle": "Take a photo to identify the cloth",
-    "instruction": "Point your camera at a cloth",
-    "takePhoto": "Take a photo",
-    "uploadPhoto": "Upload an image",
-    "analyzing": "Analyzing...",
-    "result": {
-      "title": "Cloth identified!",
-      "confidence": "Confidence: {percent}%",
-      "notFound": "Cloth not recognized",
-      "tryAgain": "Try again"
-    },
-    "permissions": {
-      "title": "Camera access required",
-      "description": "To scan a cloth, we need access to your camera",
-      "allow": "Allow"
-    }
-  },
-  
-  "learn": {
-    "title": "Learn",
-    "subtitle": "Discover African textile heritage in a fun way",
-    "quiz": {
-      "title": "Cultural Quizzes",
-      "subtitle": "Test your knowledge",
-      "start": "Start quiz",
-      "question": "Question {current} / {total}",
-      "timeRemaining": "Time remaining",
-      "correct": "Correct answer!",
-      "incorrect": "Wrong answer",
-      "explanation": "Explanation",
-      "result": {
-        "title": "Quiz completed!",
-        "score": "Score: {score} / {total}",
-        "xpEarned": "+{xp} XP earned",
-        "coinsEarned": "+{coins} SandjaCoin earned",
-        "playAgain": "Play again",
-        "backToQuizzes": "Back to quizzes"
-      }
-    },
-    "stories": {
-      "title": "Griot Stories",
-      "subtitle": "Listen to traditional tales",
-      "listen": "Listen",
-      "duration": "{minutes} min"
-    },
-    "puzzles": {
-      "title": "Pattern Puzzles",
-      "subtitle": "Reconstruct traditional patterns"
-    }
-  },
-  
-  "map": {
-    "title": "Cultural Map",
-    "subtitle": "Explore textile traditions by region",
-    "selectRegion": "Select a region",
-    "regionDetail": {
-      "symbols": "Regional symbols",
-      "pagnes": "Traditional cloths"
-    }
-  },
-  
-  "marketplace": {
-    "title": "Shop",
-    "subtitle": "Authentic and certified cloths",
-    "filters": {
-      "type": "Type",
-      "price": "Price",
-      "region": "Region"
-    },
-    "types": {
-      "physical": "Physical cloth",
-      "digital": "Digital design",
-      "nft": "NFT",
-      "license": "Print license"
-    },
-    "product": {
+      "title": "Featured Selection",
+      "subtitle": "The most popular pieces among our community",
+      "viewAll": "View all",
       "addToCart": "Add to cart",
-      "buyNow": "Buy now",
-      "inStock": "In stock",
-      "outOfStock": "Out of stock",
-      "reviews": "{count} reviews",
-      "noReviews": "No reviews",
-      "writeReview": "Write a review"
+      "viewDetails": "View details"
     },
-    "cart": {
-      "title": "Cart",
-      "empty": "Your cart is empty",
-      "subtotal": "Subtotal",
-      "shipping": "Shipping",
-      "total": "Total",
-      "checkout": "Checkout",
-      "continueShopping": "Continue shopping"
-    }
-  },
-  
-  "wallet": {
-    "title": "My Wallet",
-    "connect": "Connect wallet",
-    "disconnect": "Disconnect",
-    "balance": "Balance",
-    "nfts": {
-      "title": "My NFTs",
-      "empty": "You don't have any NFTs yet"
-    },
-    "transactions": {
-      "title": "Recent transactions",
-      "empty": "No transactions"
-    },
-    "sandjaCoin": {
-      "title": "SandjaCoin",
-      "balance": "Your balance",
-      "earn": "Earn coins",
-      "history": "History"
-    }
-  },
-  
-  "events": {
-    "title": "Cultural Events",
-    "subtitle": "Join exclusive events",
-    "upcoming": "Upcoming",
-    "past": "Past",
-    "buyTicket": "Buy ticket",
-    "ticketOwned": "Ticket owned",
-    "eventDetail": {
-      "date": "Date",
-      "location": "Location",
-      "price": "Price",
-      "remaining": "{count} spots remaining"
-    }
-  },
-  
-  "profile": {
-    "title": "My Profile",
-    "level": "Level {level}",
-    "memberSince": "Member since {date}",
-    "stats": {
-      "xp": "Total XP",
-      "coins": "SandjaCoin",
-      "nfts": "NFTs",
-      "achievements": "Badges"
-    },
-    "achievements": {
-      "title": "Unlocked badges",
-      "seeAll": "See all badges",
-      "locked": "Locked badge"
-    },
-    "orders": {
-      "title": "My Orders",
-      "empty": "No orders",
-      "status": {
-        "pending": "Pending",
-        "paid": "Paid",
-        "processing": "Processing",
-        "shipped": "Shipped",
-        "delivered": "Delivered",
-        "cancelled": "Cancelled"
+    "filters": {
+      "title": "Filters",
+      "active": "Active filters",
+      "clearAll": "Clear all",
+      "typeTitle": "Product type",
+      "priceTitle": "Price",
+      "optionsTitle": "Options",
+      "inStockOnly": "In stock only",
+      "types": {
+        "physical": "Physical textile",
+        "digital": "Digital design",
+        "nft": "NFT",
+        "license": "Print license"
+      },
+      "sort": {
+        "newest": "Newest",
+        "priceLow": "Price: Low to High",
+        "priceHigh": "Price: High to Low",
+        "popular": "Popular"
       }
     },
-    "settings": {
-      "title": "Settings",
-      "account": "Account",
-      "notifications": "Notifications",
-      "language": "Language",
-      "theme": "Theme",
-      "privacy": "Privacy",
-      "deleteAccount": "Delete my account"
-    }
+    "allProducts": "All products",
+    "productsCount": "products",
+    "loadMore": "Load more",
+    "addedToCart": "Added to cart",
+    "outOfStock": "Out of stock"
   },
-  
-  "levels": {
-    "1": { "name": "Ndop Apprentice" },
-    "2": { "name": "Symbol Initiate" },
-    "3": { "name": "Novice Weaver" },
-    "4": { "name": "Pattern Storyteller" },
-    "5": { "name": "Cloth Sage" },
-    "6": { "name": "Master Weaver" },
-    "7": { "name": "Symbol Guardian" },
-    "8": { "name": "Village Elder" },
-    "9": { "name": "Grand Initiate" },
-    "10": { "name": "Living Legend" }
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue shopping",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity"
   },
-  
-  "achievements": {
-    "first_quiz": {
-      "name": "First Quiz",
-      "description": "Complete your first quiz"
-    },
-    "quiz_master": {
-      "name": "Quiz Master",
-      "description": "Complete 50 quizzes"
-    },
-    "symbol_explorer": {
-      "name": "Symbol Explorer",
-      "description": "Discover 10 symbols"
-    },
-    "first_scan": {
-      "name": "First Scan",
-      "description": "Scan your first cloth"
-    },
-    "first_purchase": {
-      "name": "First Purchase",
-      "description": "Make your first purchase"
-    },
-    "first_nft": {
-      "name": "First NFT",
-      "description": "Get your first NFT"
-    },
-    "week_streak": {
-      "name": "Week Streak",
-      "description": "Log in 7 days in a row"
-    }
-  },
-  
   "footer": {
-    "description": "Preserving and promoting African textile heritage through technology",
+    "description": "Giving meaning and value back to African textiles through technology. A platform dedicated to preserving African textile heritage.",
     "explore": "Explore",
     "marketplace": "Shop",
     "learn": "Learn",
@@ -463,25 +358,28 @@
     "blog": "Blog",
     "faq": "FAQ",
     "support": "Support",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
+    "privacy": "Privacy",
+    "terms": "Terms",
     "cookies": "Cookies",
     "copyright": "© {year} SANDJA. All rights reserved."
   },
-  
-  "errors": {
-    "notFound": {
-      "title": "Page not found",
-      "description": "The page you are looking for does not exist.",
-      "backHome": "Back to home"
-    },
-    "serverError": {
-      "title": "Server error",
-      "description": "An error occurred. Please try again later."
-    },
-    "unauthorized": {
-      "title": "Access denied",
-      "description": "You must be logged in to access this page."
-    }
+  "profile": {
+    "title": "My Profile",
+    "overview": "Overview",
+    "orders": "My orders",
+    "collection": "My collection",
+    "settings": "Settings",
+    "level": "Level",
+    "xp": "Experience points",
+    "badges": "Badges",
+    "favorites": "Favorites"
+  },
+  "wallet": {
+    "title": "My Wallet",
+    "connect": "Connect wallet",
+    "disconnect": "Disconnect",
+    "balance": "Balance",
+    "nfts": "My NFTs",
+    "transactions": "Transactions"
   }
 }
