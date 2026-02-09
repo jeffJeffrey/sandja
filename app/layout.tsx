@@ -3,6 +3,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, Amatic_SC } from "next/font/google";
 import "./globals.css";
 
+
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",

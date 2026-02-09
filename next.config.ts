@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
     ];
   },
   
-  // Configuration expérimentale
+  // // Configuration expérimentale
   experimental: {
     // Optimisations
     optimizePackageImports: ["lucide-react", "framer-motion"],

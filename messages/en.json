@@ -428,14 +428,6 @@
     "badges": "Badges",
     "favorites": "Favorites"
   },
-  "wallet": {
-    "title": "My Wallet",
-    "connect": "Connect wallet",
-    "disconnect": "Disconnect",
-    "balance": "Balance",
-    "nfts": "My NFTs",
-    "transactions": "Transactions"
-  },
   "errors": {
     "notFound": {
       "title": "Page not found",
@@ -448,41 +440,8 @@
       "retry": "Retry"
     }
   },
-  "welcome": "Welcome, {name}!",
-    "subtitle": "Continue your exploration of African textile heritage",
-    "levelLabel": "Level {level}",
-    "stats": {
-      "coins": "SandjaCoin",
-      "streak": "Day streak",
-      "totalXp": "Total XP"
-    },
-    "quickActions": {
-      "title": "Quick actions",
-      "quiz": "Quiz",
-      "leaderboard": "Leaderboard"
-    },
-    "featured": {
-      "title": "Textiles to discover",
-      "viewAll": "View all",
-      "regions": {
-        "cameroonWest": "Cameroon - West",
-        "ghanaAshanti": "Ghana - Ashanti",
-        "maliDogon": "Mali - Dogon"
-      }
-    },
-    "levels": {
-      "1": "Ndop Apprentice",
-      "2": "Symbol Initiate",
-      "3": "Novice Weaver",
-      "4": "Pattern Storyteller",
-      "5": "Cloth Sage",
-      "6": "Master Weaver",
-      "7": "Symbol Guardian",
-      "8": "Village Elder",
-      "9": "Grand Initiate",
-      "10": "Living Legend"
-    },
-    "wallet": {
+
+  "wallet": {
     "title": "My Wallet",
     "connect": "Connect",
     "disconnect": "Disconnect",
@@ -511,5 +470,40 @@
       "nftPurchase": "NFT purchase",
       "dailyReward": "Daily reward"
     }
+  },
+
+  "welcome": "Welcome, {name}!",
+  "subtitle": "Continue your exploration of African textile heritage",
+  "levelLabel": "Level {level}",
+  "stats": {
+    "coins": "SandjaCoin",
+    "streak": "Day streak",
+    "totalXp": "Total XP"
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "quiz": "Quiz",
+    "leaderboard": "Leaderboard"
+  },
+  "featured": {
+    "title": "Textiles to discover",
+    "viewAll": "View all",
+    "regions": {
+      "cameroonWest": "Cameroon - West",
+      "ghanaAshanti": "Ghana - Ashanti",
+      "maliDogon": "Mali - Dogon"
+    }
+  },
+  "levels": {
+    "1": "Ndop Apprentice",
+    "2": "Symbol Initiate",
+    "3": "Novice Weaver",
+    "4": "Pattern Storyteller",
+    "5": "Cloth Sage",
+    "6": "Master Weaver",
+    "7": "Symbol Guardian",
+    "8": "Village Elder",
+    "9": "Grand Initiate",
+    "10": "Living Legend"
   }
 }

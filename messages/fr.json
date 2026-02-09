@@ -428,14 +428,6 @@
     "badges": "Badges",
     "favorites": "Favoris"
   },
-  "wallet": {
-    "title": "Mon Portefeuille",
-    "connect": "Connecter le portefeuille",
-    "disconnect": "Déconnecter",
-    "balance": "Solde",
-    "nfts": "Mes NFT",
-    "transactions": "Transactions"
-  },
   "errors": {
     "notFound": {
       "title": "Page introuvable",

@@ -3,8 +3,22 @@
 import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
-import { useState } from "react";
-import { CardanoProvider } from "./cardano-provider";
+import { useState, useEffect } from "react";
+
+// function LazyCardanoProvider({ children }: { children: React.ReactNode }) {
+//   const [Provider, setProvider] = useState<React.ComponentType<{
+//     children: React.ReactNode;
+//   }> | null>(null);
+
+//   useEffect(() => {
+//     import("@meshsdk/react").then((mod) => {
+//       setProvider(() => mod.MeshProvider);
+//     });
+//   }, []);
+
+//   if (!Provider) return <>{children}</>;
+//   return <Provider>{children}</Provider>;
+// }
 
 interface AppProvidersProps {
   children: React.ReactNode;
@@ -31,7 +45,7 @@ export function AppProviders({ children }: AppProvidersProps) {
         enableSystem={false}
         disableTransitionOnChange
       >
-        <CardanoProvider>
+        {/* <LazyCardanoProvider> */}
           {children}
 
           <Toaster
@@ -47,7 +61,7 @@ export function AppProviders({ children }: AppProvidersProps) {
               },
             }}
           />
-        </CardanoProvider>
+        {/* </LazyCardanoProvider> */}
       </ThemeProvider>
     </QueryClientProvider>
   );
