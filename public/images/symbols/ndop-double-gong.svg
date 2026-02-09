@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="ndopBg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a5f"/>
+      <stop offset="100%" style="stop-color:#2c5282"/>
+    </linearGradient>
+    <pattern id="crossPattern" patternUnits="userSpaceOnUse" width="40" height="40">
+      <rect width="40" height="40" fill="transparent"/>
+      <line x1="20" y1="0" x2="20" y2="40" stroke="#E2E8F0" stroke-width="1" opacity="0.1"/>
+      <line x1="0" y1="20" x2="40" y2="20" stroke="#E2E8F0" stroke-width="1" opacity="0.1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Fond -->
+  <rect width="400" height="400" fill="url(#ndopBg2)"/>
+  <rect width="400" height="400" fill="url(#crossPattern)"/>
+  
+  <!-- Bordure triple -->
+  <rect x="10" y="10" width="380" height="380" fill="none" stroke="#E2E8F0" stroke-width="4"/>
+  <rect x="20" y="20" width="360" height="360" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+  <rect x="30" y="30" width="340" height="340" fill="none" stroke="#E2E8F0" stroke-width="1"/>
+  
+  <!-- Premier gong (gauche) -->
+  <g transform="translate(130, 200)">
+    <!-- Disque du gong -->
+    <circle cx="0" cy="0" r="70" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="60" fill="#1e3a5f"/>
+    <circle cx="0" cy="0" r="50" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="40" fill="#1e3a5f"/>
+    <circle cx="0" cy="0" r="30" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="20" fill="#1e3a5f"/>
+    <circle cx="0" cy="0" r="10" fill="#E2E8F0"/>
+    
+    <!-- Rayons -->
+    <line x1="0" y1="-70" x2="0" y2="70" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+    <line x1="-70" y1="0" x2="70" y2="0" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+    <line x1="-50" y1="-50" x2="50" y2="50" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+    <line x1="50" y1="-50" x2="-50" y2="50" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+  </g>
+  
+  <!-- Deuxième gong (droite) -->
+  <g transform="translate(270, 200)">
+    <!-- Disque du gong -->
+    <circle cx="0" cy="0" r="70" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="60" fill="#1e3a5f"/>
+    <circle cx="0" cy="0" r="50" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="40" fill="#1e3a5f"/>
+    <circle cx="0" cy="0" r="30" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="20" fill="#1e3a5f"/>
+    <circle cx="0" cy="0" r="10" fill="#E2E8F0"/>
+    
+    <!-- Rayons -->
+    <line x1="0" y1="-70" x2="0" y2="70" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+    <line x1="-70" y1="0" x2="70" y2="0" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+    <line x1="-50" y1="-50" x2="50" y2="50" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+    <line x1="50" y1="-50" x2="-50" y2="50" stroke="#1e3a5f" stroke-width="2" opacity="0.5"/>
+  </g>
+  
+  <!-- Barre de connexion -->
+  <rect x="130" y="80" width="140" height="15" fill="#E2E8F0"/>
+  <rect x="130" y="85" width="140" height="5" fill="#1e3a5f"/>
+  
+  <!-- Poignée centrale -->
+  <rect x="190" y="50" width="20" height="40" fill="#E2E8F0"/>
+  <rect x="195" y="55" width="10" height="30" fill="#1e3a5f"/>
+  
+  <!-- Cordes de suspension -->
+  <path d="M130 88 Q100 60 130 50" stroke="#E2E8F0" stroke-width="3" fill="none"/>
+  <path d="M270 88 Q300 60 270 50" stroke="#E2E8F0" stroke-width="3" fill="none"/>
+  
+  <!-- Décorations aux coins -->
+  <g transform="translate(50, 50)">
+    <rect x="-15" y="-15" width="30" height="30" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#E2E8F0" stroke-width="2"/>
+  </g>
+  <g transform="translate(350, 50)">
+    <rect x="-15" y="-15" width="30" height="30" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#E2E8F0" stroke-width="2"/>
+  </g>
+  <g transform="translate(50, 350)">
+    <rect x="-15" y="-15" width="30" height="30" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#E2E8F0" stroke-width="2"/>
+  </g>
+  <g transform="translate(350, 350)">
+    <rect x="-15" y="-15" width="30" height="30" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#E2E8F0" stroke-width="2"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#E2E8F0" stroke-width="2"/>
+  </g>
+</svg>

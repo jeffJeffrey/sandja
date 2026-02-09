@@ -33,7 +33,7 @@ export function AppHeader() {
   const cartItemsCount = useCartStore((state) => state.getTotalItems());
 
   const navLinks = [
-    { href: "/home", label: t("home") },
+    { href: "/", label: t("home") },
     { href: "/explore", label: t("explore") },
     { href: "/ceremonies", label: t("ceremonies") },
     { href: "/marketplace", label: t("marketplace") },
@@ -56,7 +56,7 @@ export function AppHeader() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/home" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Image
               src="/images/logo/logo-icon.svg"
               alt="SANDJA"

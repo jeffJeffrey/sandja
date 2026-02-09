@@ -47,9 +47,9 @@ const getSymbolData = (slug: string) => ({
     flag: "🇨🇲",
   },
   images: [
-    "/images/symbols/ndop-spider-1.jpg",
-    "/images/symbols/ndop-spider-2.jpg",
-    "/images/symbols/ndop-spider-3.jpg",
+    "/images/symbols/ndop-spider-1.svg",
+    "/images/symbols/ndop-spider-2.svg",
+    "/images/symbols/ndop-spider-3.svg",
   ],
   description: `L'araignée (Nka) est l'un des symboles les plus puissants et vénérés dans la culture Bamiléké du Cameroun. Elle représente la sagesse, la créativité et l'ingéniosité.
 
@@ -74,8 +74,8 @@ Le symbole est particulièrement présent dans les pagnes Ndop réservés à la 
   viewCount: 1234,
   likeCount: 456,
   relatedPagnes: [
-    { id: "1", slug: "ndop-royal-bleu", name: "Ndop Royal Bleu", image: "/images/pagnes/ndop-royal-bleu.jpg" },
-    { id: "2", slug: "ndop-mariage", name: "Ndop Mariage", image: "/images/pagnes/ndop-mariage.jpg" },
+    { id: "1", slug: "ndop-royal-bleu", name: "Ndop Royal Bleu", image: "/images/pagnes/ndop-royal-bleu.svg" },
+    { id: "2", slug: "ndop-mariage", name: "Ndop Mariage", image: "/images/pagnes/ndop-mariage.svg" },
   ],
 });
 
@@ -214,7 +214,7 @@ export function SymbolDetail({ slug }: SymbolDetailProps) {
                     className="object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = "/images/placeholder-symbol.jpg";
+                      target.src = "/images/placeholder-symbol.svg";
                     }}
                   />
                 </button>
@@ -386,7 +386,7 @@ export function SymbolDetail({ slug }: SymbolDetailProps) {
                           className="object-cover group-hover:scale-105 transition-transform"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
-                            target.src = "/images/placeholder-pagne.jpg";
+                            target.src = "/images/placeholder-pagne.svg";
                           }}
                         />
                       </div>

@@ -13,7 +13,7 @@ const mockRelatedSymbols = [
     slug: "ndop-lizard",
     name: "Le Lézard",
     category: "ANIMAL",
-    image: "/images/symbols/ndop-lizard.jpg",
+    image: "/images/symbols/ndop-lizard.svg",
     region: "Cameroun Ouest",
   },
   {
@@ -21,7 +21,7 @@ const mockRelatedSymbols = [
     slug: "adinkra-sankofa",
     name: "Sankofa",
     category: "ANIMAL",
-    image: "/images/symbols/adinkra-sankofa.jpg",
+    image: "/images/symbols/adinkra-sankofa.svg",
     region: "Ghana Ashanti",
   },
   {
@@ -29,7 +29,7 @@ const mockRelatedSymbols = [
     slug: "ndop-double-gong",
     name: "Double Gong",
     category: "OBJECT",
-    image: "/images/symbols/ndop-double-gong.jpg",
+    image: "/images/symbols/ndop-double-gong.svg",
     region: "Cameroun Ouest",
   },
   {
@@ -37,7 +37,7 @@ const mockRelatedSymbols = [
     slug: "bogolan-crocodile",
     name: "Le Crocodile",
     category: "ANIMAL",
-    image: "/images/symbols/bogolan-crocodile.jpg",
+    image: "/images/symbols/bogolan-crocodile.svg",
     region: "Mali Dogon",
   },
 ];
@@ -89,7 +89,7 @@ export function RelatedSymbols({ currentSlug }: RelatedSymbolsProps) {
                         className="object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = "/images/placeholder-symbol.jpg";
+                          target.src = "/images/placeholder-symbol.svg";
                         }}
                       />
                     </div>

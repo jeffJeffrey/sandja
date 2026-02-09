@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="kenteBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#744210"/>
+      <stop offset="100%" style="stop-color:#975a16"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fond doré/terre -->
+  <rect width="400" height="400" fill="url(#kenteBg)"/>
+  
+  <!-- Motif Kente en arrière-plan -->
+  <g opacity="0.2">
+    <rect x="0" y="0" width="400" height="20" fill="#DAA520"/>
+    <rect x="0" y="40" width="400" height="20" fill="#B22222"/>
+    <rect x="0" y="80" width="400" height="20" fill="#228B22"/>
+    <rect x="0" y="120" width="400" height="20" fill="#DAA520"/>
+    <rect x="0" y="160" width="400" height="20" fill="#B22222"/>
+    <rect x="0" y="200" width="400" height="20" fill="#228B22"/>
+    <rect x="0" y="240" width="400" height="20" fill="#DAA520"/>
+    <rect x="0" y="280" width="400" height="20" fill="#B22222"/>
+    <rect x="0" y="320" width="400" height="20" fill="#228B22"/>
+    <rect x="0" y="360" width="400" height="20" fill="#DAA520"/>
+  </g>
+  
+  <!-- Bordure -->
+  <rect x="15" y="15" width="370" height="370" fill="none" stroke="#FFF8DC" stroke-width="4"/>
+  <rect x="25" y="25" width="350" height="350" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+  
+  <!-- Oiseau Sankofa stylisé -->
+  <g transform="translate(200, 200)">
+    <!-- Corps de l'oiseau -->
+    <ellipse cx="0" cy="20" rx="60" ry="45" fill="#FFF8DC"/>
+    <ellipse cx="0" cy="20" rx="50" ry="35" fill="#744210"/>
+    <ellipse cx="0" cy="20" rx="40" ry="25" fill="#FFF8DC" opacity="0.5"/>
+    
+    <!-- Cou courbé vers l'arrière -->
+    <path d="M-20 -10 Q-60 -60 -30 -100 Q0 -120 30 -90" stroke="#FFF8DC" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <path d="M-20 -10 Q-60 -60 -30 -100 Q0 -120 30 -90" stroke="#744210" stroke-width="12" fill="none" stroke-linecap="round"/>
+    
+    <!-- Tête -->
+    <circle cx="35" cy="-85" r="25" fill="#FFF8DC"/>
+    <circle cx="35" cy="-85" r="18" fill="#744210"/>
+    
+    <!-- Oeil -->
+    <circle cx="42" cy="-88" r="6" fill="#FFF8DC"/>
+    <circle cx="43" cy="-89" r="3" fill="#744210"/>
+    
+    <!-- Bec -->
+    <path d="M55 -80 L75 -75 L55 -70 Z" fill="#DAA520"/>
+    
+    <!-- Oeuf/Graine dans le bec (symbole du passé) -->
+    <ellipse cx="70" cy="-75" rx="8" ry="10" fill="#FFF8DC" stroke="#DAA520" stroke-width="2"/>
+    
+    <!-- Aile -->
+    <path d="M-30 10 Q-80 30 -100 80 Q-60 60 -20 50 Q-50 40 -30 10" fill="#FFF8DC"/>
+    <path d="M-35 15 Q-70 30 -85 65 Q-55 50 -30 45" fill="#744210" opacity="0.5"/>
+    
+    <!-- Queue -->
+    <path d="M40 50 Q80 70 100 120 L90 110 Q70 80 50 60 Z" fill="#FFF8DC"/>
+    <path d="M45 55 Q75 70 90 100" stroke="#744210" stroke-width="3" fill="none"/>
+    <path d="M50 60 Q75 75 85 95" stroke="#744210" stroke-width="2" fill="none"/>
+    
+    <!-- Pattes -->
+    <line x1="-10" y1="60" x2="-20" y2="100" stroke="#DAA520" stroke-width="5"/>
+    <line x1="10" y1="60" x2="20" y2="100" stroke="#DAA520" stroke-width="5"/>
+    <path d="M-30 100 L-20 100 L-10 100" stroke="#DAA520" stroke-width="4" fill="none"/>
+    <path d="M10 100 L20 100 L30 100" stroke="#DAA520" stroke-width="4" fill="none"/>
+  </g>
+  
+  <!-- Symboles décoratifs aux coins -->
+  <circle cx="50" cy="50" r="15" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+  <circle cx="350" cy="50" r="15" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+  <circle cx="50" cy="350" r="15" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+  <circle cx="350" cy="350" r="15" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+</svg>

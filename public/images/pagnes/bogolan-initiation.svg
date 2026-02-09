@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Fond -->
+  <rect width="800" height="600" fill="#5D4037"/>
+  
+  <!-- Texture -->
+  <g opacity="0.2">
+    <rect x="0" y="0" width="800" height="600" fill="#3E2723"/>
+  </g>
+  
+  <!-- Bordure -->
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#FFF8DC" stroke-width="4"/>
+  <rect x="20" y="20" width="760" height="560" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+  
+  <!-- Grille de base -->
+  <g stroke="#FFF8DC" stroke-width="1" opacity="0.3">
+    <line x1="200" y1="30" x2="200" y2="570"/>
+    <line x1="400" y1="30" x2="400" y2="570"/>
+    <line x1="600" y1="30" x2="600" y2="570"/>
+    <line x1="30" y1="150" x2="770" y2="150"/>
+    <line x1="30" y1="300" x2="770" y2="300"/>
+    <line x1="30" y1="450" x2="770" y2="450"/>
+  </g>
+  
+  <!-- Symboles d'initiation -->
+  
+  <!-- Masque central -->
+  <g transform="translate(400, 300)">
+    <ellipse cx="0" cy="0" rx="80" ry="100" fill="none" stroke="#FFF8DC" stroke-width="4"/>
+    <ellipse cx="0" cy="0" rx="60" ry="80" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+    <!-- Yeux -->
+    <ellipse cx="-25" cy="-20" rx="15" ry="10" fill="#FFF8DC"/>
+    <ellipse cx="25" cy="-20" rx="15" ry="10" fill="#FFF8DC"/>
+    <circle cx="-25" cy="-20" r="5" fill="#5D4037"/>
+    <circle cx="25" cy="-20" r="5" fill="#5D4037"/>
+    <!-- Nez -->
+    <path d="M0 -10 L-10 20 L0 25 L10 20 Z" fill="#FFF8DC"/>
+    <!-- Bouche -->
+    <ellipse cx="0" cy="50" rx="25" ry="10" fill="none" stroke="#FFF8DC" stroke-width="3"/>
+    <!-- Scarifications -->
+    <g stroke="#FFF8DC" stroke-width="2">
+      <line x1="-50" y1="-40" x2="-35" y2="-30"/>
+      <line x1="-50" y1="-30" x2="-35" y2="-20"/>
+      <line x1="-50" y1="-20" x2="-35" y2="-10"/>
+      <line x1="50" y1="-40" x2="35" y2="-30"/>
+      <line x1="50" y1="-30" x2="35" y2="-20"/>
+      <line x1="50" y1="-20" x2="35" y2="-10"/>
+    </g>
+    <!-- Cornes/Ornements -->
+    <path d="M-60 -80 Q-80 -120 -40 -100" stroke="#FFF8DC" stroke-width="4" fill="none"/>
+    <path d="M60 -80 Q80 -120 40 -100" stroke="#FFF8DC" stroke-width="4" fill="none"/>
+  </g>
+  
+  <!-- Symboles aux coins - Serpents (sagesse) -->
+  <g stroke="#FFF8DC" stroke-width="3" fill="none">
+    <!-- Serpent haut gauche -->
+    <path d="M60 60 Q100 40 120 80 Q140 120 100 140 Q60 160 80 200"/>
+    <circle cx="60" cy="60" r="5" fill="#FFF8DC"/>
+    
+    <!-- Serpent haut droit -->
+    <path d="M740 60 Q700 40 680 80 Q660 120 700 140 Q740 160 720 200"/>
+    <circle cx="740" cy="60" r="5" fill="#FFF8DC"/>
+    
+    <!-- Serpent bas gauche -->
+    <path d="M60 540 Q100 560 120 520 Q140 480 100 460 Q60 440 80 400"/>
+    <circle cx="60" cy="540" r="5" fill="#FFF8DC"/>
+    
+    <!-- Serpent bas droit -->
+    <path d="M740 540 Q700 560 680 520 Q660 480 700 460 Q740 440 720 400"/>
+    <circle cx="740" cy="540" r="5" fill="#FFF8DC"/>
+  </g>
+  
+  <!-- Symboles latéraux - Lézards (fertilité/renaissance) -->
+  <g fill="#FFF8DC">
+    <!-- Lézard gauche -->
+    <g transform="translate(120, 300) rotate(-90)">
+      <ellipse cx="0" cy="0" rx="15" ry="30"/>
+      <ellipse cx="0" cy="-40" rx="8" ry="12"/>
+      <path d="M-20 -20 L-35 -35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M20 -20 L35 -35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M-20 20 L-35 35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M20 20 L35 35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M0 30 Q5 50 0 70 Q-5 50 0 30" stroke="#FFF8DC" stroke-width="3" fill="none"/>
+    </g>
+    
+    <!-- Lézard droit -->
+    <g transform="translate(680, 300) rotate(90)">
+      <ellipse cx="0" cy="0" rx="15" ry="30"/>
+      <ellipse cx="0" cy="-40" rx="8" ry="12"/>
+      <path d="M-20 -20 L-35 -35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M20 -20 L35 -35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M-20 20 L-35 35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M20 20 L35 35" stroke="#FFF8DC" stroke-width="4"/>
+      <path d="M0 30 Q5 50 0 70 Q-5 50 0 30" stroke="#FFF8DC" stroke-width="3" fill="none"/>
+    </g>
+  </g>
+  
+  <!-- Motifs géométriques -->
+  <g fill="#FFF8DC">
+    <!-- Losanges -->
+    <polygon points="300,80 320,100 300,120 280,100"/>
+    <polygon points="500,80 520,100 500,120 480,100"/>
+    <polygon points="300,520 320,500 300,480 280,500"/>
+    <polygon points="500,520 520,500 500,480 480,500"/>
+  </g>
+  
+  <!-- Zigzags décoratifs -->
+  <g stroke="#FFF8DC" stroke-width="2" fill="none">
+    <path d="M150 150 L170 130 L190 150 L210 130 L230 150 L250 130 L270 150"/>
+    <path d="M530 150 L550 130 L570 150 L590 130 L610 150 L630 130 L650 150"/>
+    <path d="M150 450 L170 470 L190 450 L210 470 L230 450 L250 470 L270 450"/>
+    <path d="M530 450 L550 470 L570 450 L590 470 L610 450 L630 470 L650 450"/>
+  </g>
+</svg>

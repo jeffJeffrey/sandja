@@ -34,8 +34,47 @@
     "profile": "Profile"
   },
   "auth": {
-    "login": "Login",
-    "register": "Sign up",
+    "loginTitle": "login",
+    "registerTitle": "register",
+    "login": {
+      "title": "Welcome back!",
+      "subtitle": "Sign in to continue your exploration",
+      "email": "Email address",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "rememberMe": "Remember me",
+      "submit": "Sign in",
+      "orContinueWith": "Or continue with",
+      "noAccount": "Don't have an account?",
+      "signUp": "Create account"
+    },
+    "register": {
+      "title": "Join SANDJA",
+      "subtitle": "Create your account and explore African heritage",
+      "name": "Full name",
+      "email": "Email address",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "acceptTerms": "I accept the",
+      "termsLink": "terms of service",
+      "and": "and the",
+      "privacyLink": "privacy policy",
+      "submit": "Create account",
+      "orContinueWith": "Or continue with",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email",
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "nameRequired": "Name is required",
+      "acceptTermsRequired": "You must accept the terms",
+      "loginFailed": "Login failed. Check your credentials.",
+      "registerFailed": "Registration failed. Please try again."
+    },
     "logout": "Logout"
   },
   "login": {

@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="nftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="50%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f0f1a"/>
+    </linearGradient>
+    <linearGradient id="goldGradNFT" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700"/>
+      <stop offset="50%" style="stop-color:#DAA520"/>
+      <stop offset="100%" style="stop-color:#B8860B"/>
+    </linearGradient>
+    <filter id="nftGlow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="goldGlow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Fond -->
+  <rect width="800" height="800" fill="url(#nftGrad)"/>
+  
+  <!-- Cercle externe avec motif -->
+  <circle cx="400" cy="400" r="350" fill="none" stroke="url(#goldGradNFT)" stroke-width="4" filter="url(#goldGlow)"/>
+  <circle cx="400" cy="400" r="340" fill="none" stroke="#DAA520" stroke-width="1" opacity="0.5"/>
+  <circle cx="400" cy="400" r="320" fill="none" stroke="#DAA520" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Toile d'araignée en arrière-plan -->
+  <g stroke="#DAA520" stroke-width="1" opacity="0.3" filter="url(#nftGlow)">
+    <!-- Cercles concentriques -->
+    <circle cx="400" cy="400" r="280" fill="none"/>
+    <circle cx="400" cy="400" r="220" fill="none"/>
+    <circle cx="400" cy="400" r="160" fill="none"/>
+    <circle cx="400" cy="400" r="100" fill="none"/>
+    
+    <!-- Rayons -->
+    <line x1="400" y1="50" x2="400" y2="750"/>
+    <line x1="50" y1="400" x2="750" y2="400"/>
+    <line x1="125" y1="125" x2="675" y2="675"/>
+    <line x1="675" y1="125" x2="125" y2="675"/>
+    <line x1="200" y1="50" x2="600" y2="750"/>
+    <line x1="600" y1="50" x2="200" y2="750"/>
+    <line x1="50" y1="200" x2="750" y2="600"/>
+    <line x1="50" y1="600" x2="750" y2="200"/>
+  </g>
+  
+  <!-- Araignée royale centrale -->
+  <g transform="translate(400, 400)" filter="url(#goldGlow)">
+    <!-- Corps -->
+    <ellipse cx="0" cy="0" rx="60" ry="80" fill="url(#goldGradNFT)"/>
+    <ellipse cx="0" cy="0" rx="45" ry="60" fill="#1a1a2e"/>
+    <ellipse cx="0" cy="0" rx="30" ry="40" fill="#DAA520" opacity="0.5"/>
+    
+    <!-- Motif royal sur le corps -->
+    <path d="M0 -30 L-15 0 L0 30 L15 0 Z" fill="#FFD700"/>
+    <circle cx="0" cy="0" r="8" fill="#1a1a2e"/>
+    
+    <!-- Tête -->
+    <circle cx="0" cy="-100" r="45" fill="url(#goldGradNFT)"/>
+    <circle cx="0" cy="-100" r="35" fill="#1a1a2e"/>
+    <!-- Yeux -->
+    <g fill="#FFD700">
+      <circle cx="-18" cy="-110" r="10"/>
+      <circle cx="18" cy="-110" r="10"/>
+      <circle cx="-10" cy="-95" r="6"/>
+      <circle cx="10" cy="-95" r="6"/>
+    </g>
+    <g fill="#1a1a2e">
+      <circle cx="-18" cy="-110" r="5"/>
+      <circle cx="18" cy="-110" r="5"/>
+      <circle cx="-10" cy="-95" r="3"/>
+      <circle cx="10" cy="-95" r="3"/>
+    </g>
+    <!-- Couronne royale -->
+    <g fill="url(#goldGradNFT)">
+      <polygon points="0,-160 -10,-145 -5,-145 -5,-150 0,-140 5,-150 5,-145 10,-145"/>
+      <polygon points="-25,-155 -35,-140 -30,-140 -30,-145 -25,-135 -20,-145 -20,-140 -15,-140"/>
+      <polygon points="25,-155 15,-140 20,-140 20,-145 25,-135 30,-145 30,-140 35,-140"/>
+      <rect x="-40" y="-145" width="80" height="8" rx="2"/>
+    </g>
+    
+    <!-- Pattes royales -->
+    <g stroke="url(#goldGradNFT)" stroke-width="10" fill="none" stroke-linecap="round">
+      <!-- Gauche -->
+      <path d="M-45 -20 Q-120 -80 -180 -40"/>
+      <path d="M-50 0 Q-140 -20 -200 20"/>
+      <path d="M-50 20 Q-140 40 -200 80"/>
+      <path d="M-45 40 Q-120 100 -180 160"/>
+      <!-- Droite -->
+      <path d="M45 -20 Q120 -80 180 -40"/>
+      <path d="M50 0 Q140 -20 200 20"/>
+      <path d="M50 20 Q140 40 200 80"/>
+      <path d="M45 40 Q120 100 180 160"/>
+    </g>
+    
+    <!-- Extrémités des pattes (griffes dorées) -->
+    <g fill="#FFD700">
+      <circle cx="-180" cy="-40" r="8"/>
+      <circle cx="-200" cy="20" r="8"/>
+      <circle cx="-200" cy="80" r="8"/>
+      <circle cx="-180" cy="160" r="8"/>
+      <circle cx="180" cy="-40" r="8"/>
+      <circle cx="200" cy="20" r="8"/>
+      <circle cx="200" cy="80" r="8"/>
+      <circle cx="180" cy="160" r="8"/>
+    </g>
+  </g>
+  
+  <!-- Badge NFT -->
+  <g transform="translate(650, 100)">
+    <rect x="-50" y="-25" width="100" height="50" rx="10" fill="url(#goldGradNFT)" filter="url(#goldGlow)"/>
+    <text x="0" y="8" text-anchor="middle" fill="#1a1a2e" font-family="Arial" font-weight="bold" font-size="24">NFT</text>
+  </g>
+  
+  <!-- Numéro de série -->
+  <text x="400" y="720" text-anchor="middle" fill="#DAA520" font-family="monospace" font-size="16" opacity="0.7">#001 / 100</text>
+  
+  <!-- Nom -->
+  <text x="400" y="760" text-anchor="middle" fill="#FFD700" font-family="serif" font-size="24" filter="url(#nftGlow)">Araignée Royale</text>
+  
+  <!-- Particules dorées -->
+  <g fill="#FFD700" opacity="0.6">
+    <circle cx="100" cy="150" r="3"/>
+    <circle cx="700" cy="200" r="4"/>
+    <circle cx="150" cy="650" r="3"/>
+    <circle cx="650" cy="600" r="4"/>
+    <circle cx="200" cy="300" r="2"/>
+    <circle cx="600" cy="500" r="2"/>
+    <circle cx="300" cy="700" r="3"/>
+    <circle cx="500" cy="100" r="3"/>
+  </g>
+</svg>

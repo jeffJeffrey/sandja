@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="digitalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="50%" style="stop-color:#1e3a5f"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Fond digital -->
+  <rect width="800" height="600" fill="url(#digitalGrad)"/>
+  
+  <!-- Grille digitale -->
+  <g stroke="#3b82f6" stroke-width="0.5" opacity="0.3">
+    <!-- Verticales -->
+    <line x1="50" y1="0" x2="50" y2="600"/>
+    <line x1="100" y1="0" x2="100" y2="600"/>
+    <line x1="150" y1="0" x2="150" y2="600"/>
+    <line x1="200" y1="0" x2="200" y2="600"/>
+    <line x1="250" y1="0" x2="250" y2="600"/>
+    <line x1="300" y1="0" x2="300" y2="600"/>
+    <line x1="350" y1="0" x2="350" y2="600"/>
+    <line x1="400" y1="0" x2="400" y2="600"/>
+    <line x1="450" y1="0" x2="450" y2="600"/>
+    <line x1="500" y1="0" x2="500" y2="600"/>
+    <line x1="550" y1="0" x2="550" y2="600"/>
+    <line x1="600" y1="0" x2="600" y2="600"/>
+    <line x1="650" y1="0" x2="650" y2="600"/>
+    <line x1="700" y1="0" x2="700" y2="600"/>
+    <line x1="750" y1="0" x2="750" y2="600"/>
+    <!-- Horizontales -->
+    <line x1="0" y1="50" x2="800" y2="50"/>
+    <line x1="0" y1="100" x2="800" y2="100"/>
+    <line x1="0" y1="150" x2="800" y2="150"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="250" x2="800" y2="250"/>
+    <line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="0" y1="350" x2="800" y2="350"/>
+    <line x1="0" y1="400" x2="800" y2="400"/>
+    <line x1="0" y1="450" x2="800" y2="450"/>
+    <line x1="0" y1="500" x2="800" y2="500"/>
+    <line x1="0" y1="550" x2="800" y2="550"/>
+  </g>
+  
+  <!-- Motifs Ndop digitalisés avec glow -->
+  <g filter="url(#glow)">
+    <!-- Cercles concentriques centraux -->
+    <g transform="translate(400, 300)">
+      <circle cx="0" cy="0" r="120" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.6"/>
+      <circle cx="0" cy="0" r="100" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.7"/>
+      <circle cx="0" cy="0" r="80" fill="none" stroke="#93c5fd" stroke-width="2" opacity="0.8"/>
+      <circle cx="0" cy="0" r="60" fill="none" stroke="#93c5fd" stroke-width="3"/>
+      <circle cx="0" cy="0" r="40" fill="none" stroke="#bfdbfe" stroke-width="3"/>
+      <circle cx="0" cy="0" r="20" fill="#bfdbfe"/>
+      <circle cx="0" cy="0" r="10" fill="#0f172a"/>
+      
+      <!-- Rayons -->
+      <g stroke="#60a5fa" stroke-width="2">
+        <line x1="0" y1="-120" x2="0" y2="-150"/>
+        <line x1="0" y1="120" x2="0" y2="150"/>
+        <line x1="-120" y1="0" x2="-150" y2="0"/>
+        <line x1="120" y1="0" x2="150" y2="0"/>
+        <line x1="-85" y1="-85" x2="-106" y2="-106"/>
+        <line x1="85" y1="-85" x2="106" y2="-106"/>
+        <line x1="-85" y1="85" x2="-106" y2="106"/>
+        <line x1="85" y1="85" x2="106" y2="106"/>
+      </g>
+    </g>
+    
+    <!-- Losanges aux coins -->
+    <g fill="none" stroke="#60a5fa" stroke-width="2">
+      <polygon points="100,100 130,130 100,160 70,130"/>
+      <polygon points="700,100 730,130 700,160 670,130"/>
+      <polygon points="100,500 130,470 100,440 70,470"/>
+      <polygon points="700,500 730,470 700,440 670,470"/>
+    </g>
+    
+    <!-- Motifs latéraux -->
+    <g transform="translate(150, 300)">
+      <circle cx="0" cy="0" r="40" fill="none" stroke="#93c5fd" stroke-width="2"/>
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#93c5fd" stroke-width="2"/>
+      <circle cx="0" cy="0" r="10" fill="#93c5fd"/>
+    </g>
+    
+    <g transform="translate(650, 300)">
+      <circle cx="0" cy="0" r="40" fill="none" stroke="#93c5fd" stroke-width="2"/>
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#93c5fd" stroke-width="2"/>
+      <circle cx="0" cy="0" r="10" fill="#93c5fd"/>
+    </g>
+    
+    <!-- Zigzags digitaux -->
+    <path d="M50 200 L80 170 L110 200 L140 170 L170 200 L200 170 L230 200" 
+          stroke="#60a5fa" stroke-width="2" fill="none"/>
+    <path d="M570 200 L600 170 L630 200 L660 170 L690 200 L720 170 L750 200" 
+          stroke="#60a5fa" stroke-width="2" fill="none"/>
+    <path d="M50 400 L80 430 L110 400 L140 430 L170 400 L200 430 L230 400" 
+          stroke="#60a5fa" stroke-width="2" fill="none"/>
+    <path d="M570 400 L600 430 L630 400 L660 430 L690 400 L720 430 L750 400" 
+          stroke="#60a5fa" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Points lumineux -->
+  <g fill="#bfdbfe">
+    <circle cx="50" cy="50" r="3"/>
+    <circle cx="750" cy="50" r="3"/>
+    <circle cx="50" cy="550" r="3"/>
+    <circle cx="750" cy="550" r="3"/>
+    <circle cx="400" cy="50" r="3"/>
+    <circle cx="400" cy="550" r="3"/>
+    <circle cx="50" cy="300" r="3"/>
+    <circle cx="750" cy="300" r="3"/>
+  </g>
+  
+  <!-- Bordure moderne -->
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+</svg>

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <pattern id="weddingPattern" patternUnits="userSpaceOnUse" width="80" height="80">
+      <rect width="80" height="80" fill="#1e3a5f"/>
+      <circle cx="40" cy="40" r="30" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="40" cy="40" r="20" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="40" cy="40" r="10" fill="#E2E8F0"/>
+      <circle cx="10" cy="10" r="8" fill="#E2E8F0" opacity="0.5"/>
+      <circle cx="70" cy="10" r="8" fill="#E2E8F0" opacity="0.5"/>
+      <circle cx="10" cy="70" r="8" fill="#E2E8F0" opacity="0.5"/>
+      <circle cx="70" cy="70" r="8" fill="#E2E8F0" opacity="0.5"/>
+    </pattern>
+  </defs>
+  
+  <!-- Fond -->
+  <rect width="800" height="600" fill="#1a365d"/>
+  
+  <!-- Bordure avec coeurs/cercles liés -->
+  <g fill="none" stroke="#E2E8F0" stroke-width="3">
+    <!-- Bordure haut -->
+    <path d="M0 25 Q25 0 50 25 Q75 50 100 25 Q125 0 150 25 Q175 50 200 25 Q225 0 250 25 Q275 50 300 25 Q325 0 350 25 Q375 50 400 25 Q425 0 450 25 Q475 50 500 25 Q525 0 550 25 Q575 50 600 25 Q625 0 650 25 Q675 50 700 25 Q725 0 750 25 Q775 50 800 25"/>
+    <!-- Bordure bas -->
+    <path d="M0 575 Q25 600 50 575 Q75 550 100 575 Q125 600 150 575 Q175 550 200 575 Q225 600 250 575 Q275 550 300 575 Q325 600 350 575 Q375 550 400 575 Q425 600 450 575 Q475 550 500 575 Q525 600 550 575 Q575 550 600 575 Q625 600 650 575 Q675 550 700 575 Q725 600 750 575 Q775 550 800 575"/>
+  </g>
+  
+  <!-- Zone centrale avec motifs -->
+  <rect x="40" y="50" width="720" height="500" fill="url(#weddingPattern)"/>
+  
+  <!-- Bordure intérieure -->
+  <rect x="40" y="50" width="720" height="500" fill="none" stroke="#E2E8F0" stroke-width="4"/>
+  <rect x="50" y="60" width="700" height="480" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+  
+  <!-- Symbole central - Double cercle (union) -->
+  <g transform="translate(400, 300)">
+    <!-- Cercle gauche -->
+    <circle cx="-40" cy="0" r="60" fill="none" stroke="#E2E8F0" stroke-width="4"/>
+    <circle cx="-40" cy="0" r="45" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    <circle cx="-40" cy="0" r="30" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    
+    <!-- Cercle droit -->
+    <circle cx="40" cy="0" r="60" fill="none" stroke="#E2E8F0" stroke-width="4"/>
+    <circle cx="40" cy="0" r="45" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    <circle cx="40" cy="0" r="30" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+    
+    <!-- Intersection (union) -->
+    <ellipse cx="0" cy="0" rx="25" ry="50" fill="#E2E8F0" opacity="0.3"/>
+    <circle cx="0" cy="0" r="15" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="8" fill="#1a365d"/>
+    
+    <!-- Rayons d'union -->
+    <g stroke="#E2E8F0" stroke-width="2">
+      <line x1="0" y1="-70" x2="0" y2="-90"/>
+      <line x1="0" y1="70" x2="0" y2="90"/>
+      <line x1="-120" y1="0" x2="-140" y2="0"/>
+      <line x1="120" y1="0" x2="140" y2="0"/>
+    </g>
+  </g>
+  
+  <!-- Symboles de fertilité aux coins -->
+  <g fill="#E2E8F0">
+    <!-- Haut gauche -->
+    <g transform="translate(120, 130)">
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="-15" r="5"/>
+      <circle cx="-10" cy="10" r="5"/>
+      <circle cx="10" cy="10" r="5"/>
+    </g>
+    <!-- Haut droit -->
+    <g transform="translate(680, 130)">
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="-15" r="5"/>
+      <circle cx="-10" cy="10" r="5"/>
+      <circle cx="10" cy="10" r="5"/>
+    </g>
+    <!-- Bas gauche -->
+    <g transform="translate(120, 470)">
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="-15" r="5"/>
+      <circle cx="-10" cy="10" r="5"/>
+      <circle cx="10" cy="10" r="5"/>
+    </g>
+    <!-- Bas droit -->
+    <g transform="translate(680, 470)">
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="-15" r="5"/>
+      <circle cx="-10" cy="10" r="5"/>
+      <circle cx="10" cy="10" r="5"/>
+    </g>
+  </g>
+  
+  <!-- Lignes décoratives -->
+  <g stroke="#E2E8F0" stroke-width="2" opacity="0.6">
+    <line x1="200" y1="100" x2="200" y2="500"/>
+    <line x1="600" y1="100" x2="600" y2="500"/>
+  </g>
+</svg>

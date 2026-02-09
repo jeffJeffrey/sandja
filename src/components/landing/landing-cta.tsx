@@ -28,7 +28,7 @@ export function LandingCTA() {
           <motion.div
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ duration: 4, repeat: Infinity }}
-            className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-white text-4xl mb-8 shadow-african"
+            className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-primary-500 to-secondary-500 text-white text-4xl mb-8 shadow-african"
           >
             <Sparkles className="w-10 h-10" />
           </motion.div>

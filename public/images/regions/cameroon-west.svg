@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="cameroonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669"/>
+      <stop offset="100%" style="stop-color:#047857"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fond -->
+  <rect width="800" height="500" fill="url(#cameroonGrad)"/>
+  
+  <!-- Montagnes stylisées -->
+  <polygon points="0,500 150,200 300,350 450,150 600,300 750,180 800,250 800,500" fill="#047857" opacity="0.5"/>
+  <polygon points="0,500 100,300 250,400 400,250 550,380 700,280 800,350 800,500" fill="#065f46" opacity="0.5"/>
+  
+  <!-- Motifs Ndop stylisés -->
+  <g opacity="0.2" fill="#E2E8F0">
+    <circle cx="100" cy="100" r="40" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+    <circle cx="100" cy="100" r="25"/>
+    <circle cx="300" cy="150" r="40" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+    <circle cx="300" cy="150" r="25"/>
+    <circle cx="500" cy="100" r="40" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+    <circle cx="500" cy="100" r="25"/>
+    <circle cx="700" cy="150" r="40" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+    <circle cx="700" cy="150" r="25"/>
+  </g>
+  
+  <!-- Drapeau Cameroun simplifié -->
+  <g transform="translate(650, 30)">
+    <rect x="0" y="0" width="120" height="80" fill="#007A5E"/>
+    <rect x="40" y="0" width="40" height="80" fill="#CE1126"/>
+    <rect x="80" y="0" width="40" height="80" fill="#FCD116"/>
+    <polygon points="60,20 65,35 80,35 68,45 73,60 60,50 47,60 52,45 40,35 55,35" fill="#FCD116"/>
+  </g>
+  
+  <!-- Texte -->
+  <text x="50" y="420" fill="white" font-family="Arial" font-size="48" font-weight="bold">Cameroun Ouest</text>
+  <text x="50" y="470" fill="white" font-family="Arial" font-size="28" opacity="0.8">Pays Bamiléké • Ndop</text>
+</svg>

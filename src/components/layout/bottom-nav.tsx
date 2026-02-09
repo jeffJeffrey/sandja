@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const navItems = [
-  { href: "/home", icon: Home, labelKey: "home" },
+  { href: "/", icon: Home, labelKey: "home" },
   { href: "/explore", icon: Compass, labelKey: "explore" },
   { href: "/scanner", icon: Camera, labelKey: "scanner", isMain: true },
   { href: "/marketplace", icon: ShoppingBag, labelKey: "marketplace" },
@@ -37,7 +37,7 @@ export function BottomNav() {
                   whileTap={{ scale: 0.95 }}
                   className={cn(
                     "w-14 h-14 rounded-full flex items-center justify-center shadow-lg",
-                    "bg-gradient-to-br from-primary-500 to-secondary-500 text-white"
+                    "bg-linear-to-br from-primary-500 to-secondary-500 text-white"
                   )}
                 >
                   <Icon className="w-6 h-6" />

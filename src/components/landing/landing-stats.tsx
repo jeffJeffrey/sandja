@@ -49,7 +49,7 @@ export function LandingStats() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-500 relative overflow-hidden">
+    <section className="py-20 bg-linear-to-r from-primary-600 via-primary-500 to-secondary-500 relative overflow-hidden">
       {/* Motif de fond */}
       <div className="absolute inset-0 african-pattern-zigzag opacity-10" />
       
@@ -69,10 +69,10 @@ export function LandingStats() {
               className="text-center"
             >
               <div className="text-4xl mb-2">{stat.icon}</div>
-              <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              <div className="text-4xl md:text-5xl font-bold text-black mb-2">
                 <AnimatedCounter value={stat.value} suffix={stat.suffix} />
               </div>
-              <div className="text-white/80 font-medium">{stat.label}</div>
+              <div className="text-black/80 font-medium">{stat.label}</div>
             </motion.div>
           ))}
         </div>

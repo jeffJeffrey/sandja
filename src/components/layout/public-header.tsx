@@ -151,10 +151,10 @@ export function PublicHeader() {
             {/* Boutons auth - desktop */}
             <div className="hidden md:flex items-center gap-2">
               <Button asChild variant="ghost" size="sm">
-                <Link href="/login">{tAuth("login")}</Link>
+                <Link href="/login">{tAuth("loginTitle")}</Link>
               </Button>
               <Button asChild variant="african" size="sm">
-                <Link href="/register">{tAuth("register")}</Link>
+                <Link href="/register">{tAuth("registerTitle")}</Link>
               </Button>
             </div>
 
@@ -223,7 +223,7 @@ export function PublicHeader() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
                   >
-                    {tAuth("login")}
+                    {tAuth("loginTitle")}
                   </Link>
                 </motion.div>
                 
@@ -234,7 +234,7 @@ export function PublicHeader() {
                 >
                   <Button asChild variant="african" className="w-full mt-2">
                     <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                      {tAuth("register")}
+                      {tAuth("registerTitle")}
                     </Link>
                   </Button>
                 </motion.div>

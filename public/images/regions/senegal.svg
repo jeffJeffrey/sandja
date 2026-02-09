@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="senegalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0891b2"/>
+      <stop offset="100%" style="stop-color:#0e7490"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fond océan/ciel -->
+  <rect width="800" height="500" fill="url(#senegalGrad)"/>
+  
+  <!-- Vagues stylisées (côte atlantique) -->
+  <g fill="#0e7490" opacity="0.5">
+    <path d="M0 400 Q100 380 200 400 Q300 420 400 400 Q500 380 600 400 Q700 420 800 400 L800 500 L0 500 Z"/>
+    <path d="M0 430 Q100 410 200 430 Q300 450 400 430 Q500 410 600 430 Q700 450 800 430 L800 500 L0 500 Z" opacity="0.7"/>
+    <path d="M0 460 Q100 440 200 460 Q300 480 400 460 Q500 440 600 460 Q700 480 800 460 L800 500 L0 500 Z" opacity="0.9"/>
+  </g>
+  
+  <!-- Motifs textiles sénégalais -->
+  <g fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+    <!-- Losanges -->
+    <polygon points="100,80 130,110 100,140 70,110"/>
+    <polygon points="250,100 280,130 250,160 220,130"/>
+    <polygon points="400,80 430,110 400,140 370,110"/>
+    <polygon points="550,100 580,130 550,160 520,130"/>
+    
+    <!-- Cercles -->
+    <circle cx="175" cy="200" r="30" fill="none"/>
+    <circle cx="325" cy="180" r="30" fill="none"/>
+    <circle cx="475" cy="200" r="30" fill="none"/>
+    <circle cx="625" cy="180" r="30" fill="none"/>
+  </g>
+  
+  <!-- Baobab stylisé -->
+  <g transform="translate(680, 280)" fill="rgba(255,255,255,0.15)">
+    <rect x="-15" y="0" width="30" height="80"/>
+    <ellipse cx="0" cy="-20" rx="60" ry="40"/>
+    <ellipse cx="-40" cy="-40" rx="25" ry="20"/>
+    <ellipse cx="40" cy="-40" rx="25" ry="20"/>
+    <ellipse cx="0" cy="-50" rx="30" ry="25"/>
+  </g>
+  
+  <!-- Drapeau Sénégal -->
+  <g transform="translate(650, 30)">
+    <rect x="0" y="0" width="40" height="80" fill="#00853F"/>
+    <rect x="40" y="0" width="40" height="80" fill="#FDEF42"/>
+    <rect x="80" y="0" width="40" height="80" fill="#E31B23"/>
+    <polygon points="60,25 65,38 78,38 68,46 72,58 60,50 48,58 52,46 42,38 55,38" fill="#00853F"/>
+  </g>
+  
+  <!-- Texte -->
+  <text x="50" y="420" fill="white" font-family="Arial" font-size="48" font-weight="bold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3)">Sénégal</text>
+  <text x="50" y="470" fill="white" font-family="Arial" font-size="28" opacity="0.9">Casamance • Thioup</text>
+</svg>

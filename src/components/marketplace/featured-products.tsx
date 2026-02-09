@@ -17,7 +17,7 @@ const featuredProducts = [
     description: "Pagne traditionnel Bamiléké aux motifs royaux",
     price: 150,
     currency: "ADA",
-    image: "/images/pagnes/ndop-royal-bleu.jpg",
+    image: "/images/pagnes/ndop-royal-bleu.svg",
     rating: 4.9,
     reviewCount: 128,
     isNFT: true,
@@ -30,7 +30,7 @@ const featuredProducts = [
     description: "Le tissu des rois Ashanti, fait main au Ghana",
     price: 200,
     currency: "ADA",
-    image: "/images/pagnes/kente-adweneasa.jpg",
+    image: "/images/pagnes/kente-adweneasa.svg",
     rating: 4.8,
     reviewCount: 89,
     isNFT: true,
@@ -43,7 +43,7 @@ const featuredProducts = [
     description: "Tissu traditionnel malien teint à la boue",
     price: 120,
     currency: "ADA",
-    image: "/images/pagnes/bogolan-chasseur.jpg",
+    image: "/images/pagnes/bogolan-chasseur.svg",
     rating: 4.7,
     reviewCount: 56,
     isNFT: false,
@@ -96,19 +96,19 @@ export function FeaturedProducts() {
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = "/images/placeholder-pagne.jpg";
+                      target.src = "/images/placeholder-pagne.svg";
                     }}
                   />
 
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex flex-col gap-2">
                     {product.isBestseller && (
-                      <span className="px-3 py-1 bg-accent-red text-white text-xs font-bold rounded-full">
+                      <span className="px-3 py-1 bg-accent-red text-black text-xs font-bold rounded-full">
                         Bestseller
                       </span>
                     )}
                     {product.isNFT && (
-                      <span className="px-3 py-1 bg-accent-blue text-white text-xs font-bold rounded-full flex items-center gap-1">
+                      <span className="px-3 py-1 bg-accent-blue text-black text-xs font-bold rounded-full flex items-center gap-1">
                         <Sparkles className="w-3 h-3" />
                         NFT inclus
                       </span>

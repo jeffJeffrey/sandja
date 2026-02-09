@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="ndopBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a5f"/>
+      <stop offset="50%" style="stop-color:#2c5282"/>
+      <stop offset="100%" style="stop-color:#1a365d"/>
+    </linearGradient>
+    <pattern id="ndopGrid" patternUnits="userSpaceOnUse" width="100" height="100">
+      <rect width="100" height="100" fill="#1a365d"/>
+      <rect x="5" y="5" width="90" height="90" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+      <rect x="15" y="15" width="70" height="70" fill="none" stroke="#E2E8F0" stroke-width="1"/>
+      <line x1="50" y1="5" x2="50" y2="95" stroke="#E2E8F0" stroke-width="1" opacity="0.5"/>
+      <line x1="5" y1="50" x2="95" y2="50" stroke="#E2E8F0" stroke-width="1" opacity="0.5"/>
+      <circle cx="50" cy="50" r="20" fill="none" stroke="#E2E8F0" stroke-width="2"/>
+      <circle cx="50" cy="50" r="8" fill="#E2E8F0"/>
+      <rect x="25" y="25" width="10" height="10" fill="#E2E8F0" opacity="0.6"/>
+      <rect x="65" y="25" width="10" height="10" fill="#E2E8F0" opacity="0.6"/>
+      <rect x="25" y="65" width="10" height="10" fill="#E2E8F0" opacity="0.6"/>
+      <rect x="65" y="65" width="10" height="10" fill="#E2E8F0" opacity="0.6"/>
+    </pattern>
+    <pattern id="borderPattern" patternUnits="userSpaceOnUse" width="40" height="40">
+      <rect width="40" height="40" fill="#1a365d"/>
+      <polygon points="0,0 20,20 0,40" fill="#E2E8F0" opacity="0.8"/>
+      <polygon points="40,0 20,20 40,40" fill="#E2E8F0" opacity="0.8"/>
+    </pattern>
+  </defs>
+  
+  <!-- Fond principal -->
+  <rect width="800" height="600" fill="url(#ndopBlue)"/>
+  
+  <!-- Bordure extérieure -->
+  <rect x="0" y="0" width="800" height="30" fill="url(#borderPattern)"/>
+  <rect x="0" y="570" width="800" height="30" fill="url(#borderPattern)"/>
+  <rect x="0" y="30" width="30" height="540" fill="url(#borderPattern)"/>
+  <rect x="770" y="30" width="30" height="540" fill="url(#borderPattern)"/>
+  
+  <!-- Zone centrale avec motifs -->
+  <rect x="30" y="30" width="740" height="540" fill="url(#ndopGrid)"/>
+  
+  <!-- Motifs centraux - Araignée stylisée -->
+  <g transform="translate(400, 300)">
+    <!-- Cercle central -->
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#E2E8F0" stroke-width="4"/>
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+    <circle cx="0" cy="0" r="40" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="25" fill="#1a365d"/>
+    <circle cx="0" cy="0" r="10" fill="#E2E8F0"/>
+    
+    <!-- Rayons -->
+    <g stroke="#E2E8F0" stroke-width="3">
+      <line x1="0" y1="-80" x2="0" y2="-120"/>
+      <line x1="0" y1="80" x2="0" y2="120"/>
+      <line x1="-80" y1="0" x2="-120" y2="0"/>
+      <line x1="80" y1="0" x2="120" y2="0"/>
+      <line x1="-57" y1="-57" x2="-85" y2="-85"/>
+      <line x1="57" y1="-57" x2="85" y2="-85"/>
+      <line x1="-57" y1="57" x2="-85" y2="85"/>
+      <line x1="57" y1="57" x2="85" y2="85"/>
+    </g>
+    
+    <!-- Losanges aux extrémités -->
+    <g fill="#E2E8F0">
+      <polygon points="0,-130 10,-120 0,-110 -10,-120"/>
+      <polygon points="0,130 10,120 0,110 -10,120"/>
+      <polygon points="-130,0 -120,10 -110,0 -120,-10"/>
+      <polygon points="130,0 120,10 110,0 120,-10"/>
+    </g>
+  </g>
+  
+  <!-- Motifs aux coins -->
+  <g fill="#E2E8F0">
+    <!-- Coin supérieur gauche -->
+    <g transform="translate(100, 100)">
+      <rect x="-25" y="-25" width="50" height="50" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="0" r="15" fill="#E2E8F0"/>
+      <circle cx="0" cy="0" r="8" fill="#1a365d"/>
+    </g>
+    <!-- Coin supérieur droit -->
+    <g transform="translate(700, 100)">
+      <rect x="-25" y="-25" width="50" height="50" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="0" r="15" fill="#E2E8F0"/>
+      <circle cx="0" cy="0" r="8" fill="#1a365d"/>
+    </g>
+    <!-- Coin inférieur gauche -->
+    <g transform="translate(100, 500)">
+      <rect x="-25" y="-25" width="50" height="50" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="0" r="15" fill="#E2E8F0"/>
+      <circle cx="0" cy="0" r="8" fill="#1a365d"/>
+    </g>
+    <!-- Coin inférieur droit -->
+    <g transform="translate(700, 500)">
+      <rect x="-25" y="-25" width="50" height="50" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+      <circle cx="0" cy="0" r="15" fill="#E2E8F0"/>
+      <circle cx="0" cy="0" r="8" fill="#1a365d"/>
+    </g>
+  </g>
+  
+  <!-- Lignes décoratives horizontales -->
+  <g stroke="#E2E8F0" stroke-width="2" opacity="0.6">
+    <line x1="150" y1="200" x2="650" y2="200"/>
+    <line x1="150" y1="400" x2="650" y2="400"/>
+  </g>
+</svg>

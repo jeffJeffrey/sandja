@@ -37,7 +37,7 @@ export function ExploreHero() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-white text-center lg:text-left"
+            className="text-gray-700 text-center lg:text-left"
           >
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -53,7 +53,7 @@ export function ExploreHero() {
               {t("hero.title")}
             </h1>
 
-            <p className="text-lg text-white/80 mb-8 max-w-xl mx-auto lg:mx-0">
+            <p className="text-lg text-black/80 mb-8 max-w-xl mx-auto lg:mx-0">
               {t("hero.subtitle")}
             </p>
 
@@ -72,7 +72,7 @@ export function ExploreHero() {
 
             {/* Tags populaires */}
             <div className="mt-6 flex flex-wrap gap-2 justify-center lg:justify-start">
-              <span className="text-sm text-white/60">Populaires:</span>
+              <span className="text-sm text-black/60">Populaires:</span>
               {["Araignée", "Serpent", "Lune", "Fertilité"].map((tag) => (
                 <button
                   key={tag}

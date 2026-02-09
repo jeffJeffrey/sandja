@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bogolanBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513"/>
+      <stop offset="50%" style="stop-color:#A0522D"/>
+      <stop offset="100%" style="stop-color:#6B3E26"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fond terre/boue (couleur Bogolan) -->
+  <rect width="400" height="400" fill="url(#bogolanBg)"/>
+  
+  <!-- Texture de boue séchée -->
+  <g opacity="0.15">
+    <path d="M0 50 Q100 30 200 50 Q300 70 400 50" stroke="#3d2314" stroke-width="2" fill="none"/>
+    <path d="M0 100 Q100 80 200 100 Q300 120 400 100" stroke="#3d2314" stroke-width="2" fill="none"/>
+    <path d="M0 150 Q100 130 200 150 Q300 170 400 150" stroke="#3d2314" stroke-width="2" fill="none"/>
+    <path d="M0 200 Q100 180 200 200 Q300 220 400 200" stroke="#3d2314" stroke-width="2" fill="none"/>
+    <path d="M0 250 Q100 230 200 250 Q300 270 400 250" stroke="#3d2314" stroke-width="2" fill="none"/>
+    <path d="M0 300 Q100 280 200 300 Q300 320 400 300" stroke="#3d2314" stroke-width="2" fill="none"/>
+    <path d="M0 350 Q100 330 200 350 Q300 370 400 350" stroke="#3d2314" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Bordure -->
+  <rect x="15" y="15" width="370" height="370" fill="none" stroke="#FFF8DC" stroke-width="4"/>
+  <rect x="25" y="25" width="350" height="350" fill="none" stroke="#FFF8DC" stroke-width="2"/>
+  
+  <!-- Motifs triangulaires Bogolan aux bords -->
+  <g fill="#FFF8DC" opacity="0.8">
+    <polygon points="40,35 50,55 30,55"/>
+    <polygon points="80,35 90,55 70,55"/>
+    <polygon points="120,35 130,55 110,55"/>
+    <polygon points="280,35 290,55 270,55"/>
+    <polygon points="320,35 330,55 310,55"/>
+    <polygon points="360,35 370,55 350,55"/>
+    
+    <polygon points="40,365 50,345 30,345"/>
+    <polygon points="80,365 90,345 70,345"/>
+    <polygon points="120,365 130,345 110,345"/>
+    <polygon points="280,365 290,345 270,345"/>
+    <polygon points="320,365 330,345 310,345"/>
+    <polygon points="360,365 370,345 350,345"/>
+  </g>
+  
+  <!-- Crocodile stylisé Bogolan -->
+  <g transform="translate(200, 200)">
+    <!-- Queue -->
+    <path d="M100 0 Q130 -20 150 0 Q170 20 150 0 Q130 -20 100 0" fill="#FFF8DC"/>
+    <path d="M80 0 L150 0" stroke="#FFF8DC" stroke-width="20" stroke-linecap="round"/>
+    <!-- Écailles de queue -->
+    <path d="M90 -8 L100 0 L90 8" stroke="#8B4513" stroke-width="2" fill="none"/>
+    <path d="M110 -8 L120 0 L110 8" stroke="#8B4513" stroke-width="2" fill="none"/>
+    <path d="M130 -6 L138 0 L130 6" stroke="#8B4513" stroke-width="2" fill="none"/>
+    
+    <!-- Corps -->
+    <ellipse cx="20" cy="0" rx="70" ry="35" fill="#FFF8DC"/>
+    <!-- Motif d'écailles sur le corps -->
+    <g stroke="#8B4513" stroke-width="2" fill="none">
+      <path d="M-30 -15 Q-20 -25 -10 -15"/>
+      <path d="M0 -18 Q10 -28 20 -18"/>
+      <path d="M30 -15 Q40 -25 50 -15"/>
+      <path d="M-20 0 Q-10 -10 0 0"/>
+      <path d="M10 0 Q20 -10 30 0"/>
+      <path d="M40 0 Q50 -10 60 0"/>
+      <path d="M-30 15 Q-20 5 -10 15"/>
+      <path d="M0 18 Q10 8 20 18"/>
+      <path d="M30 15 Q40 5 50 15"/>
+    </g>
+    
+    <!-- Tête -->
+    <path d="M-50 0 L-120 -15 L-130 0 L-120 15 Z" fill="#FFF8DC"/>
+    <!-- Dents -->
+    <g fill="#8B4513">
+      <polygon points="-70,-12 -75,-5 -65,-5"/>
+      <polygon points="-85,-14 -90,-6 -80,-6"/>
+      <polygon points="-100,-15 -105,-7 -95,-7"/>
+      <polygon points="-70,12 -75,5 -65,5"/>
+      <polygon points="-85,14 -90,6 -80,6"/>
+      <polygon points="-100,15 -105,7 -95,7"/>
+    </g>
+    <!-- Oeil -->
+    <circle cx="-60" cy="-5" r="8" fill="#8B4513"/>
+    <circle cx="-58" cy="-6" r="3" fill="#FFF8DC"/>
+    
+    <!-- Pattes avant -->
+    <g fill="#FFF8DC">
+      <path d="M-20 30 L-35 60 L-25 55 L-20 65 L-15 55 L-5 60 Z"/>
+      <path d="M-20 -30 L-35 -60 L-25 -55 L-20 -65 L-15 -55 L-5 -60 Z"/>
+    </g>
+    
+    <!-- Pattes arrière -->
+    <g fill="#FFF8DC">
+      <path d="M50 30 L40 60 L50 55 L55 65 L60 55 L70 60 Z"/>
+      <path d="M50 -30 L40 -60 L50 -55 L55 -65 L60 -55 L70 -60 Z"/>
+    </g>
+  </g>
+  
+  <!-- Symboles Bogolan aux coins -->
+  <g stroke="#FFF8DC" stroke-width="3" fill="none">
+    <circle cx="55" cy="55" r="15"/>
+    <line x1="55" y1="40" x2="55" y2="70"/>
+    <line x1="40" y1="55" x2="70" y2="55"/>
+    
+    <circle cx="345" cy="55" r="15"/>
+    <line x1="345" y1="40" x2="345" y2="70"/>
+    <line x1="330" y1="55" x2="360" y2="55"/>
+    
+    <circle cx="55" cy="345" r="15"/>
+    <line x1="55" y1="330" x2="55" y2="360"/>
+    <line x1="40" y1="345" x2="70" y2="345"/>
+    
+    <circle cx="345" cy="345" r="15"/>
+    <line x1="345" y1="330" x2="345" y2="360"/>
+    <line x1="330" y1="345" x2="360" y2="345"/>
+  </g>
+</svg>

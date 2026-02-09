@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="mudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513"/>
+      <stop offset="50%" style="stop-color:#A0522D"/>
+      <stop offset="100%" style="stop-color:#6B3E26"/>
+    </linearGradient>
+    <pattern id="mudTexture" patternUnits="userSpaceOnUse" width="100" height="100">
+      <rect width="100" height="100" fill="#8B4513"/>
+      <circle cx="20" cy="20" r="2" fill="#6B3E26" opacity="0.5"/>
+      <circle cx="60" cy="40" r="3" fill="#6B3E26" opacity="0.4"/>
+      <circle cx="80" cy="70" r="2" fill="#6B3E26" opacity="0.5"/>
+      <circle cx="30" cy="80" r="2" fill="#6B3E26" opacity="0.3"/>
+    </pattern>
+  </defs>
+  
+  <!-- Fond terre -->
+  <rect width="800" height="600" fill="url(#mudGrad)"/>
+  <rect width="800" height="600" fill="url(#mudTexture)" opacity="0.3"/>
+  
+  <!-- Bordure avec triangles -->
+  <g fill="#FFF8DC">
+    <!-- Haut -->
+    <polygon points="0,0 30,30 0,30"/>
+    <polygon points="60,0 90,30 60,30"/>
+    <polygon points="120,0 150,30 120,30"/>
+    <polygon points="180,0 210,30 180,30"/>
+    <polygon points="240,0 270,30 240,30"/>
+    <polygon points="300,0 330,30 300,30"/>
+    <polygon points="360,0 390,30 360,30"/>
+    <polygon points="420,0 450,30 420,30"/>
+    <polygon points="480,0 510,30 480,30"/>
+    <polygon points="540,0 570,30 540,30"/>
+    <polygon points="600,0 630,30 600,30"/>
+    <polygon points="660,0 690,30 660,30"/>
+    <polygon points="720,0 750,30 720,30"/>
+    <polygon points="780,0 800,0 800,30 780,30"/>
+    
+    <!-- Bas -->
+    <polygon points="30,600 0,570 30,570"/>
+    <polygon points="90,600 60,570 90,570"/>
+    <polygon points="150,600 120,570 150,570"/>
+    <polygon points="210,600 180,570 210,570"/>
+    <polygon points="270,600 240,570 270,570"/>
+    <polygon points="330,600 300,570 330,570"/>
+    <polygon points="390,600 360,570 390,570"/>
+    <polygon points="450,600 420,570 450,570"/>
+    <polygon points="510,600 480,570 510,570"/>
+    <polygon points="570,600 540,570 570,570"/>
+    <polygon points="630,600 600,570 630,570"/>
+    <polygon points="690,600 660,570 690,570"/>
+    <polygon points="750,600 720,570 750,570"/>
+    <polygon points="800,600 780,570 800,570"/>
+  </g>
+  
+  <!-- Ligne de bordure -->
+  <rect x="0" y="30" width="800" height="5" fill="#FFF8DC"/>
+  <rect x="0" y="565" width="800" height="5" fill="#FFF8DC"/>
+  <rect x="0" y="35" width="5" height="530" fill="#FFF8DC"/>
+  <rect x="795" y="35" width="5" height="530" fill="#FFF8DC"/>
+  
+  <!-- Grille principale -->
+  <g stroke="#FFF8DC" stroke-width="2" fill="none">
+    <!-- Lignes verticales -->
+    <line x1="100" y1="50" x2="100" y2="550"/>
+    <line x1="200" y1="50" x2="200" y2="550"/>
+    <line x1="300" y1="50" x2="300" y2="550"/>
+    <line x1="400" y1="50" x2="400" y2="550"/>
+    <line x1="500" y1="50" x2="500" y2="550"/>
+    <line x1="600" y1="50" x2="600" y2="550"/>
+    <line x1="700" y1="50" x2="700" y2="550"/>
+    
+    <!-- Lignes horizontales -->
+    <line x1="20" y1="100" x2="780" y2="100"/>
+    <line x1="20" y1="200" x2="780" y2="200"/>
+    <line x1="20" y1="300" x2="780" y2="300"/>
+    <line x1="20" y1="400" x2="780" y2="400"/>
+    <line x1="20" y1="500" x2="780" y2="500"/>
+  </g>
+  
+  <!-- Symboles de chasse - Crocodiles -->
+  <g fill="#FFF8DC">
+    <!-- Crocodile 1 -->
+    <g transform="translate(150, 150)">
+      <ellipse cx="0" cy="0" rx="40" ry="15"/>
+      <path d="M-40 0 L-70 -8 L-75 0 L-70 8 Z"/>
+      <path d="M40 0 L60 0 Q70 -5 60 0 Q70 5 60 0"/>
+      <circle cx="-50" cy="-3" r="3" fill="#8B4513"/>
+    </g>
+    
+    <!-- Crocodile 2 -->
+    <g transform="translate(550, 150) scale(-1,1)">
+      <ellipse cx="0" cy="0" rx="40" ry="15"/>
+      <path d="M-40 0 L-70 -8 L-75 0 L-70 8 Z"/>
+      <path d="M40 0 L60 0 Q70 -5 60 0 Q70 5 60 0"/>
+      <circle cx="-50" cy="-3" r="3" fill="#8B4513"/>
+    </g>
+    
+    <!-- Crocodile 3 -->
+    <g transform="translate(150, 450)">
+      <ellipse cx="0" cy="0" rx="40" ry="15"/>
+      <path d="M-40 0 L-70 -8 L-75 0 L-70 8 Z"/>
+      <path d="M40 0 L60 0 Q70 -5 60 0 Q70 5 60 0"/>
+      <circle cx="-50" cy="-3" r="3" fill="#8B4513"/>
+    </g>
+    
+    <!-- Crocodile 4 -->
+    <g transform="translate(550, 450) scale(-1,1)">
+      <ellipse cx="0" cy="0" rx="40" ry="15"/>
+      <path d="M-40 0 L-70 -8 L-75 0 L-70 8 Z"/>
+      <path d="M40 0 L60 0 Q70 -5 60 0 Q70 5 60 0"/>
+      <circle cx="-50" cy="-3" r="3" fill="#8B4513"/>
+    </g>
+  </g>
+  
+  <!-- Symbole central - Soleil/Cible -->
+  <g transform="translate(400, 300)" fill="none" stroke="#FFF8DC" stroke-width="3">
+    <circle cx="0" cy="0" r="60"/>
+    <circle cx="0" cy="0" r="40"/>
+    <circle cx="0" cy="0" r="20"/>
+    <circle cx="0" cy="0" r="8" fill="#FFF8DC"/>
+    <line x1="0" y1="-60" x2="0" y2="-80"/>
+    <line x1="0" y1="60" x2="0" y2="80"/>
+    <line x1="-60" y1="0" x2="-80" y2="0"/>
+    <line x1="60" y1="0" x2="80" y2="0"/>
+    <line x1="-42" y1="-42" x2="-57" y2="-57"/>
+    <line x1="42" y1="-42" x2="57" y2="-57"/>
+    <line x1="-42" y1="42" x2="-57" y2="57"/>
+    <line x1="42" y1="42" x2="57" y2="57"/>
+  </g>
+  
+  <!-- Losanges décoratifs -->
+  <g fill="#FFF8DC">
+    <polygon points="350,100 370,120 350,140 330,120"/>
+    <polygon points="450,100 470,120 450,140 430,120"/>
+    <polygon points="350,500 370,520 350,540 330,520"/>
+    <polygon points="450,500 470,520 450,540 430,520"/>
+  </g>
+  
+  <!-- Zigzags -->
+  <g stroke="#FFF8DC" stroke-width="2" fill="none">
+    <path d="M50 250 L70 230 L90 250 L110 230 L130 250 L150 230 L170 250"/>
+    <path d="M630 250 L650 230 L670 250 L690 230 L710 250 L730 230 L750 250"/>
+    <path d="M50 350 L70 370 L90 350 L110 370 L130 350 L150 370 L170 350"/>
+    <path d="M630 350 L650 370 L670 350 L690 370 L710 350 L730 370 L750 350"/>
+  </g>
+</svg>

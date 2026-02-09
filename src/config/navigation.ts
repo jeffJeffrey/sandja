@@ -37,7 +37,7 @@ export interface NavItem {
 export const mobileNavItems: NavItem[] = [
   {
     key: "nav.home",
-    href: "/home",
+    href: "/",
     icon: Home
   },
   {
@@ -66,7 +66,7 @@ export const mobileNavItems: NavItem[] = [
 export const appSidebarItems: NavItem[] = [
   {
     key: "nav.home",
-    href: "/home",
+    href: "/",
     icon: Home
   },
   {
