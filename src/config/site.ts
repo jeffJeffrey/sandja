@@ -1,8 +1,4 @@
-// src/config/site.ts
-// Configuration centralisée de l'application SANDJA
-
 export const siteConfig = {
-  // Informations de base
   name: "SANDJA",
   tagline: {
     fr: "Redonner sens et valeur au pagne africain",
@@ -13,17 +9,14 @@ export const siteConfig = {
     en: "Cultural and technological platform for the preservation and promotion of African textile heritage"
   },
   
-  // URLs
   url: process.env.NEXT_PUBLIC_APP_URL || "https://sandja.app",
   
-  // Contact
   contact: {
     email: "contact@sandja.app",
     phone: "+237 6XX XXX XXX",
     address: "Dschang, Cameroun"
   },
   
-  // Réseaux sociaux
   social: {
     twitter: "https://twitter.com/sandja_app",
     instagram: "https://instagram.com/sandja_app",
@@ -32,7 +25,6 @@ export const siteConfig = {
     tiktok: "https://tiktok.com/@sandja_app"
   },
   
-  // Liens utiles
   links: {
     docs: "https://docs.sandja.app",
     support: "https://support.sandja.app",
@@ -40,7 +32,6 @@ export const siteConfig = {
     terms: "/terms-of-service"
   },
   
-  // Métadonnées SEO
   seo: {
     title: "SANDJA - Le Pagne du Futur",
     titleTemplate: "%s | SANDJA",
@@ -56,14 +47,12 @@ export const siteConfig = {
     ]
   },
   
-  // Blockchain
   blockchain: {
-    network: process.env.NEXT_PUBLIC_CARDANO_NETWORK || "preview", // preview, preprod, mainnet
+    network: process.env.NEXT_PUBLIC_CARDANO_NETWORK || "preview", 
     tokenName: "SandjaCoin",
     tokenSymbol: "SNDJ"
   },
   
-  // Gamification
   gamification: {
     levels: [
       { level: 1, name: { fr: "Apprenti du Ndop", en: "Ndop Apprentice" }, xpRequired: 0 },
@@ -87,18 +76,16 @@ export const siteConfig = {
     }
   },
   
-  // Devises supportées
   currencies: {
     primary: "ADA",
     display: ["ADA", "XAF", "EUR", "USD"],
     rates: {
-      ADA_XAF: 350, // Taux indicatif, sera mis à jour dynamiquement
+      ADA_XAF: 350, 
       ADA_EUR: 0.58,
       ADA_USD: 0.63
     }
   },
   
-  // Catégories de cérémonies
   ceremonies: [
     { id: "marriage", icon: "💍", key: "ceremonies.marriage" },
     { id: "funeral", icon: "🕯️", key: "ceremonies.funeral" },
@@ -109,7 +96,6 @@ export const siteConfig = {
     { id: "everyday", icon: "☀️", key: "ceremonies.everyday" }
   ],
   
-  // Régions africaines principales
   regions: [
     { id: "cameroon-west", country: "Cameroun", area: "Ouest" },
     { id: "cameroon-northwest", country: "Cameroun", area: "Nord-Ouest" },

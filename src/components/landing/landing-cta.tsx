@@ -67,12 +67,6 @@ export function LandingCTA() {
                 <span className="font-semibold text-gray-700">Cardano</span>
               </div>
               <div className="w-px h-8 bg-gray-300" />
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded bg-black flex items-center justify-center text-white text-xs font-bold">
-                  ▲
-                </div>
-                <span className="font-semibold text-gray-700">Vercel</span>
-              </div>
             </div>
           </div>
         </motion.div>
