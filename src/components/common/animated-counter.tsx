@@ -262,7 +262,7 @@ export function AnimatedProgress({
         >
           {/* Shimmer effect */}
           <motion.div
-            className="h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
+            className="h-full w-full bg-linear-to-r from-transparent via-white/30 to-transparent"
             animate={{
               x: ["-100%", "100%"],
             }}
@@ -312,7 +312,7 @@ export function XPProgressBar({
             initial={{ scale: 0, rotate: -180 }}
             animate={isInView ? { scale: 1, rotate: 0 } : {}}
             transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-            className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-lg shadow-african"
+            className="w-12 h-12 rounded-xl bg-linear-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-lg shadow-african"
           >
             {level}
           </motion.div>
@@ -331,7 +331,7 @@ export function XPProgressBar({
 
       <div className="relative h-4 bg-gray-100 rounded-full overflow-hidden">
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-gold"
+          className="h-full rounded-full bg-linear-to-r from-primary-500 via-secondary-500 to-accent-gold"
           initial={{ width: 0 }}
           animate={isInView ? { width: `${percentage}%` } : {}}
           transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
@@ -339,7 +339,7 @@ export function XPProgressBar({
         
         {/* Sparkle effect */}
         <motion.div
-          className="absolute top-0 h-full w-4 bg-gradient-to-r from-transparent via-white/50 to-transparent"
+          className="absolute top-0 h-full w-4 bg-linear-to-r from-transparent via-white/50 to-transparent"
           animate={{
             left: ["-10%", "110%"],
           }}

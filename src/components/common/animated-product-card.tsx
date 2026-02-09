@@ -114,7 +114,7 @@ export function AnimatedProductCard({
 
           {/* Overlay gradient au hover */}
           <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+            className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"
             initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.3 }}

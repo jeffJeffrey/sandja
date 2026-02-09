@@ -317,7 +317,7 @@ export function AfricanLoader({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 export function AfricanSkeleton({ className = "" }: { className?: string }) {
   return (
     <motion.div
-      className={`bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg ${className}`}
+      className={`bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg ${className}`}
       animate={{
         backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
       }}
