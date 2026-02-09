@@ -1,149 +1,167 @@
-// "use client";
+"use client";
 
-// import { useCallback, useEffect, useState } from "react";
-// import { useWallet } from "@meshsdk/react";
-// import { useAuthStore } from "@/stores/auth-store";
-// import {
-//   formatLovelace,
-//   shortenAddress,
-//   parseAssets,
-//   isSandjaCoin,
-//   isSandjaNft,
-//   type ParsedAsset,
-// } from "@/services/cardano-client.utils";
-// import { toast } from "sonner";
+import { useState, useCallback, useEffect, useRef } from "react";
+import {
+  type CIP30WalletAPI,
+  type CIP30WalletInfo,
+  getInstalledWallets,
+  connectWallet,
+  isWalletEnabled,
+  decodeCborBalance,
+  formatLovelace,
+  shortenAddress,
+} from "@/services/cardano-wallet";
+import { useAuthStore } from "@/stores/auth-store";
+import { toast } from "sonner";
 
-// export interface WalletBalance {
-//   lovelace: string;
-//   adaFormatted: string;
-//   sandjaCoin: string;
-//   assets: ParsedAsset[];
-//   nfts: ParsedAsset[];
-// }
+export interface WalletBalance {
+  lovelace: string;
+  adaFormatted: string;
+  assets: { unit: string; quantity: string }[];
+}
 
-// export function useCardanoWallet() {
-//   const {
-//     wallet,
-//     connected,
-//     name: walletName,
-//     connecting,
-//     connect,
-//     disconnect,
-//     error,
-//   } = useWallet();
+export function useCardanoWallet() {
+  const [walletApi, setWalletApi] = useState<CIP30WalletAPI | null>(null);
+  const [connected, setConnected] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [walletName, setWalletName] = useState("");
+  const [walletIcon, setWalletIcon] = useState("");
+  const [address, setAddress] = useState("");
+  const [balance, setBalance] = useState<WalletBalance | null>(null);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  const [installedWallets, setInstalledWallets] = useState<CIP30WalletInfo[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-//   const { setWalletAddress, updateUser } = useAuthStore();
+  const { setWalletAddress } = useAuthStore();
+  const hasAutoConnected = useRef(false);
 
-//   const [address, setAddress] = useState<string>("");
-//   const [balance, setBalance] = useState<WalletBalance | null>(null);
-//   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  // Detect installed wallets on mount
+  useEffect(() => {
+    // Small delay to let wallet extensions inject into window.cardano
+    const timer = setTimeout(() => {
+      const wallets = getInstalledWallets();
+      setInstalledWallets(wallets);
 
-//   // Fetch address when connected
-//   useEffect(() => {
-//     if (connected && wallet) {
-//       fetchAddress();
-//       fetchBalance();
-//     } else {
-//       setAddress("");
-//       setBalance(null);
-//       setWalletAddress(null);
-//     }
-//   }, [connected, wallet]);
+      // Auto-reconnect if previously connected
+      const lastWallet = localStorage.getItem("sandja_wallet_id");
+      if (lastWallet && !hasAutoConnected.current) {
+        hasAutoConnected.current = true;
+        isWalletEnabled(lastWallet).then((enabled) => {
+          if (enabled) {
+            handleConnect(lastWallet, true);
+          }
+        });
+      }
+    }, 500);
 
-//   const fetchAddress = useCallback(async () => {
-//     if (!wallet) return;
-//     try {
-//       const addr = await wallet.getChangeAddress();
-//       setAddress(addr);
-//       setWalletAddress(addr);
-//     } catch (err) {
-//       console.error("Failed to get address:", err);
-//     }
-//   }, [wallet, setWalletAddress]);
+    return () => clearTimeout(timer);
+  }, []);
 
-//   const fetchBalance = useCallback(async () => {
-//     if (!wallet) return;
-//     setIsLoadingBalance(true);
-//     try {
-//       const rawBalance = await wallet.getBalance();
-//       const lovelaceAsset = rawBalance.find(
-//         (a: any) => a.unit === "lovelace"
-//       );
-//       const lovelace = lovelaceAsset?.quantity || "0";
+  const fetchBalance = useCallback(async (api: CIP30WalletAPI) => {
+    setIsLoadingBalance(true);
+    try {
+      const cborBalance = await api.getBalance();
+      const decoded = decodeCborBalance(cborBalance);
 
-//       const parsed = parseAssets(rawBalance);
+      setBalance({
+        lovelace: decoded.lovelace,
+        adaFormatted: formatLovelace(decoded.lovelace),
+        assets: decoded.assets,
+      });
+    } catch (err) {
+      console.error("Failed to get balance:", err);
+    } finally {
+      setIsLoadingBalance(false);
+    }
+  }, []);
 
-//       const sndj = parsed.find((a) => isSandjaCoin(a.unit));
-//       const sandjaCoinAmount = sndj?.quantity || "0";
+  const fetchAddress = useCallback(
+    async (api: CIP30WalletAPI) => {
+      try {
+        const changeAddr = await api.getChangeAddress();
+        setAddress(changeAddr);
+        setWalletAddress(changeAddr);
+      } catch (err) {
+        console.error("Failed to get address:", err);
+      }
+    },
+    [setWalletAddress]
+  );
 
-//       const nfts = parsed.filter(
-//         (a) => a.unit !== "lovelace" && isSandjaNft(a.policyId)
-//       );
+  const handleConnect = useCallback(
+    async (walletId: string, silent = false) => {
+      setConnecting(true);
+      setError(null);
+      try {
+        const api = await connectWallet(walletId);
+        setWalletApi(api);
+        setConnected(true);
 
-//       const assets = parsed.filter(
-//         (a) =>
-//           a.unit !== "lovelace" &&
-//           !isSandjaNft(a.policyId) &&
-//           !isSandjaCoin(a.unit)
-//       );
+        // Get wallet info
+        const walletInfo = getInstalledWallets().find((w) => w.id === walletId);
+        setWalletName(walletInfo?.name || walletId);
+        setWalletIcon(walletInfo?.icon || "");
 
-//       setBalance({
-//         lovelace,
-//         adaFormatted: formatLovelace(lovelace),
-//         sandjaCoin: sandjaCoinAmount,
-//         assets,
-//         nfts,
-//       });
+        // Save for auto-reconnect
+        localStorage.setItem("sandja_wallet_id", walletId);
 
-//       if (sandjaCoinAmount !== "0") {
-//         updateUser({
-//           sandjaCoin: Number(sandjaCoinAmount) / Math.pow(10, 6),
-//         });
-//       }
-//     } catch (err) {
-//       console.error("Failed to get balance:", err);
-//     } finally {
-//       setIsLoadingBalance(false);
-//     }
-//   }, [wallet, updateUser]);
+        // Fetch data
+        await fetchAddress(api);
+        await fetchBalance(api);
 
-//   const connectWallet = useCallback(
-//     async (walletId: string) => {
-//       try {
-//         await connect(walletId);
-//         toast.success("Wallet connecté !");
-//       } catch (err) {
-//         toast.error("Échec de la connexion au wallet");
-//         console.error("Wallet connection error:", err);
-//       }
-//     },
-//     [connect]
-//   );
+        if (!silent) {
+          toast.success("Wallet connecté !");
+        }
+      } catch (err: any) {
+        const msg = err?.message || "Échec de la connexion";
+        setError(msg);
+        if (!silent) {
+          toast.error(msg);
+        }
+        console.error("Wallet connection error:", err);
+      } finally {
+        setConnecting(false);
+      }
+    },
+    [fetchAddress, fetchBalance]
+  );
 
-//   const disconnectWallet = useCallback(async () => {
-//     try {
-//       disconnect();
-//       setAddress("");
-//       setBalance(null);
-//       setWalletAddress(null);
-//       toast.success("Wallet déconnecté");
-//     } catch (err) {
-//       toast.error("Échec de la déconnexion");
-//     }
-//   }, [disconnect, setWalletAddress]);
+  const handleDisconnect = useCallback(() => {
+    setWalletApi(null);
+    setConnected(false);
+    setWalletName("");
+    setWalletIcon("");
+    setAddress("");
+    setBalance(null);
+    setError(null);
+    setWalletAddress(null);
+    localStorage.removeItem("sandja_wallet_id");
+    toast.success("Wallet déconnecté");
+  }, [setWalletAddress]);
 
-//   return {
-//     wallet,
-//     connected,
-//     connecting,
-//     walletName,
-//     error,
-//     address,
-//     shortAddress: shortenAddress(address),
-//     balance,
-//     isLoadingBalance,
-//     connectWallet,
-//     disconnectWallet,
-//     refreshBalance: fetchBalance,
-//   };
-// }
+  const refreshBalance = useCallback(async () => {
+    if (walletApi) {
+      await fetchBalance(walletApi);
+    }
+  }, [walletApi, fetchBalance]);
+
+  return {
+    // State
+    connected,
+    connecting,
+    walletName,
+    walletIcon,
+    address,
+    shortAddress: shortenAddress(address),
+    balance,
+    isLoadingBalance,
+    installedWallets,
+    error,
+    walletApi,
+
+    // Actions
+    connect: handleConnect,
+    disconnect: handleDisconnect,
+    refreshBalance,
+  };
+}

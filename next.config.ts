@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  
+
   // Headers de sécurité
   async headers() {
     return [
@@ -37,14 +37,13 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  
-  // // Configuration expérimentale
+
+  // Configuration expérimentale
   experimental: {
-    // Optimisations
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
-  
-  // Webpack config pour Three.js
+
+  // Webpack config pour Three.js (canvas)
   webpack: (config) => {
     config.externals = [...(config.externals || []), { canvas: "canvas" }];
     return config;

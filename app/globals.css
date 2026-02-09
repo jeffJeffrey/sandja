@@ -4,7 +4,6 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
-@import "@meshsdk/react/styles.css";
 @custom-variant dark (&:is(.dark *));
 
 /* @import "@meshsdk/react/styles.css"; */
