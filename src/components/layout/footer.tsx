@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { siteConfig } from "@/config/site";
 import Image from "next/image";
 import { 
   Facebook, 
@@ -16,6 +17,13 @@ import {
 export function Footer() {
   const t = useTranslations("footer");
   const currentYear = new Date().getFullYear();
+
+  const socialIconMap: Record<string, React.ReactNode> = {
+    Twitter: <Twitter className="w-5 h-5" />,
+    Instagram: <Instagram className="w-5 h-5" />,
+    Facebook: <Facebook className="w-5 h-5" />,
+    Linkedin: <Linkedin className="w-5 h-5" />,
+  };
 
   const footerLinks = {
     product: [
@@ -43,12 +51,7 @@ export function Footer() {
     ],
   };
 
-  const socialLinks = [
-    { href: "https://facebook.com/sandja_app", icon: Facebook, label: "Facebook" },
-    { href: "https://twitter.com/sandja_app", icon: Twitter, label: "Twitter" },
-    { href: "https://instagram.com/sandja_app", icon: Instagram, label: "Instagram" },
-    { href: "https://linkedin.com/company/sandja", icon: Linkedin, label: "LinkedIn" },
-  ];
+  
 
   return (
     <footer className="bg-gray-900 text-gray-300">
@@ -77,19 +80,19 @@ export function Footer() {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3 text-gray-400">
                 <MapPin className="w-4 h-4 text-primary-400" />
-                <span>Dschang, Cameroun</span>
+                <span>{siteConfig.contact.address}</span>
               </div>
               <div className="flex items-center gap-3 text-gray-400">
                 <Mail className="w-4 h-4 text-primary-400" />
-                <a href="mailto:contact@sandja.app" className="hover:text-white transition-colors">
-                  contact@sandja.app
+                <a href={`mailto:${siteConfig.contact.email}`} className="hover:text-white transition-colors">
+                  {siteConfig.contact.email}
                 </a>
               </div>
             </div>
 
             {/* Réseaux sociaux */}
             <div className="flex items-center gap-3 mt-6">
-              {socialLinks.map((social) => (
+              {siteConfig.social.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
@@ -98,7 +101,7 @@ export function Footer() {
                   className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all duration-300"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5" />
+                  {socialIconMap[social.label]}
                 </a>
               ))}
             </div>
