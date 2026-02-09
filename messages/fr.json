@@ -483,5 +483,36 @@
       "9": "Grand Initié",
       "10": "Légende Vivante"
     }
+  },
+
+  "wallet": {
+    "title": "Mon Portefeuille",
+    "connect": "Connecter",
+    "disconnect": "Déconnecter",
+    "connectTitle": "Connectez votre wallet Cardano",
+    "connectSubtitle": "Connectez votre portefeuille pour gérer vos actifs, NFTs et SandjaCoins sur la blockchain Cardano.",
+    "selectWallet": "Choisissez votre portefeuille",
+    "walletInstalled": "Installé — Cliquer pour connecter",
+    "walletNotInstalled": "Non installé — Cliquer pour télécharger",
+    "noWalletsDetected": "Aucun wallet Cardano détecté. Installez-en un pour commencer.",
+    "mainBalance": "Solde principal",
+    "balance": "Solde",
+    "addressCopied": "Adresse copiée !",
+    "viewOnExplorer": "Voir sur l'explorateur Cardano",
+    "tabs": {
+      "assets": "Actifs",
+      "nfts": "NFTs",
+      "transactions": "Transactions"
+    },
+    "noAssets": "Aucun autre actif dans ce portefeuille",
+    "noNfts": "Aucun NFT SANDJA",
+    "noNftsDescription": "Vos certificats d'authenticité et pagnes numérisés apparaîtront ici",
+    "nfts": "Mes NFTs",
+    "transactions": {
+      "title": "Transactions",
+      "quizReward": "Récompense de quiz",
+      "nftPurchase": "Achat de NFT",
+      "dailyReward": "Récompense quotidienne"
+    }
   }
 }

@@ -1,12 +1,13 @@
 "use client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import { ThemeProvider } from "next-themes";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
+import { CardanoProvider } from "./cardano-provider";
 
 interface AppProvidersProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export function AppProviders({ children }: AppProvidersProps) {
@@ -15,7 +16,7 @@ export function AppProviders({ children }: AppProvidersProps) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000, // 1 minute
+            staleTime: 60 * 1000,
             refetchOnWindowFocus: false,
           },
         },
@@ -27,24 +28,27 @@ export function AppProviders({ children }: AppProvidersProps) {
       <ThemeProvider
         attribute="class"
         defaultTheme="light"
-        enableSystem
+        enableSystem={false}
         disableTransitionOnChange
       >
-        {children}
-        <Toaster
-          position="top-right"
-          richColors
-          closeButton
-          toastOptions={{
-            style: {
-              background: "hsl(var(--card))",
-              color: "hsl(var(--card-foreground))",
-              border: "1px solid hsl(var(--border))",
-            },
-          }}
-        />
+        <CardanoProvider>
+          {children}
+
+          <Toaster
+            position="top-right"
+            expand
+            richColors
+            closeButton
+            toastOptions={{
+              classNames: {
+                toast: "font-sans",
+                title: "font-medium",
+                description: "text-sm",
+              },
+            }}
+          />
+        </CardanoProvider>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

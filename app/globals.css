@@ -7,6 +7,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@import "@meshsdk/react/styles.css";
+
 /* ============================================
    VARIABLES CSS SANDJA - THÈME AFRICAIN
    ============================================ */

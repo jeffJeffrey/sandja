@@ -481,5 +481,35 @@
       "8": "Village Elder",
       "9": "Grand Initiate",
       "10": "Living Legend"
+    },
+    "wallet": {
+    "title": "My Wallet",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "connectTitle": "Connect your Cardano wallet",
+    "connectSubtitle": "Connect your wallet to manage your assets, NFTs and SandjaCoins on the Cardano blockchain.",
+    "selectWallet": "Choose your wallet",
+    "walletInstalled": "Installed — Click to connect",
+    "walletNotInstalled": "Not installed — Click to download",
+    "noWalletsDetected": "No Cardano wallet detected. Install one to get started.",
+    "mainBalance": "Main balance",
+    "balance": "Balance",
+    "addressCopied": "Address copied!",
+    "viewOnExplorer": "View on Cardano explorer",
+    "tabs": {
+      "assets": "Assets",
+      "nfts": "NFTs",
+      "transactions": "Transactions"
+    },
+    "noAssets": "No other assets in this wallet",
+    "noNfts": "No SANDJA NFTs",
+    "noNftsDescription": "Your authenticity certificates and digitized textiles will appear here",
+    "nfts": "My NFTs",
+    "transactions": {
+      "title": "Transactions",
+      "quizReward": "Quiz reward",
+      "nftPurchase": "NFT purchase",
+      "dailyReward": "Daily reward"
     }
+  }
 }
