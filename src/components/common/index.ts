@@ -27,3 +27,5 @@ export {
   AnimatedProgress,
   XPProgressBar,
 } from "./animated-counter";
+
+export { FloatingPagneBackground } from "./floating-pagne-background";

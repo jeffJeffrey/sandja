@@ -20,7 +20,10 @@
     "yes": "Oui",
     "no": "Non",
     "or": "ou",
-    "and": "et"
+    "and": "et",
+    "noResults": "Aucun résultat",
+    "seeAll": "Voir tout",
+    "language": "Langue"
   },
   "nav": {
     "home": "Accueil",
@@ -31,116 +34,128 @@
     "map": "Carte",
     "about": "À propos",
     "scanner": "Scanner",
-    "profile": "Profil"
+    "profile": "Profil",
+    "wallet": "Portefeuille",
+    "events": "Événements"
   },
   "auth": {
-    "loginTitle": "connexion",
-    "registerTitle": "inscription",
+    "quote": "Le pagne est plus qu'un tissu. Il est la mémoire vivante de nos peuples, le langage silencieux de nos ancêtres.",
+    "quoteAuthor": "Proverbe Bamiléké",
+    "loginTitle": "Connexion",
+    "registerTitle": "Inscription",
+    "stats": {
+      "symbols": "Symboles",
+      "regions": "Régions",
+      "heritage": "Héritage"
+    },
     "login": {
       "title": "Bon retour !",
       "subtitle": "Connectez-vous pour continuer votre exploration",
-      "email": "Adresse email",
-      "password": "Mot de passe",
+      "googleButton": "Continuer avec Google",
+      "orDivider": "ou",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "votre@email.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Entrez votre mot de passe",
       "forgotPassword": "Mot de passe oublié ?",
       "rememberMe": "Se souvenir de moi",
-      "submit": "Se connecter",
-      "orContinueWith": "Ou continuer avec",
+      "submitButton": "Se connecter",
+      "loading": "Connexion en cours...",
       "noAccount": "Pas encore de compte ?",
-      "signUp": "Créer un compte"
+      "signUpLink": "Créer un compte",
+      "orContinueWith": "Ou continuer avec"
     },
     "register": {
       "title": "Rejoignez SANDJA",
       "subtitle": "Créez votre compte et explorez le patrimoine africain",
-      "name": "Nom complet",
-      "email": "Adresse email",
-      "password": "Mot de passe",
-      "confirmPassword": "Confirmer le mot de passe",
-      "acceptTerms": "J'accepte les",
-      "termsLink": "conditions d'utilisation",
-      "and": "et la",
-      "privacyLink": "politique de confidentialité",
-      "submit": "Créer mon compte",
+      "googleButton": "S'inscrire avec Google",
+      "orDivider": "ou",
+      "nameLabel": "Nom complet",
+      "namePlaceholder": "Votre nom complet",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "votre@email.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Créez un mot de passe sécurisé",
+      "confirmPasswordLabel": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Retapez votre mot de passe",
+      "submitButton": "Créer mon compte",
+      "loading": "Création en cours...",
+      "hasAccount": "Déjà un compte ?",
+      "loginLink": "Se connecter",
       "orContinueWith": "Ou continuer avec",
-      "haveAccount": "Déjà un compte ?",
-      "signIn": "Se connecter"
+      "terms": {
+        "prefix": "En créant un compte, vous acceptez nos",
+        "termsLink": "Conditions d'utilisation",
+        "and": "et notre",
+        "privacyLink": "Politique de confidentialité"
+      },
+      "strength": {
+        "weak": "Faible",
+        "fair": "Moyen",
+        "good": "Bon",
+        "strong": "Fort"
+      },
+      "requirements": {
+        "length": "6+ caractères",
+        "uppercase": "Une majuscule",
+        "lowercase": "Une minuscule",
+        "number": "Un chiffre"
+      }
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié ?",
+      "subtitle": "Entrez votre email et nous vous enverrons un lien de réinitialisation",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "votre@email.com",
+      "submitButton": "Envoyer le lien",
+      "loading": "Envoi en cours...",
+      "backToLogin": "Retour à la connexion",
+      "successTitle": "Email envoyé !",
+      "successMessage": "Vérifiez votre boîte de réception pour le lien de réinitialisation."
     },
     "errors": {
-      "emailRequired": "L'email est requis",
-      "emailInvalid": "Email invalide",
-      "passwordRequired": "Le mot de passe est requis",
-      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
-      "passwordMismatch": "Les mots de passe ne correspondent pas",
-      "nameRequired": "Le nom est requis",
-      "acceptTermsRequired": "Vous devez accepter les conditions",
-      "loginFailed": "Échec de la connexion. Vérifiez vos identifiants.",
-      "registerFailed": "Échec de l'inscription. Veuillez réessayer."
+      "loginFailed": "Échec de la connexion",
+      "invalidCredentials": "Email ou mot de passe incorrect",
+      "registerFailed": "Échec de l'inscription",
+      "emailExists": "Un compte avec cet email existe déjà",
+      "socialLoginFailed": "Échec de la connexion sociale",
+      "logoutFailed": "Échec de la déconnexion",
+      "unexpected": "Une erreur inattendue s'est produite. Veuillez réessayer."
+    },
+    "success": {
+      "loginSuccess": "Connexion réussie",
+      "welcome": "Bienvenue sur SANDJA !",
+      "registerSuccess": "Inscription réussie",
+      "accountCreated": "Votre compte a été créé avec succès",
+      "logoutSuccess": "Vous avez été déconnecté"
     },
     "logout": "Déconnexion"
   },
-  "login": {
-    "title": "Bon retour !",
-    "subtitle": "Connectez-vous pour continuer votre exploration",
-    "email": "Adresse email",
-    "password": "Mot de passe",
-    "forgotPassword": "Mot de passe oublié ?",
-    "rememberMe": "Se souvenir de moi",
-    "submit": "Se connecter",
-    "orContinueWith": "Ou continuer avec",
-    "noAccount": "Pas encore de compte ?",
-    "signUp": "Créer un compte"
-  },
-  "register": {
-    "title": "Rejoignez SANDJA",
-    "subtitle": "Créez votre compte et explorez le patrimoine africain",
-    "name": "Nom complet",
-    "email": "Adresse email",
-    "password": "Mot de passe",
-    "confirmPassword": "Confirmer le mot de passe",
-    "acceptTerms": "J'accepte les",
-    "termsLink": "conditions d'utilisation",
-    "and": "et la",
-    "privacyLink": "politique de confidentialité",
-    "submit": "Créer mon compte",
-    "orContinueWith": "Ou continuer avec",
-    "haveAccount": "Déjà un compte ?",
-    "signIn": "Se connecter"
-  },
-  "errors": {
+  "validation": {
     "emailRequired": "L'email est requis",
-    "emailInvalid": "Email invalide",
-    "passwordRequired": "Le mot de passe est requis",
-    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
-    "passwordMismatch": "Les mots de passe ne correspondent pas",
-    "nameRequired": "Le nom est requis",
-    "acceptTermsRequired": "Vous devez accepter les conditions",
-    "loginFailed": "Échec de la connexion. Vérifiez vos identifiants.",
-    "registerFailed": "Échec de l'inscription. Veuillez réessayer.",
-    "notFound": {
-      "title": "Page non trouvée",
-      "description": "La page que vous recherchez n'existe pas.",
-      "backHome": "Retour à l'accueil"
-    },
-    "serverError": {
-      "title": "Erreur serveur",
-      "description": "Une erreur inattendue s'est produite.",
-      "retry": "Réessayer"
-    }
+    "emailInvalid": "Adresse email invalide",
+    "passwordMin": "Le mot de passe doit contenir au moins 6 caractères",
+    "passwordMax": "Le mot de passe ne peut pas dépasser 100 caractères",
+    "nameMin": "Le nom doit contenir au moins 2 caractères",
+    "nameMax": "Le nom ne peut pas dépasser 50 caractères",
+    "confirmPasswordRequired": "La confirmation du mot de passe est requise",
+    "passwordMismatch": "Les mots de passe ne correspondent pas"
   },
   "landing": {
     "hero": {
       "badge": "Propulsé par Cardano",
-      "title": "Redécouvrez l'Âme du Pagne Africain",
-      "subtitle": "Une plateforme unique qui allie technologie blockchain et patrimoine culturel pour préserver et valoriser les textiles traditionnels africains.",
+      "title": "Redécouvrez l'Âme du Textile Africain",
+      "subtitle": "Une plateforme unique combinant technologie blockchain et patrimoine culturel pour préserver et valoriser les textiles traditionnels africains.",
       "cta": "Commencer l'exploration",
       "ctaSecondary": "Voir la démo"
     },
     "problem": {
       "badge": "Le constat",
       "title": "Un Patrimoine en Danger",
-      "subtitle": "Les textiles africains traditionnels font face à des défis majeurs qui menacent leur survie",
-      "description": "Face à la mondialisation et l'industrialisation, les savoirs ancestraux du textile africain se perdent. Les jeunes générations ne connaissent plus la signification des motifs que portaient leurs ancêtres.",
+      "subtitle": "Les textiles traditionnels africains font face à des défis majeurs menaçant leur survie",
+      "description": "Face à la mondialisation et l'industrialisation, le savoir textile ancestral se perd. Les jeunes générations ne connaissent plus la signification des motifs portés par leurs ancêtres.",
       "stat1": "70%",
-      "stat1Label": "des textiles sur nos marchés sont des importations",
+      "stat1Label": "des textiles sur nos marchés sont importés",
       "stat2": "Perte",
       "stat2Label": "de la signification culturelle des motifs",
       "problems": {
@@ -150,7 +165,7 @@
         },
         "meaning": {
           "title": "Perte de sens",
-          "description": "La signification des symboles se perd avec les générations"
+          "description": "Les significations des symboles se perdent entre générations"
         },
         "value": {
           "title": "Dévalorisation",
@@ -160,23 +175,23 @@
     },
     "solution": {
       "badge": "Notre solution",
-      "title": "SANDJA : Le Pagne du Futur",
-      "subtitle": "Une approche innovante qui combine tradition et technologie pour préserver et valoriser le patrimoine textile africain",
+      "title": "SANDJA : Le Textile du Futur",
+      "subtitle": "Une approche innovante combinant tradition et technologie pour préserver et valoriser le patrimoine textile africain",
       "feature1": {
         "title": "Éducation Interactive",
         "description": "Découvrez l'histoire et la signification profonde de chaque symbole textile"
       },
       "feature2": {
         "title": "Scanner IA",
-        "description": "Identifiez les motifs instantanément avec votre caméra smartphone"
+        "description": "Identifiez les motifs instantanément avec l'appareil photo de votre smartphone"
       },
       "feature3": {
         "title": "Certification Blockchain",
-        "description": "Authentifiez vos pagnes avec des NFTs sur la blockchain Cardano"
+        "description": "Authentifiez vos textiles avec des NFT sur la blockchain Cardano"
       },
       "feature4": {
         "title": "Apprentissage Ludique",
-        "description": "Gagnez des récompenses et badges en explorant le patrimoine"
+        "description": "Gagnez des récompenses et des badges en explorant le patrimoine"
       },
       "features": {
         "education": {
@@ -189,7 +204,7 @@
         },
         "blockchain": {
           "title": "Certification Blockchain",
-          "description": "Authentifiez vos pagnes avec des NFTs sur Cardano"
+          "description": "Authentifiez vos textiles avec des NFT sur Cardano"
         },
         "gamification": {
           "title": "Apprentissage Ludique",
@@ -203,15 +218,15 @@
       "subtitle": "Une plateforme complète pour explorer, apprendre et préserver le patrimoine textile africain",
       "explore": {
         "title": "Explorer les Symboles",
-        "description": "Bibliothèque complète des motifs textiles africains"
+        "description": "Bibliothèque complète de motifs textiles africains"
       },
       "scanner": {
         "title": "Scanner IA",
-        "description": "Reconnaissance instantanée des motifs par caméra"
+        "description": "Reconnaissance instantanée de motifs via la caméra"
       },
       "ar": {
         "title": "Réalité Augmentée",
-        "description": "Visualisez les pagnes sur vous en temps réel"
+        "description": "Visualisez les textiles sur vous en temps réel"
       },
       "map": {
         "title": "Carte Interactive",
@@ -223,10 +238,10 @@
       },
       "marketplace": {
         "title": "Marketplace",
-        "description": "Achetez des pagnes authentiques certifiés"
+        "description": "Achetez des textiles authentiques certifiés"
       },
       "wallet": {
-        "title": "Wallet NFT",
+        "title": "Portefeuille NFT",
         "description": "Gérez vos certificats d'authenticité"
       },
       "events": {
@@ -240,28 +255,28 @@
     },
     "stats": {
       "title": "SANDJA en chiffres",
-      "subtitle": "Une communauté grandissante de passionnés",
+      "subtitle": "Une communauté croissante de passionnés",
       "symbols": "Symboles",
       "pagnes": "Pagnes",
       "users": "Utilisateurs",
       "regions": "Régions"
     },
     "testimonials": {
-      "title": "Ce qu'ils en disent",
+      "title": "Ce qu'ils disent",
       "subtitle": "Découvrez les témoignages de notre communauté"
     },
     "cta": {
       "title": "Prêt à explorer ?",
       "subtitle": "Rejoignez la communauté SANDJA et participez à la préservation du patrimoine textile africain",
-      "button": "Créer mon compte gratuit",
+      "button": "Créer un compte gratuitement",
       "trust": "Rejoint par plus de 1000 passionnés"
     }
   },
   "explore": {
     "hero": {
       "title": "Explorez les Symboles Africains",
-      "subtitle": "Plongez dans l'univers fascinant des motifs textiles africains. Chaque symbole raconte une histoire millénaire.",
-      "searchPlaceholder": "Rechercher un symbole, un thème, une région...",
+      "subtitle": "Plongez dans le monde fascinant des motifs textiles africains. Chaque symbole raconte une histoire millénaire.",
+      "searchPlaceholder": "Rechercher un symbole, thème, région...",
       "searchButton": "Rechercher"
     },
     "filters": {
@@ -298,7 +313,7 @@
       "count": "résultats",
       "loadMore": "Charger plus",
       "noResults": "Aucun symbole trouvé",
-      "tryAgain": "Essayez avec d'autres filtres"
+      "tryAgain": "Essayez des filtres différents"
     },
     "regions": {
       "title": "Explorer par Région",
@@ -310,7 +325,7 @@
     "tabs": {
       "meaning": "Signification",
       "history": "Histoire",
-      "usage": "Utilisations"
+      "usage": "Utilisation"
     },
     "actions": {
       "learnMore": "En savoir plus",
@@ -320,7 +335,7 @@
     },
     "relatedPagnes": "Pagnes avec ce symbole",
     "relatedSymbols": "Symboles similaires",
-    "viewAll": "Voir tous",
+    "viewAll": "Voir tout",
     "pronunciation": "Prononciation",
     "origin": "Origine",
     "category": "Catégorie",
@@ -328,9 +343,9 @@
   },
   "marketplace": {
     "hero": {
-      "badge": "Authenticité certifiée blockchain",
-      "title": "Marketplace des Pagnes Africains",
-      "subtitle": "Découvrez et achetez des pagnes authentiques, directement des artisans. Chaque pièce est certifiée sur la blockchain Cardano.",
+      "badge": "Authenticité certifiée par blockchain",
+      "title": "Marketplace de Pagnes Africains",
+      "subtitle": "Découvrez et achetez des pagnes authentiques, directement auprès des artisans. Chaque pièce est certifiée sur la blockchain Cardano.",
       "features": {
         "authentic": "100% Authentique",
         "shipping": "Livraison mondiale",
@@ -340,10 +355,10 @@
     },
     "featured": {
       "title": "Sélection Vedette",
-      "subtitle": "Les pièces les plus prisées par notre communauté",
+      "subtitle": "Les pièces les plus populaires de notre communauté",
       "viewAll": "Voir tout",
       "addToCart": "Ajouter au panier",
-      "viewDetails": "Voir détails"
+      "viewDetails": "Voir les détails"
     },
     "filters": {
       "title": "Filtres",
@@ -355,14 +370,14 @@
       "inStockOnly": "En stock uniquement",
       "types": {
         "physical": "Pagne physique",
-        "digital": "Design digital",
+        "digital": "Design numérique",
         "nft": "NFT",
         "license": "Licence d'impression"
       },
       "sort": {
         "newest": "Plus récent",
-        "priceLow": "Prix croissant",
-        "priceHigh": "Prix décroissant",
+        "priceLow": "Prix : croissant",
+        "priceHigh": "Prix : décroissant",
         "popular": "Populaire"
       }
     },
@@ -384,7 +399,7 @@
     "quantity": "Quantité"
   },
   "footer": {
-    "description": "Redonner sens et valeur au pagne africain par la technologie. Une plateforme dédiée à la préservation du patrimoine textile africain.",
+    "description": "Redonner sens et valeur au pagne africain grâce à la technologie. Une plateforme dédiée à la préservation du patrimoine textile africain.",
     "explore": "Explorer",
     "marketplace": "Boutique",
     "learn": "Apprendre",
@@ -404,7 +419,7 @@
   },
   "profile": {
     "title": "Mon Profil",
-    "overview": "Aperçu",
+    "overview": "Vue d'ensemble",
     "orders": "Mes commandes",
     "collection": "Ma collection",
     "settings": "Paramètres",
@@ -414,11 +429,23 @@
     "favorites": "Favoris"
   },
   "wallet": {
-    "title": "Mon Wallet",
-    "connect": "Connecter le wallet",
+    "title": "Mon Portefeuille",
+    "connect": "Connecter le portefeuille",
     "disconnect": "Déconnecter",
     "balance": "Solde",
-    "nfts": "Mes NFTs",
+    "nfts": "Mes NFT",
     "transactions": "Transactions"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page introuvable",
+      "description": "La page que vous recherchez n'existe pas.",
+      "backHome": "Retour à l'accueil"
+    },
+    "serverError": {
+      "title": "Erreur serveur",
+      "description": "Une erreur inattendue s'est produite.",
+      "retry": "Réessayer"
+    }
   }
 }

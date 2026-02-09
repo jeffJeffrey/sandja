@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { LoginForm } from "@/components/auth";
+import { LoginForm } from "@/components/forms/login-form";
 import type { Metadata } from "next";
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-  title: "Connexion",
+  title: "Connexion | SANDJA",
   description: "Connectez-vous à votre compte SANDJA",
 };
 

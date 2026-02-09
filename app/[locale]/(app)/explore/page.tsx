@@ -1,3 +1,4 @@
+// app/[locale]/(app)/explore/page.tsx
 import { setRequestLocale } from "next-intl/server";
 import { ExploreHero } from "@/components/explore";
 import { ExploreFilters } from "@/components/explore";
