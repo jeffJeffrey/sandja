@@ -1,6 +1,4 @@
-// src/components/providers/app-providers.tsx
 "use client";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";

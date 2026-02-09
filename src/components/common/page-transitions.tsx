@@ -313,7 +313,6 @@ export function AfricanLoader({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   );
 }
 
-// Skeleton avec animation africaine
 export function AfricanSkeleton({ className = "" }: { className?: string }) {
   return (
     <motion.div
