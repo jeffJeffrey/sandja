@@ -33,18 +33,18 @@ export function LandingHero() {
   const t = useTranslations("landing.hero");
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-earth-50 via-cream-50 to-white">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-linear-to-b from-earth-50 via-cream-50 to-white">
       {/* Motif de fond africain animé */}
       <div className="absolute inset-0 african-pattern-ndop opacity-20 animate-weave" />
       
-      {/* Gradient overlay avec animation */}
+      {/* linear overlay avec animation */}
       <motion.div 
         className="absolute inset-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-earth-50/95 via-cream-100/90 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-earth-50/95 via-cream-100/90 to-transparent" />
       </motion.div>
       
       {/* Éléments décoratifs animés avec blur */}
@@ -88,7 +88,7 @@ export function LandingHero() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-700 text-sm font-medium mb-6 shadow-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-primary-100 to-secondary-100 text-primary-700 text-sm font-medium mb-6 shadow-sm"
             >
               <motion.span 
                 className="w-2 h-2 rounded-full bg-accent-gold"
@@ -110,7 +110,7 @@ export function LandingHero() {
               transition={{ delay: 0.4, duration: 0.8 }}
             >
               <motion.span 
-                className="text-gradient-african inline-block"
+                className="text-linear-african inline-block"
                 animate={{ 
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
                 }}
@@ -148,7 +148,7 @@ export function LandingHero() {
                   </span>
                   {/* Effet shimmer */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
                     animate={{ x: ["-100%", "100%"] }}
                     transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                   />
@@ -205,7 +205,7 @@ export function LandingHero() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="relative h-[400px] md:h-[500px] lg:h-[600px]"
+            className="relative h-100 md:h-125 lg:h-150"
           >
             {/* Cercle décoratif derrière */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
