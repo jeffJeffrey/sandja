@@ -1,0 +1,20 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer ring -->
+  <circle cx="100" cy="100" r="96" fill="#DAA520" stroke="#B8860B" stroke-width="2"/>
+  <!-- Inner ring -->
+  <circle cx="100" cy="100" r="82" fill="#F5D060" stroke="#DAA520" stroke-width="1.5"/>
+  <!-- Inner subtle ring -->
+  <circle cx="100" cy="100" r="72" fill="none" stroke="#DAA520" stroke-width="0.5" stroke-dasharray="4 3"/>
+  <!-- African pattern border (zigzag) -->
+  <path d="M50 40L55 48L60 40L65 48L70 40L75 48L80 40" stroke="#C49B20" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M120 40L125 48L130 40L135 48L140 40L145 48L150 40" stroke="#C49B20" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M50 152L55 160L60 152L65 160L70 152L75 160L80 152" stroke="#C49B20" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M120 152L125 160L130 152L135 160L140 152L145 160L150 152" stroke="#C49B20" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Letter S - stylized -->
+  <text x="100" y="125" text-anchor="middle" font-size="80" font-weight="bold" fill="#8B6914" font-family="serif">S</text>
+  <!-- Small diamond accents -->
+  <path d="M100 28L104 34L100 40L96 34Z" fill="#B8860B" opacity="0.6"/>
+  <path d="M100 160L104 166L100 172L96 166Z" fill="#B8860B" opacity="0.6"/>
+  <path d="M28 100L34 104L28 108L22 104Z" fill="#B8860B" opacity="0.6" transform="rotate(-90 28 104)"/>
+  <path d="M172 100L178 104L172 108L166 104Z" fill="#B8860B" opacity="0.6" transform="rotate(90 172 104)"/>
+</svg>

@@ -1,106 +1,83 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { CartItem, Product } from "@/types";
+
+export interface CartProduct {
+  id: string;
+  slug: string;
+  nameKey: string;
+  price: number;
+  currency: string;
+  type: string;
+  images: string[];
+}
+
+export interface CartItem {
+  product: CartProduct;
+  quantity: number;
+}
 
 interface CartState {
   items: CartItem[];
-  isOpen: boolean;
-  
-  // Actions
-  addItem: (product: Product, quantity?: number) => void;
+
+  addItem: (product: CartProduct, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
-  toggleCart: () => void;
-  openCart: () => void;
-  closeCart: () => void;
-  
-  // Computed
+
   getTotalItems: () => number;
   getSubtotal: () => number;
-  getTotal: () => number;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      isOpen: false,
-      
-      addItem: (product: Product, quantity: number = 1) => {
-        const items = get().items;
-        const existingItem = items.find((item) => item.productId === product.id);
-        
-        if (existingItem) {
-          set({
-            items: items.map((item) =>
-              item.productId === product.id
-                ? { ...item, quantity: item.quantity + quantity }
-                : item
-            ),
-          });
-        } else {
-          set({
-            items: [...items, { productId: product.id, product, quantity }],
-          });
-        }
-      },
-      
-      removeItem: (productId: string) => {
-        set({
-          items: get().items.filter((item) => item.productId !== productId),
-        });
-      },
-      
-      updateQuantity: (productId: string, quantity: number) => {
-        if (quantity <= 0) {
-          get().removeItem(productId);
-          return;
-        }
-        
-        set({
-          items: get().items.map((item) =>
-            item.productId === productId ? { ...item, quantity } : item
-          ),
-        });
-      },
-      
-      clearCart: () => {
-        set({ items: [] });
-      },
-      
-      toggleCart: () => {
-        set({ isOpen: !get().isOpen });
-      },
-      
-      openCart: () => {
-        set({ isOpen: true });
-      },
-      
-      closeCart: () => {
-        set({ isOpen: false });
-      },
-      
-      getTotalItems: () => {
-        return get().items.reduce((total, item) => total + item.quantity, 0);
-      },
-      
-      getSubtotal: () => {
-        return get().items.reduce(
+
+      addItem: (product, quantity = 1) =>
+        set((state) => {
+          const existing = state.items.find(
+            (item) => item.product.id === product.id
+          );
+          if (existing) {
+            return {
+              items: state.items.map((item) =>
+                item.product.id === product.id
+                  ? { ...item, quantity: item.quantity + quantity }
+                  : item
+              ),
+            };
+          }
+          return { items: [...state.items, { product, quantity }] };
+        }),
+
+      removeItem: (productId) =>
+        set((state) => ({
+          items: state.items.filter((item) => item.product.id !== productId),
+        })),
+
+      updateQuantity: (productId, quantity) =>
+        set((state) => ({
+          items:
+            quantity <= 0
+              ? state.items.filter((item) => item.product.id !== productId)
+              : state.items.map((item) =>
+                  item.product.id === productId ? { ...item, quantity } : item
+                ),
+        })),
+
+      clearCart: () => set({ items: [] }),
+
+      getTotalItems: () =>
+        get().items.reduce((total, item) => total + item.quantity, 0),
+
+      getSubtotal: () =>
+        get().items.reduce(
           (total, item) => total + item.product.price * item.quantity,
           0
-        );
-      },
-      
-      getTotal: () => {
-        const subtotal = get().getSubtotal();
-        // TODO: Ajouter les frais de livraison et réductions
-        return subtotal;
-      },
+        ),
     }),
     {
       name: "sandja-cart",
-      partialize: (state) => ({ items: state.items }),
     }
   )
 );

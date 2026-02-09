@@ -447,5 +447,41 @@
       "description": "Une erreur inattendue s'est produite.",
       "retry": "Réessayer"
     }
+  },
+  "home": {
+    "welcome": "Bienvenue, {name} !",
+    "subtitle": "Continuez votre exploration du patrimoine textile africain",
+    "levelLabel": "Niveau {level}",
+    "stats": {
+      "coins": "SandjaCoin",
+      "streak": "Jours consécutifs",
+      "totalXp": "XP Total"
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "quiz": "Quiz",
+      "leaderboard": "Classement"
+    },
+    "featured": {
+      "title": "Pagnes à découvrir",
+      "viewAll": "Voir tout",
+      "regions": {
+        "cameroonWest": "Cameroun - Ouest",
+        "ghanaAshanti": "Ghana - Ashanti",
+        "maliDogon": "Mali - Dogon"
+      }
+    },
+    "levels": {
+      "1": "Apprenti du Ndop",
+      "2": "Initié aux Symboles",
+      "3": "Tisserand Novice",
+      "4": "Conteur de Motifs",
+      "5": "Sage du Pagne",
+      "6": "Maître Tisserand",
+      "7": "Gardien des Symboles",
+      "8": "Ancien du Village",
+      "9": "Grand Initié",
+      "10": "Légende Vivante"
+    }
   }
 }

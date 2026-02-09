@@ -1,11 +1,7 @@
-// src/config/blockchain.ts
-// Configuration de la blockchain Cardano pour SANDJA
 
 export const blockchainConfig = {
-  // Réseau Cardano
   network: (process.env.NEXT_PUBLIC_CARDANO_NETWORK || "preview") as CardanoNetwork,
   
-  // Configuration des réseaux
   networks: {
     preview: {
       name: "Preview Testnet",
@@ -30,25 +26,19 @@ export const blockchainConfig = {
     }
   },
   
-  // Token natif SandjaCoin
   token: {
     name: "SandjaCoin",
     symbol: "SNDJ",
     decimals: 6,
-    // Policy ID sera généré lors du déploiement
     policyId: process.env.NEXT_PUBLIC_SANDJA_POLICY_ID || "",
-    // Logo du token
     logo: "/images/token/sandja-coin.png",
-    // Description
     description: {
       fr: "Token natif de l'écosystème SANDJA pour récompenser les contributions culturelles",
       en: "Native token of the SANDJA ecosystem to reward cultural contributions"
     }
   },
   
-  // Configuration NFT
   nft: {
-    // Collection principale
     collection: {
       name: "SANDJA Pagnes Collection",
       policyId: process.env.NEXT_PUBLIC_NFT_POLICY_ID || "",
@@ -57,23 +47,19 @@ export const blockchainConfig = {
         en: "Collection of certified and digitized African cloths"
       }
     },
-    // Métadonnées standard CIP-25
     metadataStandard: "CIP-25",
-    // IPFS configuration
     ipfs: {
       gateway: "https://ipfs.io/ipfs/",
       pinataApiUrl: "https://api.pinata.cloud",
       nftStorageUrl: "https://api.nft.storage"
     },
-    // Royalties (en %)
     royalties: {
-      creator: 5,    // Artisan/designer
-      platform: 2.5, // SANDJA
-      community: 2.5 // Pool communautaire
+      creator: 5,    
+      platform: 2.5, 
+      community: 2.5 
     }
   },
   
-  // Wallets supportés
   supportedWallets: [
     {
       id: "nami",
@@ -107,19 +93,13 @@ export const blockchainConfig = {
     }
   ],
   
-  // Frais de transaction (en ADA)
   fees: {
-    // Frais minimum de transaction
     minFee: 0.17,
-    // Frais de mint NFT (approximatif)
     nftMint: 2,
-    // Frais de listing marketplace
     marketplaceListing: 1,
-    // Frais de transfert token
     tokenTransfer: 0.2
   },
   
-  // Smart contracts (adresses des scripts)
   contracts: {
     marketplace: {
       address: process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT || "",
@@ -169,13 +149,11 @@ export interface NFTMetadata {
   };
 }
 
-// Helper pour obtenir la config du réseau actuel
 export function getCurrentNetworkConfig() {
   const network = blockchainConfig.network;
   return blockchainConfig.networks[network];
 }
 
-// Helper pour construire l'URL de l'explorateur
 export function getExplorerUrl(type: "tx" | "address" | "token" | "policy", hash: string): string {
   const { explorerUrl } = getCurrentNetworkConfig();
   
@@ -193,7 +171,6 @@ export function getExplorerUrl(type: "tx" | "address" | "token" | "policy", hash
   }
 }
 
-// Helper pour formater un montant ADA
 export function formatAda(lovelace: number | bigint): string {
   const ada = Number(lovelace) / 1_000_000;
   return new Intl.NumberFormat("en-US", {
@@ -202,18 +179,15 @@ export function formatAda(lovelace: number | bigint): string {
   }).format(ada);
 }
 
-// Helper pour convertir ADA en lovelace
 export function adaToLovelace(ada: number): bigint {
   return BigInt(Math.floor(ada * 1_000_000));
 }
 
-// Helper pour vérifier si un wallet est disponible
 export function isWalletAvailable(walletId: string): boolean {
   if (typeof window === "undefined") return false;
   return !!(window as any).cardano?.[walletId];
 }
 
-// Helper pour obtenir les wallets disponibles
 export function getAvailableWallets(): WalletInfo[] {
   if (typeof window === "undefined") return [];
   
