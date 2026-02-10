@@ -61,7 +61,7 @@ export const metadata: Metadata = {
       "Redonner sens et valeur au pagne africain par la technologie",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/images/og-image.png",
         width: 1200,
         height: 630,
         alt: "SANDJA - Le Pagne du Futur",
