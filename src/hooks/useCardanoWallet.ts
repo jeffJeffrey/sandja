@@ -10,6 +10,13 @@ import {
   decodeCborBalance,
   formatLovelace,
   shortenAddress,
+  isMobileDevice,
+  isCIP30Available,
+  isInsideDAppBrowser,
+  openWalletDAppBrowser,
+  getMobileWallets,
+  getWalletStoreUrl,
+  SUPPORTED_WALLETS,
 } from "@/services/cardano-wallet";
 import { useAuthStore } from "@/stores/auth-store";
 import { toast } from "sonner";
@@ -32,27 +39,41 @@ export function useCardanoWallet() {
   const [installedWallets, setInstalledWallets] = useState<CIP30WalletInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  // Mobile-specific state
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInDAppBrowser, setIsInDAppBrowser] = useState(false);
+
   const { setWalletAddress } = useAuthStore();
   const hasAutoConnected = useRef(false);
 
-  // Detect installed wallets on mount
+  // Detect environment on mount
   useEffect(() => {
-    // Small delay to let wallet extensions inject into window.cardano
-    const timer = setTimeout(() => {
-      const wallets = getInstalledWallets();
-      setInstalledWallets(wallets);
+    const mobile = isMobileDevice();
+    setIsMobile(mobile);
 
-      // Auto-reconnect if previously connected
-      const lastWallet = localStorage.getItem("sandja_wallet_id");
-      if (lastWallet && !hasAutoConnected.current) {
-        hasAutoConnected.current = true;
-        isWalletEnabled(lastWallet).then((enabled) => {
-          if (enabled) {
-            handleConnect(lastWallet, true);
-          }
-        });
+    // Delay detection to let wallet extensions/DApp browser inject window.cardano
+    const timer = setTimeout(() => {
+      const dappBrowser = isInsideDAppBrowser();
+      const cip30 = isCIP30Available();
+      setIsInDAppBrowser(dappBrowser);
+
+      // CIP-30 available — either desktop extensions or mobile DApp browser
+      if (cip30) {
+        const wallets = getInstalledWallets();
+        setInstalledWallets(wallets);
+
+        // Auto-reconnect
+        const lastWallet = localStorage.getItem("sandja_wallet_id");
+        if (lastWallet && !hasAutoConnected.current) {
+          hasAutoConnected.current = true;
+          isWalletEnabled(lastWallet).then((enabled) => {
+            if (enabled) {
+              handleConnect(lastWallet, true);
+            }
+          });
+        }
       }
-    }, 500);
+    }, 800); // Slightly longer delay for mobile DApp browsers
 
     return () => clearTimeout(timer);
   }, []);
@@ -62,7 +83,6 @@ export function useCardanoWallet() {
     try {
       const cborBalance = await api.getBalance();
       const decoded = decodeCborBalance(cborBalance);
-
       setBalance({
         lovelace: decoded.lovelace,
         adaFormatted: formatLovelace(decoded.lovelace),
@@ -97,34 +117,42 @@ export function useCardanoWallet() {
         setWalletApi(api);
         setConnected(true);
 
-        // Get wallet info
         const walletInfo = getInstalledWallets().find((w) => w.id === walletId);
         setWalletName(walletInfo?.name || walletId);
         setWalletIcon(walletInfo?.icon || "");
 
-        // Save for auto-reconnect
         localStorage.setItem("sandja_wallet_id", walletId);
 
-        // Fetch data
         await fetchAddress(api);
         await fetchBalance(api);
 
-        if (!silent) {
-          toast.success("Wallet connecté !");
-        }
+        if (!silent) toast.success("Wallet connecté !");
       } catch (err: any) {
         const msg = err?.message || "Échec de la connexion";
         setError(msg);
-        if (!silent) {
-          toast.error(msg);
-        }
-        console.error("Wallet connection error:", err);
+        if (!silent) toast.error(msg);
       } finally {
         setConnecting(false);
       }
     },
     [fetchAddress, fetchBalance]
   );
+
+  /**
+   * Mobile-specific: open the wallet's DApp browser
+   * The wallet app will open our URL in its built-in browser,
+   * injecting window.cardano automatically
+   */
+  const openInWalletBrowser = useCallback((walletId: string) => {
+    openWalletDAppBrowser(walletId);
+  }, []);
+
+  /**
+   * Mobile-specific: get link to install a wallet from app store
+   */
+  const getInstallUrl = useCallback((walletId: string): string | null => {
+    return getWalletStoreUrl(walletId);
+  }, []);
 
   const handleDisconnect = useCallback(() => {
     setWalletApi(null);
@@ -140,9 +168,7 @@ export function useCardanoWallet() {
   }, [setWalletAddress]);
 
   const refreshBalance = useCallback(async () => {
-    if (walletApi) {
-      await fetchBalance(walletApi);
-    }
+    if (walletApi) await fetchBalance(walletApi);
   }, [walletApi, fetchBalance]);
 
   return {
@@ -159,9 +185,16 @@ export function useCardanoWallet() {
     error,
     walletApi,
 
-    // Actions
+    isMobile,
+    isInDAppBrowser,
+    hasCIP30: installedWallets.length > 0,
+    mobileWallets: getMobileWallets(),
+    supportedWallets: SUPPORTED_WALLETS,
+
     connect: handleConnect,
     disconnect: handleDisconnect,
     refreshBalance,
+    openInWalletBrowser,
+    getInstallUrl,
   };
 }
