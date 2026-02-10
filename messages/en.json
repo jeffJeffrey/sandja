@@ -1,4 +1,75 @@
 {
+  "explore": {
+    "hero": {
+      "title": "Explore Symbols",
+      "subtitle": "Every symbol tells a thousand-year-old story. Discover their meaning, their history and their use in African textiles."
+    },
+    "filters": {
+      "title": "Filters",
+      "activeFilters": "Active filters",
+      "clearAll": "Clear all",
+      "categoryTitle": "Categories",
+      "themeTitle": "Themes",
+      "regionTitle": "Regions",
+      "categories": {
+        "geometric": "Geometric",
+        "animal": "Animal",
+        "plant": "Plant",
+        "human": "Human",
+        "abstract": "Abstract",
+        "celestial": "Celestial",
+        "object": "Object"
+      },
+      "themes": {
+        "marriage": "Marriage",
+        "funeral": "Funeral",
+        "royalty": "Royalty",
+        "initiation": "Initiation",
+        "fertility": "Fertility",
+        "wisdom": "Wisdom",
+        "power": "Power",
+        "protection": "Protection",
+        "unity": "Unity",
+        "prosperity": "Prosperity"
+      }
+    },
+    "results": {
+      "title": "Symbols",
+      "count": "symbol(s)",
+      "loadMore": "Load more",
+      "related": "Related symbols"
+    }
+  },
+  "symbolDetail": {
+    "title": "Symbol",
+    "description": "Discover the meaning and history of the {{symbol}} symbol",
+    "tabs": {
+      "meaning": "Meaning",
+      "history": "History",
+      "usage": "Usage"
+    },
+    "actions": {
+      "learnMore": "Learn more",
+      "download": "Download"
+    },
+    "relatedPagnes": "Related Pagnes"
+  },
+  "marketplace": {
+    "hero": {
+      "title": "Authentic African Pagnes & Art",
+      "subtitle": "Discover textiles certified on the Cardano blockchain"
+    },
+    "product": {
+      "addToCart": "Add to cart",
+      "buyNow": "Buy now",
+      "connectWallet": "Connect your wallet",
+      "nftCertified": "Cardano Certified NFT",
+      "new": "New",
+      "featured": "Featured",
+      "inStock": "In stock",
+      "limitedEdition": "Limited edition"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
@@ -272,7 +343,7 @@
       "trust": "Joined by over 1000 enthusiasts"
     }
   },
-  "explore": {
+  "explored": {
     "hero": {
       "title": "Explore African Symbols",
       "subtitle": "Dive into the fascinating world of African textile patterns. Each symbol tells a thousand-year-old story.",
@@ -321,7 +392,7 @@
       "viewAll": "View map"
     }
   },
-  "symbolDetail": {
+  "symbolDetaild": {
     "tabs": {
       "meaning": "Meaning",
       "history": "History",
@@ -341,7 +412,7 @@
     "category": "Category",
     "themes": "Themes"
   },
-  "marketplace": {
+  "marketplaced": {
     "hero": {
       "badge": "Blockchain certified authenticity",
       "title": "African Textile Marketplace",
@@ -471,6 +542,7 @@
       "dailyReward": "Daily reward"
     }
   },
+  "home":{
 
   "welcome": "Welcome, {name}!",
   "subtitle": "Continue your exploration of African textile heritage",
@@ -505,5 +577,6 @@
     "8": "Village Elder",
     "9": "Grand Initiate",
     "10": "Living Legend"
+  }
   }
 }

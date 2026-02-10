@@ -1,4 +1,75 @@
 {
+  "explore": {
+    "hero": {
+      "title": "Explorer les Symboles",
+      "subtitle": "Chaque symbole raconte une histoire millénaire. Découvrez leur signification, leur histoire et leur utilisation dans les textiles africains."
+    },
+    "filters": {
+      "title": "Filtres",
+      "activeFilters": "Filtres actifs",
+      "clearAll": "Effacer tout",
+      "categoryTitle": "Catégories",
+      "themeTitle": "Thèmes",
+      "regionTitle": "Régions",
+      "categories": {
+        "geometric": "Géométrique",
+        "animal": "Animal",
+        "plant": "Plante",
+        "human": "Humain",
+        "abstract": "Abstrait",
+        "celestial": "Céleste",
+        "object": "Objet"
+      },
+      "themes": {
+        "marriage": "Mariage",
+        "funeral": "Funérailles",
+        "royalty": "Royauté",
+        "initiation": "Initiation",
+        "fertility": "Fertilité",
+        "wisdom": "Sagesse",
+        "power": "Puissance",
+        "protection": "Protection",
+        "unity": "Unité",
+        "prosperity": "Prospérité"
+      }
+    },
+    "results": {
+      "title": "Symboles",
+      "count": "symbole(s)",
+      "loadMore": "Charger plus",
+      "related": "Symboles similaires"
+    }
+  },
+  "symbolDetail": {
+    "title": "Symbole",
+    "description": "Découvrez la signification et l'histoire du symbole {{symbol}}",
+    "tabs": {
+      "meaning": "Signification",
+      "history": "Histoire",
+      "usage": "Utilisations"
+    },
+    "actions": {
+      "learnMore": "En savoir plus",
+      "download": "Télécharger"
+    },
+    "relatedPagnes": "Pagnes associés"
+  },
+  "marketplace": {
+    "hero": {
+      "title": "Pagnes & Art Africain Authentiques",
+      "subtitle": "Découvrez des textiles certifiés sur la blockchain Cardano"
+    },
+    "product": {
+      "addToCart": "Ajouter au panier",
+      "buyNow": "Acheter maintenant",
+      "connectWallet": "Connecter votre wallet",
+      "nftCertified": "NFT Certifié Cardano",
+      "new": "Nouveau",
+      "featured": "En vedette",
+      "inStock": "En stock",
+      "limitedEdition": "Édition limitée"
+    }
+  },
   "common": {
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
@@ -272,7 +343,7 @@
       "trust": "Rejoint par plus de 1000 passionnés"
     }
   },
-  "explore": {
+  "explored": {
     "hero": {
       "title": "Explorez les Symboles Africains",
       "subtitle": "Plongez dans le monde fascinant des motifs textiles africains. Chaque symbole raconte une histoire millénaire.",
@@ -321,7 +392,7 @@
       "viewAll": "Voir la carte"
     }
   },
-  "symbolDetail": {
+  "symbolDetaild": {
     "tabs": {
       "meaning": "Signification",
       "history": "Histoire",
@@ -341,7 +412,7 @@
     "category": "Catégorie",
     "themes": "Thèmes"
   },
-  "marketplace": {
+  "marketplaced": {
     "hero": {
       "badge": "Authenticité certifiée par blockchain",
       "title": "Marketplace de Pagnes Africains",

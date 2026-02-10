@@ -1,73 +1,67 @@
 // src/stores/filter-store.ts
 import { create } from "zustand";
-import type { SymbolCategory, SymbolTheme, ProductType } from "@/types";
+import type { SymbolCategory, SymbolTheme, ProductType } from "@/types/explore";
+
+// ============================================
+// SYMBOL FILTER STORE
+// ============================================
 
 interface SymbolFilterState {
-  search: string;
   category: SymbolCategory | null;
   theme: SymbolTheme | null;
   regionId: string | null;
-  
-  setSearch: (search: string) => void;
-  setCategory: (category: SymbolCategory | null) => void;
-  setTheme: (theme: SymbolTheme | null) => void;
-  setRegionId: (regionId: string | null) => void;
+  search: string;
+  setCategory: (c: SymbolCategory | null) => void;
+  setTheme: (t: SymbolTheme | null) => void;
+  setRegionId: (r: string | null) => void;
+  setSearch: (s: string) => void;
   reset: () => void;
 }
 
 export const useSymbolFilterStore = create<SymbolFilterState>((set) => ({
-  search: "",
   category: null,
   theme: null,
   regionId: null,
-  
-  setSearch: (search) => set({ search }),
+  search: "",
   setCategory: (category) => set({ category }),
   setTheme: (theme) => set({ theme }),
   setRegionId: (regionId) => set({ regionId }),
-  reset: () => set({ search: "", category: null, theme: null, regionId: null }),
+  setSearch: (search) => set({ search }),
+  reset: () => set({ category: null, theme: null, regionId: null, search: "" }),
 }));
 
-interface ProductFilterState {
-  search: string;
+// ============================================
+// MARKETPLACE FILTER STORE
+// ============================================
+
+interface MarketplaceFilterState {
   type: ProductType | null;
+  priceRange: [number, number];
   regionId: string | null;
-  minPrice: number | null;
-  maxPrice: number | null;
-  inStock: boolean;
-  sortBy: "price" | "newest" | "popular";
-  
-  setSearch: (search: string) => void;
-  setType: (type: ProductType | null) => void;
-  setRegionId: (regionId: string | null) => void;
-  setPriceRange: (min: number | null, max: number | null) => void;
-  setInStock: (inStock: boolean) => void;
-  setSortBy: (sortBy: "price" | "newest" | "popular") => void;
+  isNFT: boolean | null;
+  sortBy: "price_asc" | "price_desc" | "popular" | "newest" | "rating";
+  search: string;
+  setType: (t: ProductType | null) => void;
+  setPriceRange: (r: [number, number]) => void;
+  setRegionId: (r: string | null) => void;
+  setIsNFT: (n: boolean | null) => void;
+  setSortBy: (s: MarketplaceFilterState["sortBy"]) => void;
+  setSearch: (s: string) => void;
   reset: () => void;
 }
 
-export const useProductFilterStore = create<ProductFilterState>((set) => ({
-  search: "",
+export const useMarketplaceFilterStore = create<MarketplaceFilterState>((set) => ({
   type: null,
+  priceRange: [0, 1000],
   regionId: null,
-  minPrice: null,
-  maxPrice: null,
-  inStock: false,
-  sortBy: "newest",
-  
-  setSearch: (search) => set({ search }),
+  isNFT: null,
+  sortBy: "popular",
+  search: "",
   setType: (type) => set({ type }),
+  setPriceRange: (priceRange) => set({ priceRange }),
   setRegionId: (regionId) => set({ regionId }),
-  setPriceRange: (minPrice, maxPrice) => set({ minPrice, maxPrice }),
-  setInStock: (inStock) => set({ inStock }),
+  setIsNFT: (isNFT) => set({ isNFT }),
   setSortBy: (sortBy) => set({ sortBy }),
-  reset: () => set({
-    search: "",
-    type: null,
-    regionId: null,
-    minPrice: null,
-    maxPrice: null,
-    inStock: false,
-    sortBy: "newest",
-  }),
+  setSearch: (search) => set({ search }),
+  reset: () => set({ type: null, priceRange: [0, 1000], regionId: null, isNFT: null, sortBy: "popular", search: "" }),
 }));

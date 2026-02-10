@@ -1,18 +1,17 @@
 import { setRequestLocale } from "next-intl/server";
-import { SymbolDetail } from "@/components/explore";
-import { RelatedSymbols } from "@/components/explore";
+import { getTranslations } from "next-intl/server";
+import { SymbolDetail, RelatedSymbols } from "@/components/explore";
 import type { Metadata } from "next";
 
-type Props = {
-  params: Promise<{ locale: string; slug: string }>;
-};
+type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  // En production, récupérer les données du symbole
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "symbolDetail" });
+
   return {
-    title: `Symbole - ${slug}`,
-    description: `Découvrez la signification et l'histoire du symbole ${slug}`,
+    title: `${t("title")} - ${slug} | SANDJA`,
+    description: t("description", { symbol: slug }),
   };
 }
 
