@@ -68,6 +68,18 @@
       "featured": "Featured",
       "inStock": "In stock",
       "limitedEdition": "Limited edition"
+    },
+    "productsGrid": {
+      "allProducts": "All products",
+      "results": "result(s)",
+      "notFound": "No products found",
+      "tryOtherFilters": "Try with other filters",
+      "addedToCart": "Added to cart"
+    },
+    "featuredProducts": {
+      "title": "⭐ Featured",
+      "subtitle": "Selection of our best pieces",
+      "viewAll": "View all →"
     }
   },
   "common": {

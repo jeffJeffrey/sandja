@@ -1,8 +1,9 @@
+// src/components/3d/symbol-viewer-3d.tsx
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { RotateCw, ZoomIn, ZoomOut, Maximize2, Minimize2, Hand, RotateCcw } from "lucide-react";
+import { RotateCw, ZoomIn, ZoomOut, Maximize2, Minimize2, RotateCcw, Hand } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SymbolViewer3DProps {
@@ -13,464 +14,708 @@ interface SymbolViewer3DProps {
 }
 
 export function SymbolViewer3D({ symbolName, colors, category, className }: SymbolViewer3DProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animFrameRef = useRef<number>(0);
+  const mountRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<any>(null);
+  const rendererRef = useRef<any>(null);
+  const cameraRef = useRef<any>(null);
+  const frameRef = useRef<number>(0);
+  const clockRef = useRef<any>(null);
+  const groupRef = useRef<any>(null);
+  const particlesRef = useRef<any>(null);
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isAutoRotate, setIsAutoRotate] = useState(true);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const isDragging = useRef(false);
-  const lastMouse = useRef({ x: 0, y: 0 });
+  const prevMouse = useRef({ x: 0, y: 0 });
+  const rotationVel = useRef({ x: 0, y: 0 });
+  const targetRotation = useRef({ x: 0, y: 0 });
+  const zoomLevel = useRef(1);
 
-  const getSymbolPattern = useCallback(() => {
-    const patterns: Record<string, (ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) => void> = {
-      ANIMAL: drawAnimalSymbol,
-      OBJECT: drawObjectSymbol,
-      ABSTRACT: drawAbstractSymbol,
-      GEOMETRIC: drawGeometricSymbol,
-      PLANT: drawPlantSymbol,
-      CELESTIAL: drawCelestialSymbol,
-      HUMAN: drawHumanSymbol,
-    };
-    return patterns[category] || drawAbstractSymbol;
-  }, [category]);
+  const initScene = useCallback(async () => {
+    if (!mountRef.current) return;
+    const THREE = await import("three");
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = mountRef.current;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    // Scene
+    const scene = new THREE.Scene();
+    sceneRef.current = scene;
 
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
+    // Clock
+    const clock = new THREE.Clock();
+    clockRef.current = clock;
 
-    let autoAngle = 0;
-    const drawPattern = getSymbolPattern();
+    // Camera
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
+    camera.position.set(0, 0.5, 4);
+    camera.lookAt(0, 0, 0);
+    cameraRef.current = camera;
 
-    const render = () => {
-      const w = rect.width;
-      const h = rect.height;
-      ctx.clearRect(0, 0, w, h);
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
 
-      // Background with subtle pattern
-      const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.7);
-      bgGrad.addColorStop(0, "#1a1a2e");
-      bgGrad.addColorStop(0.6, "#16213e");
-      bgGrad.addColorStop(1, "#0f0f23");
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, w, h);
+    // Background gradient
+    const bgColor = new THREE.Color("#0f0f1a");
+    scene.background = bgColor;
+    scene.fog = new THREE.FogExp2("#0f0f1a", 0.08);
 
-      // Draw grid floor for 3D effect
-      drawPerspectiveGrid(ctx, w, h, rotation);
+    // Lights
+    const ambientLight = new THREE.AmbientLight("#404060", 0.6);
+    scene.add(ambientLight);
 
-      // Auto rotate
+    const mainLight = new THREE.DirectionalLight("#ffffff", 1.2);
+    mainLight.position.set(3, 5, 4);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.set(1024, 1024);
+    scene.add(mainLight);
+
+    const rimLight = new THREE.PointLight(colors[0] || "#DAA520", 1.5, 10);
+    rimLight.position.set(-3, 2, -2);
+    scene.add(rimLight);
+
+    const fillLight = new THREE.PointLight(colors[1] || "#4169E1", 0.8, 10);
+    fillLight.position.set(2, -1, 3);
+    scene.add(fillLight);
+
+    // Ground plane
+    const groundGeom = new THREE.CircleGeometry(3, 64);
+    const groundMat = new THREE.MeshStandardMaterial({
+      color: "#0a0a15",
+      roughness: 0.9,
+      metalness: 0.1,
+    });
+    const ground = new THREE.Mesh(groundGeom, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -1.2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // Grid helper
+    const gridHelper = new THREE.GridHelper(6, 20, "#1a1a30", "#1a1a30");
+    gridHelper.position.y = -1.19;
+    (gridHelper.material as any).opacity = 0.3;
+    (gridHelper.material as any).transparent = true;
+    scene.add(gridHelper);
+
+    // Main symbol group
+    const group = new THREE.Group();
+    groupRef.current = group;
+    scene.add(group);
+
+    // Build symbol based on category
+    buildSymbol(THREE, group, category, colors);
+
+    // Floating particles
+    const particleGroup = createParticles(THREE, colors);
+    particlesRef.current = particleGroup;
+    scene.add(particleGroup);
+
+    setIsLoaded(true);
+
+    // Animation loop
+    const animate = () => {
+      frameRef.current = requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      const elapsed = clock.getElapsedTime();
+
+      // Auto rotation
       if (isAutoRotate) {
-        autoAngle += 0.008;
+        targetRotation.current.y += delta * 0.4;
       }
 
-      const rot = {
-        x: rotation.x + (isAutoRotate ? Math.sin(autoAngle) * 0.2 : 0),
-        y: rotation.y + (isAutoRotate ? autoAngle : 0),
-      };
+      // Apply damped rotation
+      rotationVel.current.x *= 0.95;
+      rotationVel.current.y *= 0.95;
+      targetRotation.current.x += rotationVel.current.x;
+      targetRotation.current.y += rotationVel.current.y;
 
-      // Draw the main symbol
-      ctx.save();
-      const cx = w / 2;
-      const cy = h / 2 - 20;
-      const size = Math.min(w, h) * 0.3 * zoom;
+      group.rotation.x += (targetRotation.current.x - group.rotation.x) * 0.08;
+      group.rotation.y += (targetRotation.current.y - group.rotation.y) * 0.08;
 
-      // Glow effect
-      ctx.shadowColor = colors[0] || "#DAA520";
-      ctx.shadowBlur = 30 + Math.sin(autoAngle * 2) * 10;
+      // Gentle float
+      group.position.y = Math.sin(elapsed * 0.8) * 0.08;
 
-      drawPattern(ctx, cx, cy, size, rot);
+      // Camera zoom
+      const targetZ = 4 / zoomLevel.current;
+      camera.position.z += (targetZ - camera.position.z) * 0.05;
 
-      ctx.restore();
+      // Animate particles
+      if (particlesRef.current) {
+        particlesRef.current.rotation.y = elapsed * 0.05;
+        const positions = particlesRef.current.children[0]?.geometry?.attributes?.position;
+        if (positions) {
+          for (let i = 0; i < positions.count; i++) {
+            const y = positions.getY(i);
+            positions.setY(i, y + Math.sin(elapsed * 0.5 + i * 0.1) * 0.001);
+          }
+          positions.needsUpdate = true;
+        }
+      }
 
-      // Draw symbol name
-      ctx.save();
-      ctx.font = "bold 14px sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      ctx.textAlign = "center";
-      ctx.fillText(symbolName, w / 2, h - 20);
-      ctx.restore();
+      // Animate rim light
+      rimLight.position.x = Math.sin(elapsed * 0.5) * 3;
+      rimLight.position.z = Math.cos(elapsed * 0.5) * 3;
 
-      // Floating particles
-      drawParticles(ctx, w, h, autoAngle, colors);
+      // Animate symbol-specific elements
+      animateSymbol(group, elapsed, category);
 
-      animFrameRef.current = requestAnimationFrame(render);
+      renderer.render(scene, camera);
     };
 
-    render();
+    animate();
+
+    // Handle resize
+    const handleResize = () => {
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      cancelAnimationFrame(animFrameRef.current);
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(frameRef.current);
+      renderer.dispose();
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
     };
-  }, [rotation, zoom, isAutoRotate, colors, symbolName, getSymbolPattern]);
+  }, [category, colors, isAutoRotate]);
 
-  // Mouse interaction
-  const handleMouseDown = (e: React.MouseEvent) => {
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+
+    initScene().then((fn) => {
+      cleanup = fn;
+    });
+
+    return () => {
+      cancelAnimationFrame(frameRef.current);
+      cleanup?.();
+    };
+  }, [initScene]);
+
+  // Mouse handlers
+  const handlePointerDown = (e: React.PointerEvent) => {
     isDragging.current = true;
-    lastMouse.current = { x: e.clientX, y: e.clientY };
+    prevMouse.current = { x: e.clientX, y: e.clientY };
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging.current) return;
-    const dx = e.clientX - lastMouse.current.x;
-    const dy = e.clientY - lastMouse.current.y;
-    setRotation((prev) => ({
-      x: prev.x + dy * 0.005,
-      y: prev.y + dx * 0.005,
-    }));
-    lastMouse.current = { x: e.clientX, y: e.clientY };
+    const dx = e.clientX - prevMouse.current.x;
+    const dy = e.clientY - prevMouse.current.y;
+    rotationVel.current.x = dy * 0.003;
+    rotationVel.current.y = dx * 0.003;
+    prevMouse.current = { x: e.clientX, y: e.clientY };
   };
 
-  const handleMouseUp = () => { isDragging.current = false; };
+  const handlePointerUp = () => {
+    isDragging.current = false;
+  };
 
   const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    setZoom((prev) => Math.max(0.5, Math.min(2.5, prev - e.deltaY * 0.001)));
+    zoomLevel.current = Math.max(0.5, Math.min(2.5, zoomLevel.current - e.deltaY * 0.001));
+  };
+
+  const resetView = () => {
+    targetRotation.current = { x: 0, y: 0 };
+    zoomLevel.current = 1;
   };
 
   return (
-    <div className={cn("relative rounded-2xl overflow-hidden bg-gray-900", isFullscreen && "fixed inset-0 z-50", className)}>
-      <canvas
-        ref={canvasRef}
+    <div className={cn("relative rounded-2xl overflow-hidden bg-[#0f0f1a]", isFullscreen && "fixed inset-0 z-50", className)}>
+      <div
+        ref={mountRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
-        style={{ aspectRatio: isFullscreen ? "auto" : "1" }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
+        style={{ aspectRatio: isFullscreen ? "auto" : "1", minHeight: 300 }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
         onWheel={handleWheel}
       />
 
+      {/* Loading overlay */}
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-[#0f0f1a]">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-white/40 text-sm">Chargement 3D...</p>
+          </div>
+        </div>
+      )}
+
       {/* Controls */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 bg-black/50 backdrop-blur-md rounded-full">
-        <button onClick={() => setIsAutoRotate(!isAutoRotate)} className={cn("p-2 rounded-full transition-colors", isAutoRotate ? "bg-white/20 text-white" : "text-white/50 hover:text-white")}>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 bg-black/60 backdrop-blur-md rounded-full">
+        <button onClick={() => setIsAutoRotate(!isAutoRotate)}
+          className={cn("p-2 rounded-full transition-colors", isAutoRotate ? "bg-white/20 text-white" : "text-white/50 hover:text-white")}>
           <RotateCw className="w-4 h-4" />
         </button>
-        <button onClick={() => setZoom((z) => Math.min(2.5, z + 0.2))} className="p-2 rounded-full text-white/70 hover:text-white transition-colors">
-          <ZoomIn className="w-4 h-4" />
-        </button>
-        <button onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))} className="p-2 rounded-full text-white/70 hover:text-white transition-colors">
-          <ZoomOut className="w-4 h-4" />
-        </button>
-        <button onClick={() => { setRotation({ x: 0, y: 0 }); setZoom(1); }} className="p-2 rounded-full text-white/70 hover:text-white transition-colors">
-          <RotateCcw className="w-4 h-4" />
-        </button>
+        <button onClick={() => { zoomLevel.current = Math.min(2.5, zoomLevel.current + 0.3); }}
+          className="p-2 rounded-full text-white/70 hover:text-white"><ZoomIn className="w-4 h-4" /></button>
+        <button onClick={() => { zoomLevel.current = Math.max(0.5, zoomLevel.current - 0.3); }}
+          className="p-2 rounded-full text-white/70 hover:text-white"><ZoomOut className="w-4 h-4" /></button>
+        <button onClick={resetView} className="p-2 rounded-full text-white/70 hover:text-white"><RotateCcw className="w-4 h-4" /></button>
         <div className="w-px h-5 bg-white/20" />
-        <button onClick={() => setIsFullscreen(!isFullscreen)} className="p-2 rounded-full text-white/70 hover:text-white transition-colors">
+        <button onClick={() => setIsFullscreen(!isFullscreen)}
+          className="p-2 rounded-full text-white/70 hover:text-white">
           {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
         </button>
       </div>
 
-      {/* Interaction hint */}
-      <motion.div
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 0 }}
-        transition={{ delay: 3, duration: 1 }}
-        className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-sm rounded-full text-white/60 text-xs"
-      >
-        <Hand className="w-3.5 h-3.5" />
-        Glisser pour tourner • Scroll pour zoomer
+      {/* Label */}
+      <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/40 backdrop-blur-sm rounded-full">
+        <span className="text-white/60 text-xs font-medium">{symbolName}</span>
+      </div>
+
+      {/* Hint */}
+      <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ delay: 3, duration: 1 }}
+        className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-sm rounded-full text-white/50 text-xs">
+        <Hand className="w-3.5 h-3.5" /> Glisser • Scroll zoom
       </motion.div>
     </div>
   );
 }
 
 // ============================================
-// DRAWING FUNCTIONS
+// BUILD SYMBOL GEOMETRY
 // ============================================
 
-function drawPerspectiveGrid(ctx: CanvasRenderingContext2D, w: number, h: number, rot: { x: number; y: number }) {
-  ctx.save();
-  ctx.strokeStyle = "rgba(218,165,32,0.08)";
-  ctx.lineWidth = 0.5;
+function buildSymbol(THREE: any, group: any, category: string, colors: string[]) {
+  const primaryColor = new THREE.Color(colors[0] || "#DAA520");
+  const secondaryColor = new THREE.Color(colors[1] || "#1B3A5C");
+  const accentColor = new THREE.Color(colors[2] || "#FFFFFF");
 
-  const horizon = h * 0.7;
-  const vanishX = w / 2 + rot.y * 100;
+  // Shared materials
+  const primaryMat = new THREE.MeshStandardMaterial({
+    color: primaryColor,
+    roughness: 0.3,
+    metalness: 0.7,
+    emissive: primaryColor,
+    emissiveIntensity: 0.15,
+  });
 
-  for (let i = -10; i <= 10; i++) {
-    const x = w / 2 + i * 40;
-    ctx.beginPath();
-    ctx.moveTo(x, horizon);
-    ctx.lineTo(vanishX + (x - vanishX) * 0.1, h * 0.3);
-    ctx.stroke();
+  const secondaryMat = new THREE.MeshStandardMaterial({
+    color: secondaryColor,
+    roughness: 0.5,
+    metalness: 0.4,
+  });
+
+  const glowMat = new THREE.MeshStandardMaterial({
+    color: primaryColor,
+    roughness: 0.2,
+    metalness: 0.8,
+    emissive: primaryColor,
+    emissiveIntensity: 0.4,
+    transparent: true,
+    opacity: 0.8,
+  });
+
+  switch (category) {
+    case "ANIMAL":
+      buildAnimalSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
+      break;
+    case "OBJECT":
+      buildObjectSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
+      break;
+    case "ABSTRACT":
+      buildAbstractSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
+      break;
+    case "GEOMETRIC":
+      buildGeometricSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
+      break;
+    case "PLANT":
+      buildPlantSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
+      break;
+    case "CELESTIAL":
+      buildCelestialSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
+      break;
+    case "HUMAN":
+      buildHumanSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
+      break;
+    default:
+      buildAbstractSymbol(THREE, group, primaryMat, secondaryMat, glowMat);
   }
-
-  for (let j = 0; j < 8; j++) {
-    const y = horizon - j * 10 * (1 + j * 0.3);
-    const spread = 1 - j * 0.08;
-    ctx.beginPath();
-    ctx.moveTo(w / 2 - w * 0.5 * spread, y);
-    ctx.lineTo(w / 2 + w * 0.5 * spread, y);
-    ctx.stroke();
-  }
-
-  ctx.restore();
 }
 
-function drawParticles(ctx: CanvasRenderingContext2D, w: number, h: number, time: number, colors: string[]) {
-  for (let i = 0; i < 20; i++) {
-    const seed = i * 137.508;
-    const px = (Math.sin(seed + time * 0.3) * 0.5 + 0.5) * w;
-    const py = (Math.cos(seed * 1.3 + time * 0.2) * 0.5 + 0.5) * h;
-    const alpha = 0.15 + Math.sin(time * 2 + seed) * 0.1;
-    const size = 1 + Math.sin(seed) * 1.5;
+function buildAnimalSymbol(THREE: any, group: any, primary: any, secondary: any, glow: any) {
+  // Spider-like totem — central body + 8 legs
 
-    ctx.beginPath();
-    ctx.fillStyle = `${colors[i % colors.length] || "#DAA520"}${Math.round(alpha * 255).toString(16).padStart(2, "0")}`;
-    ctx.arc(px, py, size, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
+  // Central diamond body
+  const bodyGeom = new THREE.OctahedronGeometry(0.5, 0);
+  const body = new THREE.Mesh(bodyGeom, primary);
+  body.castShadow = true;
+  body.name = "body";
+  group.add(body);
 
-function drawAnimalSymbol(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) {
-  const s = size;
-  const rx = rot.y;
+  // Inner diamond (smaller)
+  const innerGeom = new THREE.OctahedronGeometry(0.3, 0);
+  const inner = new THREE.Mesh(innerGeom, secondary);
+  inner.name = "inner";
+  group.add(inner);
 
-  // Spider-like symbol with 3D perspective
-  ctx.save();
-  ctx.translate(cx, cy);
-
-  // Body
-  const bodyGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, s * 0.4);
-  bodyGrad.addColorStop(0, "#F5D060");
-  bodyGrad.addColorStop(0.7, "#DAA520");
-  bodyGrad.addColorStop(1, "#8B6914");
-  ctx.fillStyle = bodyGrad;
-
-  // Central diamond (3D perspective)
-  const skew = Math.sin(rx) * 0.3;
-  ctx.beginPath();
-  ctx.moveTo(s * skew, -s * 0.35);
-  ctx.lineTo(s * 0.35, 0);
-  ctx.lineTo(s * skew, s * 0.35);
-  ctx.lineTo(-s * 0.35, 0);
-  ctx.closePath();
-  ctx.fill();
-
-  // Inner detail
-  ctx.strokeStyle = "#1B3A5C";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(s * skew * 0.5, -s * 0.18);
-  ctx.lineTo(s * 0.18, 0);
-  ctx.lineTo(s * skew * 0.5, s * 0.18);
-  ctx.lineTo(-s * 0.18, 0);
-  ctx.closePath();
-  ctx.stroke();
-
-  // Legs (8 legs)
-  ctx.strokeStyle = "#DAA520";
-  ctx.lineWidth = 2.5;
+  // 8 Legs as curved tubes
   for (let i = 0; i < 8; i++) {
-    const angle = (i / 8) * Math.PI * 2 + rx;
-    const legLen = s * 0.6 + Math.sin(i * 1.5 + rot.x * 3) * s * 0.1;
-    const midX = Math.cos(angle) * s * 0.3;
-    const midY = Math.sin(angle) * s * 0.3;
-    const endX = Math.cos(angle + 0.3) * legLen;
-    const endY = Math.sin(angle + 0.3) * legLen;
-
-    ctx.beginPath();
-    ctx.moveTo(Math.cos(angle) * s * 0.15, Math.sin(angle) * s * 0.15);
-    ctx.quadraticCurveTo(midX, midY, endX, endY);
-    ctx.stroke();
+    const angle = (i / 8) * Math.PI * 2;
+    const curve = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(Math.cos(angle) * 0.3, 0, Math.sin(angle) * 0.3),
+      new THREE.Vector3(Math.cos(angle) * 0.8, 0.3 * (i % 2 === 0 ? 1 : -1), Math.sin(angle) * 0.8),
+      new THREE.Vector3(Math.cos(angle + 0.2) * 1.2, -0.4, Math.sin(angle + 0.2) * 1.2)
+    );
+    const tubeGeom = new THREE.TubeGeometry(curve, 12, 0.03, 8, false);
+    const leg = new THREE.Mesh(tubeGeom, glow);
+    leg.name = `leg_${i}`;
+    group.add(leg);
   }
 
-  ctx.restore();
-}
-
-function drawObjectSymbol(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) {
-  ctx.save();
-  ctx.translate(cx, cy);
-
-  const skew = Math.sin(rot.y) * 0.2;
-
-  // Double Gong shape
+  // Eyes (two small glowing spheres)
   for (let side = -1; side <= 1; side += 2) {
-    const offset = side * size * 0.25;
-
-    const grad = ctx.createLinearGradient(offset - size * 0.15, -size * 0.3, offset + size * 0.15, size * 0.3);
-    grad.addColorStop(0, "#C0C0C0");
-    grad.addColorStop(0.5, "#FFD700");
-    grad.addColorStop(1, "#8B6914");
-
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.ellipse(offset + skew * size, 0, size * 0.18, size * 0.4, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = "#1B3A5C";
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    const eyeGeom = new THREE.SphereGeometry(0.06, 16, 16);
+    const eye = new THREE.Mesh(eyeGeom, glow);
+    eye.position.set(side * 0.15, 0.2, 0.35);
+    group.add(eye);
   }
-
-  // Handle
-  ctx.strokeStyle = "#DAA520";
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(-size * 0.25 + skew * size, -size * 0.35);
-  ctx.quadraticCurveTo(0, -size * 0.55, size * 0.25 + skew * size, -size * 0.35);
-  ctx.stroke();
-
-  ctx.restore();
 }
 
-function drawAbstractSymbol(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) {
-  ctx.save();
-  ctx.translate(cx, cy);
+function buildObjectSymbol(THREE: any, group: any, primary: any, secondary: any, glow: any) {
+  // Double Gong — two torus shapes with a handle
 
-  // Gye Nyame inspired shape
-  const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 0.5);
-  grad.addColorStop(0, "#FFD700");
-  grad.addColorStop(1, "#DAA520");
-
-  ctx.fillStyle = grad;
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 3;
-
-  // Spiral-like abstract form
-  ctx.beginPath();
-  for (let t = 0; t < Math.PI * 4; t += 0.1) {
-    const r = size * 0.1 + t * size * 0.05;
-    const px = Math.cos(t + rot.y) * r * (1 + Math.sin(rot.x) * 0.2);
-    const py = Math.sin(t + rot.y) * r * 0.8;
-
-    if (t === 0) ctx.moveTo(px, py);
-    else ctx.lineTo(px, py);
-  }
-  ctx.stroke();
-
-  // Center dot
-  ctx.fillStyle = "#FFD700";
-  ctx.beginPath();
-  ctx.arc(0, 0, size * 0.08, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.restore();
-}
-
-function drawGeometricSymbol(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) {
-  ctx.save();
-  ctx.translate(cx, cy);
-
-  // Nested diamonds with 3D rotation
-  for (let i = 3; i >= 0; i--) {
-    const s = size * (0.2 + i * 0.15);
-    const alpha = 0.3 + i * 0.2;
-    const skew = Math.sin(rot.y) * s * 0.2;
-
-    ctx.strokeStyle = `rgba(218,165,32,${alpha})`;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(skew, -s);
-    ctx.lineTo(s, 0);
-    ctx.lineTo(skew, s);
-    ctx.lineTo(-s, 0);
-    ctx.closePath();
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawPlantSymbol(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) {
-  ctx.save();
-  ctx.translate(cx, cy);
-
-  ctx.strokeStyle = "#228B22";
-  ctx.lineWidth = 3;
-
-  // Stem
-  ctx.beginPath();
-  ctx.moveTo(0, size * 0.5);
-  ctx.quadraticCurveTo(Math.sin(rot.y) * size * 0.2, 0, 0, -size * 0.3);
-  ctx.stroke();
-
-  // Leaves
   for (let side = -1; side <= 1; side += 2) {
-    for (let j = 0; j < 3; j++) {
-      const y = size * 0.3 - j * size * 0.2;
-      ctx.fillStyle = `rgba(34,139,34,${0.5 + j * 0.15})`;
-      ctx.beginPath();
-      ctx.ellipse(side * size * 0.2, y, size * 0.15, size * 0.06, side * 0.5 + Math.sin(rot.y) * 0.2, 0, Math.PI * 2);
-      ctx.fill();
+    const torusGeom = new THREE.TorusGeometry(0.4, 0.12, 16, 32);
+    const torus = new THREE.Mesh(torusGeom, side === -1 ? primary : secondary);
+    torus.position.x = side * 0.5;
+    torus.rotation.y = Math.PI / 2;
+    torus.castShadow = true;
+    torus.name = `gong_${side}`;
+    group.add(torus);
+
+    // Inner disc
+    const discGeom = new THREE.CylinderGeometry(0.35, 0.35, 0.04, 32);
+    const disc = new THREE.Mesh(discGeom, glow);
+    disc.position.x = side * 0.5;
+    disc.rotation.z = Math.PI / 2;
+    group.add(disc);
+  }
+
+  // Handle connecting the two
+  const handleCurve = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(-0.5, 0.5, 0),
+    new THREE.Vector3(0, 0.9, 0),
+    new THREE.Vector3(0.5, 0.5, 0)
+  );
+  const handleGeom = new THREE.TubeGeometry(handleCurve, 20, 0.04, 8, false);
+  const handle = new THREE.Mesh(handleGeom, primary);
+  handle.name = "handle";
+  group.add(handle);
+}
+
+function buildAbstractSymbol(THREE: any, group: any, primary: any, secondary: any, glow: any) {
+  // Gye Nyame inspired — spiral with central sphere
+
+  // Central sphere
+  const sphereGeom = new THREE.SphereGeometry(0.25, 32, 32);
+  const sphere = new THREE.Mesh(sphereGeom, glow);
+  sphere.name = "core";
+  group.add(sphere);
+
+  // Spiral arms
+  for (let arm = 0; arm < 3; arm++) {
+    const points: any[] = [];
+    const armOffset = (arm / 3) * Math.PI * 2;
+    for (let t = 0; t < 40; t++) {
+      const tt = t / 40;
+      const r = 0.3 + tt * 0.8;
+      const angle = armOffset + tt * Math.PI * 3;
+      const y = Math.sin(tt * Math.PI) * 0.3;
+      points.push(new THREE.Vector3(Math.cos(angle) * r, y, Math.sin(angle) * r));
     }
+    const curve = new THREE.CatmullRomCurve3(points);
+    const tubeGeom = new THREE.TubeGeometry(curve, 60, 0.035, 8, false);
+    const tube = new THREE.Mesh(tubeGeom, arm === 0 ? primary : arm === 1 ? secondary : glow);
+    tube.name = `spiral_${arm}`;
+    tube.castShadow = true;
+    group.add(tube);
   }
 
-  ctx.restore();
+  // Orbiting rings
+  for (let i = 0; i < 2; i++) {
+    const ringGeom = new THREE.TorusGeometry(0.6 + i * 0.3, 0.015, 16, 64);
+    const ring = new THREE.Mesh(ringGeom, i === 0 ? primary : secondary);
+    ring.rotation.x = Math.PI / 3 + i * 0.5;
+    ring.rotation.z = i * 0.8;
+    ring.name = `ring_${i}`;
+    group.add(ring);
+  }
 }
 
-function drawCelestialSymbol(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) {
-  ctx.save();
-  ctx.translate(cx, cy);
+function buildGeometricSymbol(THREE: any, group: any, primary: any, secondary: any, glow: any) {
+  // Nested rotating diamonds / wireframes
 
-  const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 0.3);
-  grad.addColorStop(0, "#FFD700");
-  grad.addColorStop(1, "#FF6347");
-  ctx.fillStyle = grad;
+  const sizes = [0.8, 0.6, 0.4, 0.25];
+  sizes.forEach((size, i) => {
+    const geom = new THREE.OctahedronGeometry(size, 0);
+    const mat = i % 2 === 0 ? primary.clone() : secondary.clone();
+    if (i > 0) {
+      mat.wireframe = true;
+      mat.transparent = true;
+      mat.opacity = 0.6;
+    }
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.castShadow = i === 0;
+    mesh.name = `diamond_${i}`;
+    group.add(mesh);
+  });
 
-  // Sun body
-  ctx.beginPath();
-  ctx.arc(0, 0, size * 0.2, 0, Math.PI * 2);
-  ctx.fill();
+  // Cross beams
+  for (let axis = 0; axis < 3; axis++) {
+    const beamGeom = new THREE.CylinderGeometry(0.02, 0.02, 1.8, 8);
+    const beam = new THREE.Mesh(beamGeom, glow);
+    if (axis === 0) beam.rotation.z = Math.PI / 2;
+    if (axis === 2) beam.rotation.x = Math.PI / 2;
+    beam.name = `beam_${axis}`;
+    group.add(beam);
+  }
+}
+
+function buildPlantSymbol(THREE: any, group: any, primary: any, secondary: any, glow: any) {
+  // Tree of life — trunk + branches + leaves
+
+  // Trunk
+  const trunkCurve = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(0, -1, 0),
+    new THREE.Vector3(0.1, 0, 0),
+    new THREE.Vector3(0, 0.6, 0)
+  );
+  const trunkGeom = new THREE.TubeGeometry(trunkCurve, 20, 0.08, 8, false);
+  const trunk = new THREE.Mesh(trunkGeom, secondary);
+  trunk.castShadow = true;
+  group.add(trunk);
+
+  // Branches
+  for (let i = 0; i < 6; i++) {
+    const angle = (i / 6) * Math.PI * 2;
+    const height = 0.2 + (i % 3) * 0.2;
+    const branchCurve = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(0, height, 0),
+      new THREE.Vector3(Math.cos(angle) * 0.4, height + 0.3, Math.sin(angle) * 0.4),
+      new THREE.Vector3(Math.cos(angle) * 0.7, height + 0.1, Math.sin(angle) * 0.7)
+    );
+    const branchGeom = new THREE.TubeGeometry(branchCurve, 12, 0.03, 8, false);
+    const branch = new THREE.Mesh(branchGeom, primary);
+    group.add(branch);
+
+    // Leaf at tip
+    const leafGeom = new THREE.SphereGeometry(0.12, 8, 8);
+    leafGeom.scale(1, 0.5, 1);
+    const leaf = new THREE.Mesh(leafGeom, glow);
+    leaf.position.set(Math.cos(angle) * 0.7, height + 0.1, Math.sin(angle) * 0.7);
+    leaf.name = `leaf_${i}`;
+    group.add(leaf);
+  }
+}
+
+function buildCelestialSymbol(THREE: any, group: any, primary: any, secondary: any, glow: any) {
+  // Sun — central sphere + rays
+
+  const sunGeom = new THREE.SphereGeometry(0.35, 32, 32);
+  const sun = new THREE.Mesh(sunGeom, glow);
+  sun.name = "sun";
+  group.add(sun);
 
   // Rays
-  ctx.strokeStyle = "#FFD700";
-  ctx.lineWidth = 2.5;
   for (let i = 0; i < 12; i++) {
-    const angle = (i / 12) * Math.PI * 2 + rot.y;
-    const inner = size * 0.25;
-    const outer = size * 0.45 + Math.sin(i * 2 + rot.x * 5) * size * 0.05;
-
-    ctx.beginPath();
-    ctx.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
-    ctx.lineTo(Math.cos(angle) * outer, Math.sin(angle) * outer);
-    ctx.stroke();
+    const angle = (i / 12) * Math.PI * 2;
+    const length = i % 2 === 0 ? 0.8 : 0.55;
+    const rayGeom = new THREE.CylinderGeometry(0.025, 0.005, length, 6);
+    const ray = new THREE.Mesh(rayGeom, primary);
+    ray.position.set(
+      Math.cos(angle) * (0.4 + length / 2),
+      Math.sin(angle) * (0.4 + length / 2),
+      0
+    );
+    ray.rotation.z = angle - Math.PI / 2;
+    ray.name = `ray_${i}`;
+    group.add(ray);
   }
 
-  ctx.restore();
+  // Orbit ring
+  const orbitGeom = new THREE.TorusGeometry(1.0, 0.015, 16, 64);
+  const orbit = new THREE.Mesh(orbitGeom, secondary);
+  orbit.rotation.x = Math.PI / 2;
+  group.add(orbit);
 }
 
-function drawHumanSymbol(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, rot: { x: number; y: number }) {
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.strokeStyle = "#DAA520";
-  ctx.lineWidth = 3;
-
-  const skew = Math.sin(rot.y) * size * 0.1;
+function buildHumanSymbol(THREE: any, group: any, primary: any, secondary: any, glow: any) {
+  // Stylized human figure / totem
 
   // Head
-  ctx.beginPath();
-  ctx.arc(skew, -size * 0.3, size * 0.12, 0, Math.PI * 2);
-  ctx.stroke();
+  const headGeom = new THREE.SphereGeometry(0.2, 32, 32);
+  const head = new THREE.Mesh(headGeom, primary);
+  head.position.y = 0.8;
+  head.castShadow = true;
+  group.add(head);
 
-  // Body
-  ctx.beginPath();
-  ctx.moveTo(skew, -size * 0.18);
-  ctx.lineTo(skew * 0.5, size * 0.15);
-  ctx.stroke();
+  // Body (tapered cylinder)
+  const bodyGeom = new THREE.CylinderGeometry(0.08, 0.15, 0.6, 8);
+  const body = new THREE.Mesh(bodyGeom, secondary);
+  body.position.y = 0.35;
+  body.castShadow = true;
+  group.add(body);
 
   // Arms
-  ctx.beginPath();
-  ctx.moveTo(-size * 0.25, -size * 0.05);
-  ctx.lineTo(skew, -size * 0.1);
-  ctx.lineTo(size * 0.25, -size * 0.05);
-  ctx.stroke();
+  for (let side = -1; side <= 1; side += 2) {
+    const armCurve = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(0, 0.55, 0),
+      new THREE.Vector3(side * 0.4, 0.6, 0),
+      new THREE.Vector3(side * 0.6, 0.3, 0)
+    );
+    const armGeom = new THREE.TubeGeometry(armCurve, 12, 0.035, 8, false);
+    const arm = new THREE.Mesh(armGeom, primary);
+    group.add(arm);
+  }
 
   // Legs
-  ctx.beginPath();
-  ctx.moveTo(skew * 0.5, size * 0.15);
-  ctx.lineTo(-size * 0.15, size * 0.45);
-  ctx.moveTo(skew * 0.5, size * 0.15);
-  ctx.lineTo(size * 0.15, size * 0.45);
-  ctx.stroke();
+  for (let side = -1; side <= 1; side += 2) {
+    const legGeom = new THREE.CylinderGeometry(0.05, 0.04, 0.5, 8);
+    const leg = new THREE.Mesh(legGeom, secondary);
+    leg.position.set(side * 0.1, -0.2, 0);
+    group.add(leg);
+  }
 
-  ctx.restore();
+  // Crown / headdress glow
+  const crownGeom = new THREE.TorusGeometry(0.22, 0.03, 8, 32, Math.PI);
+  const crown = new THREE.Mesh(crownGeom, glow);
+  crown.position.y = 0.95;
+  crown.rotation.x = Math.PI;
+  crown.name = "crown";
+  group.add(crown);
+}
+
+// ============================================
+// ANIMATE SYMBOL ELEMENTS
+// ============================================
+
+function animateSymbol(group: any, elapsed: number, category: string) {
+  group.traverse((child: any) => {
+    if (!child.name) return;
+
+    // Legs wave gently
+    if (child.name.startsWith("leg_")) {
+      const i = parseInt(child.name.split("_")[1]);
+      child.rotation.z = Math.sin(elapsed * 1.5 + i * 0.8) * 0.05;
+    }
+
+    // Inner body pulses
+    if (child.name === "inner" || child.name === "core") {
+      const s = 1 + Math.sin(elapsed * 2) * 0.05;
+      child.scale.set(s, s, s);
+    }
+
+    // Spiral arms rotate slightly
+    if (child.name.startsWith("spiral_")) {
+      const i = parseInt(child.name.split("_")[1]);
+      child.rotation.y = elapsed * 0.1 * (i + 1);
+    }
+
+    // Rings orbit
+    if (child.name.startsWith("ring_")) {
+      const i = parseInt(child.name.split("_")[1]);
+      child.rotation.z = elapsed * 0.3 * (i === 0 ? 1 : -1);
+    }
+
+    // Diamonds rotate at different speeds
+    if (child.name.startsWith("diamond_")) {
+      const i = parseInt(child.name.split("_")[1]);
+      if (i > 0) {
+        child.rotation.y = elapsed * 0.2 * (i % 2 === 0 ? 1 : -1);
+        child.rotation.x = elapsed * 0.15 * (i % 2 === 0 ? -1 : 1);
+      }
+    }
+
+    // Leaves breathe
+    if (child.name.startsWith("leaf_")) {
+      const i = parseInt(child.name.split("_")[1]);
+      const s = 1 + Math.sin(elapsed * 1.2 + i) * 0.15;
+      child.scale.set(s, s * 0.5, s);
+    }
+
+    // Sun rays pulse
+    if (child.name.startsWith("ray_")) {
+      const i = parseInt(child.name.split("_")[1]);
+      const s = 1 + Math.sin(elapsed * 2 + i * 0.5) * 0.1;
+      child.scale.y = s;
+    }
+
+    // Crown glows
+    if (child.name === "crown") {
+      child.rotation.y = elapsed * 0.5;
+    }
+
+    // Gongs swing
+    if (child.name.startsWith("gong_")) {
+      child.rotation.z = Math.sin(elapsed * 1.2) * 0.08;
+    }
+    if (child.name === "handle") {
+      child.rotation.z = Math.sin(elapsed * 1.2) * 0.03;
+    }
+  });
+}
+
+// ============================================
+// PARTICLES
+// ============================================
+
+function createParticles(THREE: any, colors: string[]) {
+  const group = new THREE.Group();
+  const count = 80;
+  const positions = new Float32Array(count * 3);
+  const colorsArr = new Float32Array(count * 3);
+
+  for (let i = 0; i < count; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(Math.random() * 2 - 1);
+    const r = 1.5 + Math.random() * 2;
+
+    positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) - 0.5;
+    positions[i * 3 + 2] = r * Math.cos(phi);
+
+    const color = new THREE.Color(colors[i % colors.length] || "#DAA520");
+    colorsArr[i * 3] = color.r;
+    colorsArr[i * 3 + 1] = color.g;
+    colorsArr[i * 3 + 2] = color.b;
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new THREE.BufferAttribute(colorsArr, 3));
+
+  const material = new THREE.PointsMaterial({
+    size: 0.04,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.6,
+    sizeAttenuation: true,
+  });
+
+  const points = new THREE.Points(geometry, material);
+  group.add(points);
+  return group;
 }

@@ -68,6 +68,18 @@
       "featured": "En vedette",
       "inStock": "En stock",
       "limitedEdition": "Édition limitée"
+    },
+    "productsGrid": {
+      "allProducts": "Tous les produits",
+      "results": "résultat(s)",
+      "notFound": "Aucun produit trouvé",
+      "tryOtherFilters": "Essayez avec d'autres filtres",
+      "addedToCart": "Ajouté au panier"
+    },
+    "featuredProducts": {
+      "title": "⭐ En vedette",
+      "subtitle": "Sélection de nos meilleures pièces",
+      "viewAll": "Voir tout →"
     }
   },
   "common": {

@@ -1,9 +1,15 @@
-// src/components/landing/landing-problem.tsx
 "use client";
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { AlertTriangle, TrendingDown, Globe } from "lucide-react";
+import {
+  AlertTriangle,
+  TrendingDown,
+  Globe,
+  Package,            
+  HelpCircle,         
+  HeartCrack,         
+} from "lucide-react";
 
 export function LandingProblem() {
   const t = useTranslations("landing.problem");
@@ -22,6 +28,24 @@ export function LandingProblem() {
       icon: TrendingDown,
       color: "text-accent-gold",
       bgColor: "bg-amber-50",
+    },
+  ];
+
+  const problems = [
+    {
+      icon: Package,
+      title: "Importations massives",
+      desc: "Textiles produits en Asie sans respect des codes culturels",
+    },
+    {
+      icon: HelpCircle,
+      title: "Perte de sens",
+      desc: "Les symboles ancestraux vidés de leur signification",
+    },
+    {
+      icon: HeartCrack,
+      title: "Dévalorisation",
+      desc: "Le Ndop royal utilisé comme simple emballage",
     },
   ];
 
@@ -82,16 +106,14 @@ export function LandingProblem() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-16 grid md:grid-cols-3 gap-6"
         >
-          {[
-            { emoji: "📦", title: "Importations massives", desc: "Textiles produits en Asie sans respect des codes culturels" },
-            { emoji: "❓", title: "Perte de sens", desc: "Les symboles ancestraux vidés de leur signification" },
-            { emoji: "💔", title: "Dévalorisation", desc: "Le Ndop royal utilisé comme simple emballage" },
-          ].map((problem, index) => (
+          {problems.map((problem, index) => (
             <div
               key={index}
               className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-primary-200 transition-colors"
             >
-              <div className="text-4xl mb-4">{problem.emoji}</div>
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-sm mb-4 text-gray-700">
+                <problem.icon className="w-7 h-7" />
+              </div>
               <h3 className="font-semibold text-gray-900 mb-2">{problem.title}</h3>
               <p className="text-sm text-gray-600">{problem.desc}</p>
             </div>

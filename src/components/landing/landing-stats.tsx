@@ -5,6 +5,14 @@ import { useTranslations } from "next-intl";
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
+// Import des icônes Lucide nécessaires
+import {
+  Scroll,
+  Shirt,          // ou potentiellement LucideLab → Dress / Trousers si tu installes @lucide/lab
+  Users,
+  Globe,
+} from "lucide-react";
+
 function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -33,7 +41,8 @@ function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: strin
 
   return (
     <span ref={ref}>
-      {count.toLocaleString()}{suffix}
+      {count.toLocaleString()}
+      {suffix}
     </span>
   );
 }
@@ -42,10 +51,10 @@ export function LandingStats() {
   const t = useTranslations("landing.stats");
 
   const stats = [
-    { value: 500, suffix: "+", label: t("symbols"), icon: "📜" },
-    { value: 100, suffix: "+", label: t("pagnes"), icon: "👘" },
-    { value: 1000, suffix: "+", label: t("users"), icon: "👥" },
-    { value: 10, suffix: "+", label: t("regions"), icon: "🌍" },
+    { value: 500,  suffix: "+", label: t("symbols"), icon: Scroll },
+    { value: 100,  suffix: "+", label: t("pagnes"),  icon: Shirt },   // Shirt est le plus proche standard – voir note ci-dessous
+    { value: 1000, suffix: "+", label: t("users"),   icon: Users },
+    { value: 10,   suffix: "+", label: t("regions"), icon: Globe },
   ];
 
   return (
@@ -68,7 +77,9 @@ export function LandingStats() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="text-center"
             >
-              <div className="text-4xl mb-2">{stat.icon}</div>
+              <div className="mb-2">
+                <stat.icon className="mx-auto h-10 w-10 md:h-12 md:w-12 text-black" />
+              </div>
               <div className="text-4xl md:text-5xl font-bold text-black mb-2">
                 <AnimatedCounter value={stat.value} suffix={stat.suffix} />
               </div>

@@ -226,7 +226,7 @@ export function HomeContent() {
                 href={`/explore/${pagne.slug}`}
                 className="group block rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="aspect-[4/3] relative overflow-hidden">
+                <div className="aspect-4/3 relative overflow-hidden">
                   <img
                     src={pagne.image}
                     alt={pagne.name}

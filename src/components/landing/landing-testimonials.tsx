@@ -3,7 +3,18 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Star, Quote } from "lucide-react";
+import {
+  Star,
+  Quote,
+  MessageCircle,
+  Smile,
+  Globe,
+  Brush,              // pour designer textile / artiste
+  BookOpen,           // pour professeur d'histoire
+  Scissors,           // pour styliste (couture / création)
+  Hammer,             // pour artisan tisserand (outil manuel / fabrication)
+  UserCircle,         // fallback générique pour avatar si on veut uniformiser plus tard
+} from "lucide-react";
 
 const testimonials = [
   {
@@ -11,7 +22,7 @@ const testimonials = [
     name: "Aminata Diallo",
     role: "Designer textile",
     location: "Dakar, Sénégal",
-    avatar: "👩🏿‍🎨",
+    avatar: Brush,        // icône pinceau → création / design
     rating: 5,
     text: "SANDJA m'a permis de redécouvrir le sens profond des motifs que j'utilisais depuis des années sans vraiment les comprendre. Une révélation !",
     color: "from-amber-500 to-orange-500",
@@ -21,7 +32,7 @@ const testimonials = [
     name: "Kwame Asante",
     role: "Professeur d'histoire",
     location: "Accra, Ghana",
-    avatar: "👨🏿‍🏫",
+    avatar: BookOpen,     // livre ouvert → enseignement / savoir
     rating: 5,
     text: "Enfin une plateforme qui documente notre patrimoine textile de manière scientifique tout en le rendant accessible à tous.",
     color: "from-blue-500 to-indigo-500",
@@ -31,7 +42,7 @@ const testimonials = [
     name: "Marie-Claire Njoya",
     role: "Styliste",
     location: "Douala, Cameroun",
-    avatar: "👩🏿‍💼",
+    avatar: Scissors,     // ciseaux → couture / stylisme
     rating: 5,
     text: "Le scanner de pagne est incroyable ! Mes clients adorent découvrir l'histoire de leurs vêtements. Ça ajoute une dimension émotionnelle à mes créations.",
     color: "from-purple-500 to-pink-500",
@@ -41,7 +52,7 @@ const testimonials = [
     name: "Ibrahim Traoré",
     role: "Artisan tisserand",
     location: "Bamako, Mali",
-    avatar: "👨🏿‍🔧",
+    avatar: Hammer,       // marteau → artisanat manuel / tissage / fabrication
     rating: 5,
     text: "Grâce aux NFTs, mes créations sont maintenant protégées et je peux enfin être rémunéré équitablement pour mon savoir-faire ancestral.",
     color: "from-green-500 to-teal-500",
@@ -55,6 +66,8 @@ function TestimonialCard({
   testimonial: typeof testimonials[0];
   index: number;
 }) {
+  const AvatarIcon = testimonial.avatar;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -66,7 +79,7 @@ function TestimonialCard({
     >
       <div className="relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-african transition-shadow duration-300 h-full">
         {/* Quote icon */}
-        <div className={`absolute -top-4 -left-4 w-10 h-10 rounded-xl bg-gradient-to-br ${testimonial.color} flex items-center justify-center shadow-lg`}>
+        <div className={`absolute -top-4 -left-4 w-10 h-10 rounded-xl bg-linear-to-br ${testimonial.color} flex items-center justify-center shadow-lg`}>
           <Quote className="w-5 h-5 text-white" />
         </div>
 
@@ -91,7 +104,9 @@ function TestimonialCard({
 
         {/* Author */}
         <div className="flex items-center gap-3">
-          <div className="text-3xl">{testimonial.avatar}</div>
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 text-gray-700">
+            <AvatarIcon className="w-7 h-7" />
+          </div>
           <div>
             <div className="font-semibold text-gray-900">{testimonial.name}</div>
             <div className="text-sm text-gray-500">{testimonial.role}</div>
@@ -99,8 +114,8 @@ function TestimonialCard({
           </div>
         </div>
 
-        {/* Hover gradient border */}
-        <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${testimonial.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm`} />
+        {/* Hover linear border */}
+        <div className={`absolute inset-0 rounded-2xl bg-linear-to-br ${testimonial.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm`} />
       </div>
     </motion.div>
   );
@@ -119,7 +134,7 @@ export function LandingTestimonials() {
   return (
     <section 
       ref={containerRef}
-      className="py-20 md:py-32 bg-gradient-to-b from-white via-earth-50 to-white relative overflow-hidden"
+      className="py-20 md:py-32 bg-linear-to-b from-white via-earth-50 to-white relative overflow-hidden"
     >
       {/* Background elements with parallax */}
       <motion.div
@@ -146,13 +161,13 @@ export function LandingTestimonials() {
             transition={{ type: "spring", duration: 0.8 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm font-medium mb-6"
           >
-            <span className="text-xl">💬</span>
+            <MessageCircle className="w-5 h-5" />
             Ce qu'ils disent de nous
           </motion.div>
 
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Témoignages de la{" "}
-            <span className="text-gradient-african">Communauté</span>
+            <span className="text-greadient-african">Communauté</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Découvrez comment SANDJA transforme la relation des Africains avec leur patrimoine textile
@@ -179,10 +194,10 @@ export function LandingTestimonials() {
           className="mt-16 flex flex-wrap justify-center gap-8 md:gap-16"
         >
           {[
-            { value: "4.9/5", label: "Note moyenne", icon: "⭐" },
-            { value: "1,200+", label: "Avis positifs", icon: "💬" },
-            { value: "98%", label: "Satisfaction", icon: "😊" },
-            { value: "45", label: "Pays représentés", icon: "🌍" },
+            { value: "4.9/5", label: "Note moyenne",    icon: Star },
+            { value: "1,200+", label: "Avis positifs",  icon: MessageCircle },
+            { value: "98%",    label: "Satisfaction",   icon: Smile },
+            { value: "45",     label: "Pays représentés", icon: Globe },
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -192,7 +207,9 @@ export function LandingTestimonials() {
               transition={{ delay: 0.6 + index * 0.1 }}
               className="text-center"
             >
-              <div className="text-3xl mb-1">{stat.icon}</div>
+              <div className="mb-1">
+                <stat.icon className="mx-auto h-8 w-8 text-gray-700" />
+              </div>
               <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
               <div className="text-sm text-gray-500">{stat.label}</div>
             </motion.div>

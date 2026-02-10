@@ -1,8 +1,9 @@
+// src/components/3d/fabric-viewer-3d.tsx
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { RotateCw, ZoomIn, ZoomOut, Maximize2, Minimize2, RotateCcw, Shirt, Square, Hand } from "lucide-react";
+import { RotateCw, ZoomIn, ZoomOut, Maximize2, Minimize2, RotateCcw, Shirt, Square, Waves, Hand } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type DisplayMode = "flat" | "draped" | "mannequin";
@@ -10,400 +11,477 @@ type DisplayMode = "flat" | "draped" | "mannequin";
 interface FabricViewer3DProps {
   productName: string;
   colors: string[];
-  patterns?: string[];
   className?: string;
 }
 
 export function FabricViewer3D({ productName, colors, className }: FabricViewer3DProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
+  const mountRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<any>(null);
+  const rendererRef = useRef<any>(null);
+  const cameraRef = useRef<any>(null);
+  const frameRef = useRef<number>(0);
+  const fabricRef = useRef<any>(null);
+
   const [mode, setMode] = useState<DisplayMode>("flat");
-  const [isAutoRotate, setIsAutoRotate] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [isAutoRotate, setIsAutoRotate] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const isDragging = useRef(false);
-  const lastMouse = useRef({ x: 0, y: 0 });
+  const prevMouse = useRef({ x: 0, y: 0 });
+  const rotationVel = useRef({ x: 0, y: 0 });
+  const targetRotation = useRef({ x: 0, y: 0 });
+  const zoomLevel = useRef(1);
+
+  const buildFabric = useCallback(async (displayMode: DisplayMode) => {
+    if (!mountRef.current) return;
+    const THREE = await import("three");
+
+    // Cleanup previous
+    if (rendererRef.current) {
+      cancelAnimationFrame(frameRef.current);
+      rendererRef.current.dispose();
+      if (mountRef.current.contains(rendererRef.current.domElement)) {
+        mountRef.current.removeChild(rendererRef.current.domElement);
+      }
+    }
+
+    const container = mountRef.current;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#0f0f1a");
+    scene.fog = new THREE.FogExp2("#0f0f1a", 0.06);
+    sceneRef.current = scene;
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.set(0, 1, displayMode === "mannequin" ? 5 : 4);
+    camera.lookAt(0, displayMode === "mannequin" ? 0.5 : 0, 0);
+    cameraRef.current = camera;
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    container.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
+
+    // Lights
+    scene.add(new THREE.AmbientLight("#505070", 0.7));
+
+    const mainLight = new THREE.DirectionalLight("#ffffff", 1.0);
+    mainLight.position.set(3, 6, 4);
+    mainLight.castShadow = true;
+    scene.add(mainLight);
+
+    const warmLight = new THREE.PointLight(colors[0] || "#DAA520", 0.8, 10);
+    warmLight.position.set(-3, 3, 2);
+    scene.add(warmLight);
+
+    const coolLight = new THREE.PointLight("#4169E1", 0.5, 10);
+    coolLight.position.set(3, 1, -3);
+    scene.add(coolLight);
+
+    // Ground
+    const groundGeom = new THREE.PlaneGeometry(10, 10);
+    const groundMat = new THREE.MeshStandardMaterial({ color: "#0a0a15", roughness: 0.95 });
+    const ground = new THREE.Mesh(groundGeom, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -1.5;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // Grid
+    const grid = new THREE.GridHelper(8, 16, "#1a1a30", "#1a1a30");
+    grid.position.y = -1.49;
+    (grid.material as any).opacity = 0.25;
+    (grid.material as any).transparent = true;
+    scene.add(grid);
+
+    // Build fabric based on mode
+    const fabricGroup = new THREE.Group();
+    fabricRef.current = fabricGroup;
+    scene.add(fabricGroup);
+
+    if (displayMode === "flat") {
+      buildFlatFabric(THREE, fabricGroup, colors);
+    } else if (displayMode === "draped") {
+      buildDrapedFabric(THREE, fabricGroup, colors);
+    } else {
+      buildMannequinFabric(THREE, fabricGroup, colors);
+    }
+
+    // Reset rotation for mode change
+    targetRotation.current = { x: 0, y: 0 };
+    setIsLoaded(true);
+
+    // Animate
+    const clock = new THREE.Clock();
+    const animate = () => {
+      frameRef.current = requestAnimationFrame(animate);
+      const elapsed = clock.getElapsedTime();
+      const delta = clock.getDelta();
+
+      if (isAutoRotate) targetRotation.current.y += delta * 0.3;
+
+      rotationVel.current.x *= 0.95;
+      rotationVel.current.y *= 0.95;
+      targetRotation.current.x += rotationVel.current.x;
+      targetRotation.current.y += rotationVel.current.y;
+
+      fabricGroup.rotation.x += (targetRotation.current.x - fabricGroup.rotation.x) * 0.08;
+      fabricGroup.rotation.y += (targetRotation.current.y - fabricGroup.rotation.y) * 0.08;
+
+      // Zoom
+      const targetZ = (displayMode === "mannequin" ? 5 : 4) / zoomLevel.current;
+      camera.position.z += (targetZ - camera.position.z) * 0.05;
+
+      // Animate fabric wave
+      fabricGroup.traverse((child: any) => {
+        if (child.name === "fabric_mesh" && child.geometry) {
+          const pos = child.geometry.attributes.position;
+          const orig = child.userData.originalPositions;
+          if (pos && orig) {
+            for (let i = 0; i < pos.count; i++) {
+              const ox = orig[i * 3];
+              const oz = orig[i * 3 + 2];
+              const wave = Math.sin(ox * 3 + elapsed * 1.5) * 0.02 + Math.cos(oz * 4 + elapsed) * 0.015;
+              pos.setY(i, orig[i * 3 + 1] + wave);
+            }
+            pos.needsUpdate = true;
+            child.geometry.computeVertexNormals();
+          }
+        }
+      });
+
+      // Floating light
+      warmLight.position.x = Math.sin(elapsed * 0.3) * 3;
+      warmLight.position.z = Math.cos(elapsed * 0.3) * 3;
+
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // Resize
+    const handleResize = () => {
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(frameRef.current);
+      renderer.dispose();
+    };
+  }, [colors, isAutoRotate]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    let cleanup: (() => void) | undefined;
+    buildFabric(mode).then((fn) => { cleanup = fn; });
+    return () => { cancelAnimationFrame(frameRef.current); cleanup?.(); };
+  }, [mode, buildFabric]);
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-
-    let time = 0;
-
-    const render = () => {
-      const w = rect.width;
-      const h = rect.height;
-      ctx.clearRect(0, 0, w, h);
-
-      // Background
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-      bgGrad.addColorStop(0, "#1a1a2e");
-      bgGrad.addColorStop(1, "#0f0f23");
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, w, h);
-
-      if (isAutoRotate) time += 0.01;
-
-      const rot = {
-        x: rotation.x + (isAutoRotate ? Math.sin(time) * 0.15 : 0),
-        y: rotation.y + (isAutoRotate ? time * 0.5 : 0),
-      };
-
-      if (mode === "flat") {
-        drawFlatFabric(ctx, w, h, rot, zoom, colors, time);
-      } else if (mode === "draped") {
-        drawDrapedFabric(ctx, w, h, rot, zoom, colors, time);
-      } else {
-        drawMannequinView(ctx, w, h, rot, zoom, colors, time);
-      }
-
-      // Label
-      ctx.save();
-      ctx.font = "bold 13px sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.4)";
-      ctx.textAlign = "center";
-      ctx.fillText(productName, w / 2, h - 16);
-      ctx.restore();
-
-      animRef.current = requestAnimationFrame(render);
-    };
-
-    render();
-    return () => cancelAnimationFrame(animRef.current);
-  }, [rotation, zoom, isAutoRotate, mode, colors, productName]);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    isDragging.current = true;
-    lastMouse.current = { x: e.clientX, y: e.clientY };
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
+  // Pointer handlers
+  const handlePointerDown = (e: React.PointerEvent) => { isDragging.current = true; prevMouse.current = { x: e.clientX, y: e.clientY }; };
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging.current) return;
-    const dx = e.clientX - lastMouse.current.x;
-    const dy = e.clientY - lastMouse.current.y;
-    setRotation((prev) => ({ x: prev.x + dy * 0.005, y: prev.y + dx * 0.005 }));
-    lastMouse.current = { x: e.clientX, y: e.clientY };
+    rotationVel.current.x = (e.clientY - prevMouse.current.y) * 0.003;
+    rotationVel.current.y = (e.clientX - prevMouse.current.x) * 0.003;
+    prevMouse.current = { x: e.clientX, y: e.clientY };
   };
+  const handlePointerUp = () => { isDragging.current = false; };
+  const handleWheel = (e: React.WheelEvent) => { zoomLevel.current = Math.max(0.5, Math.min(2.5, zoomLevel.current - e.deltaY * 0.001)); };
 
-  const handleMouseUp = () => { isDragging.current = false; };
-
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    setZoom((prev) => Math.max(0.5, Math.min(2.5, prev - e.deltaY * 0.001)));
-  };
-
-  const modes: { id: DisplayMode; icon: React.ComponentType<{ className: string }>; label: string }[] = [
-    { id: "flat", icon: Square, label: "À plat" },
-    { id: "draped", icon: Hand, label: "Drapé" },
-    { id: "mannequin", icon: Shirt, label: "Porté" },
-  ];
+  const modes = [
+    { id: "flat" as const, icon: Square, label: "À plat" },
+    { id: "draped" as const, icon: Waves, label: "Drapé" },
+    { id: "mannequin" as const, icon: Shirt, label: "Porté" },
+  ] as const;
 
   return (
-    <div className={cn("relative rounded-2xl overflow-hidden bg-gray-900", isFullscreen && "fixed inset-0 z-50", className)}>
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full cursor-grab active:cursor-grabbing"
-        style={{ aspectRatio: isFullscreen ? "auto" : "4/3" }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onWheel={handleWheel}
-      />
+    <div className={cn("relative rounded-2xl overflow-hidden bg-[#0f0f1a]", isFullscreen && "fixed inset-0 z-50", className)}>
+      <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing"
+        style={{ aspectRatio: isFullscreen ? "auto" : "4/3", minHeight: 300 }}
+        onPointerDown={handlePointerDown} onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp} onWheel={handleWheel} />
 
-      {/* Display mode selector */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2 py-1 bg-black/50 backdrop-blur-md rounded-full">
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-[#0f0f1a]">
+          <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+
+      {/* Mode selector */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2 py-1 bg-black/60 backdrop-blur-md rounded-full">
         {modes.map(({ id, icon: Icon, label }) => (
-          <button
-            key={id}
-            onClick={() => setMode(id)}
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
-              mode === id ? "bg-white/20 text-white" : "text-white/50 hover:text-white"
-            )}
-          >
-            <Icon className="w-3.5 h-3.5" />
-            {label}
+          <button key={id} onClick={() => setMode(id)}
+            className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+              mode === id ? "bg-white/20 text-white" : "text-white/50 hover:text-white")}>
+            <Icon className="w-3.5 h-3.5" />{label}
           </button>
         ))}
       </div>
 
       {/* Bottom controls */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 bg-black/50 backdrop-blur-md rounded-full">
-        <button onClick={() => setIsAutoRotate(!isAutoRotate)} className={cn("p-2 rounded-full transition-colors", isAutoRotate ? "bg-white/20 text-white" : "text-white/50 hover:text-white")}>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 bg-black/60 backdrop-blur-md rounded-full">
+        <button onClick={() => setIsAutoRotate(!isAutoRotate)}
+          className={cn("p-2 rounded-full", isAutoRotate ? "bg-white/20 text-white" : "text-white/50")}>
           <RotateCw className="w-4 h-4" />
         </button>
-        <button onClick={() => setZoom((z) => Math.min(2.5, z + 0.2))} className="p-2 rounded-full text-white/70 hover:text-white">
-          <ZoomIn className="w-4 h-4" />
-        </button>
-        <button onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))} className="p-2 rounded-full text-white/70 hover:text-white">
-          <ZoomOut className="w-4 h-4" />
-        </button>
-        <button onClick={() => { setRotation({ x: 0, y: 0 }); setZoom(1); }} className="p-2 rounded-full text-white/70 hover:text-white">
-          <RotateCcw className="w-4 h-4" />
-        </button>
+        <button onClick={() => { zoomLevel.current = Math.min(2.5, zoomLevel.current + 0.3); }} className="p-2 text-white/70 hover:text-white"><ZoomIn className="w-4 h-4" /></button>
+        <button onClick={() => { zoomLevel.current = Math.max(0.5, zoomLevel.current - 0.3); }} className="p-2 text-white/70 hover:text-white"><ZoomOut className="w-4 h-4" /></button>
+        <button onClick={() => { targetRotation.current = { x: 0, y: 0 }; zoomLevel.current = 1; }} className="p-2 text-white/70 hover:text-white"><RotateCcw className="w-4 h-4" /></button>
         <div className="w-px h-5 bg-white/20" />
-        <button onClick={() => setIsFullscreen(!isFullscreen)} className="p-2 rounded-full text-white/70 hover:text-white">
+        <button onClick={() => setIsFullscreen(!isFullscreen)} className="p-2 text-white/70 hover:text-white">
           {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
         </button>
+      </div>
+
+      {/* Label */}
+      <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/40 backdrop-blur-sm rounded-full">
+        <span className="text-white/60 text-xs">{productName}</span>
       </div>
     </div>
   );
 }
 
 // ============================================
-// DRAWING FUNCTIONS
+// FABRIC BUILD FUNCTIONS
 // ============================================
 
-function drawFabricPattern(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, colors: string[], rot: number) {
-  // African textile pattern (ndop-inspired)
+function createFabricTexture(THREE: any, colors: string[]): any {
+  const size = 512;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  // Base color
+  ctx.fillStyle = colors[0] || "#1B3A5C";
+  ctx.fillRect(0, 0, size, size);
+
+  // African pattern — diamonds and stripes
   const cols = 8;
   const rows = 10;
-  const cellW = w / cols;
-  const cellH = h / rows;
+  const cellW = size / cols;
+  const cellH = size / rows;
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      const px = x + c * cellW;
-      const py = y + r * cellH;
-      const colorIdx = (r + c) % colors.length;
+      const x = c * cellW;
+      const y = r * cellH;
 
-      ctx.fillStyle = colors[colorIdx] || "#1B3A5C";
-      ctx.fillRect(px, py, cellW - 1, cellH - 1);
+      // Alternating stripes
+      if ((r + c) % 2 === 0) {
+        ctx.fillStyle = colors[1] || "#D4A574";
+        ctx.fillRect(x + 2, y + 2, cellW - 4, cellH - 4);
+      }
 
-      // Diamond pattern overlay
+      // Diamond overlay
       if ((r + c) % 3 === 0) {
-        ctx.fillStyle = colors[(colorIdx + 1) % colors.length] || "#D4A574";
-        const mid = cellW / 2;
+        ctx.fillStyle = colors[2] || "#FFFFFF";
+        ctx.globalAlpha = 0.6;
+        const mx = x + cellW / 2;
+        const my = y + cellH / 2;
+        const ds = Math.min(cellW, cellH) * 0.3;
         ctx.beginPath();
-        ctx.moveTo(px + mid, py + 2);
-        ctx.lineTo(px + cellW - 3, py + cellH / 2);
-        ctx.lineTo(px + mid, py + cellH - 2);
-        ctx.lineTo(px + 3, py + cellH / 2);
+        ctx.moveTo(mx, my - ds);
+        ctx.lineTo(mx + ds, my);
+        ctx.lineTo(mx, my + ds);
+        ctx.lineTo(mx - ds, my);
         ctx.closePath();
         ctx.fill();
+        ctx.globalAlpha = 1;
       }
-    }
-  }
-}
 
-function drawFlatFabric(ctx: CanvasRenderingContext2D, w: number, h: number, rot: { x: number; y: number }, zoom: number, colors: string[], time: number) {
-  ctx.save();
-
-  const fabricW = w * 0.6 * zoom;
-  const fabricH = h * 0.65 * zoom;
-  const cx = w / 2;
-  const cy = h / 2 - 10;
-  const skewX = Math.sin(rot.y) * 0.25;
-  const skewY = Math.sin(rot.x) * 0.15;
-
-  // Shadow
-  ctx.fillStyle = "rgba(0,0,0,0.3)";
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + fabricH / 2 + 15, fabricW * 0.45, 12, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Transform for perspective
-  ctx.translate(cx, cy);
-  ctx.transform(1, skewY, skewX, 1, 0, 0);
-
-  // Main fabric
-  drawFabricPattern(ctx, -fabricW / 2, -fabricH / 2, fabricW, fabricH, colors, rot.y);
-
-  // Border
-  ctx.strokeStyle = colors[0] || "#1B3A5C";
-  ctx.lineWidth = 3;
-  ctx.strokeRect(-fabricW / 2, -fabricH / 2, fabricW, fabricH);
-
-  // Fringe effect at bottom
-  ctx.strokeStyle = colors[1] || "#D4A574";
-  ctx.lineWidth = 1;
-  for (let i = 0; i < 20; i++) {
-    const fx = -fabricW / 2 + (i / 19) * fabricW;
-    const waveY = Math.sin(i * 0.5 + time * 2) * 3;
-    ctx.beginPath();
-    ctx.moveTo(fx, fabricH / 2);
-    ctx.lineTo(fx, fabricH / 2 + 12 + waveY);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawDrapedFabric(ctx: CanvasRenderingContext2D, w: number, h: number, rot: { x: number; y: number }, zoom: number, colors: string[], time: number) {
-  ctx.save();
-
-  const cx = w / 2;
-  const cy = h / 2;
-  const sz = Math.min(w, h) * 0.35 * zoom;
-
-  // Flowing fabric simulation with wave points
-  const points: { x: number; y: number }[] = [];
-  const cols = 16;
-  const rows = 20;
-
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const u = c / (cols - 1) - 0.5;
-      const v = r / (rows - 1) - 0.5;
-
-      // Drape physics - catenary curve with waves
-      const drape = v * v * sz * 1.5;
-      const wave = Math.sin(u * 4 + time * 2 + v * 3) * sz * 0.04 * (1 + v * 2);
-      const perspX = u * sz * 2 * (1 + Math.sin(rot.y) * 0.3);
-      const perspY = v * sz * 2 + drape + wave;
-
-      points.push({
-        x: cx + perspX + Math.sin(rot.y + v * 2) * sz * 0.15,
-        y: cy + perspY - sz * 0.5,
-      });
-    }
-  }
-
-  // Draw fabric quads
-  for (let r = 0; r < rows - 1; r++) {
-    for (let c = 0; c < cols - 1; c++) {
-      const i = r * cols + c;
-      const p0 = points[i];
-      const p1 = points[i + 1];
-      const p2 = points[i + cols + 1];
-      const p3 = points[i + cols];
-
-      const colorIdx = (Math.floor(r / 2) + Math.floor(c / 2)) % colors.length;
-
-      // Shading based on surface normal approximation
-      const nx = (p1.x - p0.x) * (p3.y - p0.y) - (p1.y - p0.y) * (p3.x - p0.x);
-      const shade = Math.max(0.3, Math.min(1, 0.5 + nx * 0.001));
-
-      const baseColor = colors[colorIdx] || "#1B3A5C";
-      ctx.fillStyle = adjustBrightness(baseColor, shade);
-
-      ctx.beginPath();
-      ctx.moveTo(p0.x, p0.y);
-      ctx.lineTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.lineTo(p3.x, p3.y);
-      ctx.closePath();
-      ctx.fill();
-
-      // Diamond pattern on some cells
-      if ((r + c) % 4 === 0) {
-        const mcx = (p0.x + p1.x + p2.x + p3.x) / 4;
-        const mcy = (p0.y + p1.y + p2.y + p3.y) / 4;
-        const ds = Math.min(Math.abs(p1.x - p0.x), Math.abs(p3.y - p0.y)) * 0.3;
-
-        ctx.fillStyle = adjustBrightness(colors[(colorIdx + 1) % colors.length] || "#D4A574", shade);
+      // Small dots
+      if ((r * 3 + c * 7) % 5 === 0) {
+        ctx.fillStyle = colors[0] || "#1B3A5C";
         ctx.beginPath();
-        ctx.moveTo(mcx, mcy - ds);
-        ctx.lineTo(mcx + ds, mcy);
-        ctx.lineTo(mcx, mcy + ds);
-        ctx.lineTo(mcx - ds, mcy);
-        ctx.closePath();
+        ctx.arc(x + cellW / 2, y + cellH / 2, 4, 0, Math.PI * 2);
         ctx.fill();
       }
     }
   }
 
-  ctx.restore();
+  // Border pattern
+  ctx.strokeStyle = colors[2] || "#FFFFFF";
+  ctx.lineWidth = 6;
+  ctx.strokeRect(10, 10, size - 20, size - 20);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  return texture;
 }
 
-function drawMannequinView(ctx: CanvasRenderingContext2D, w: number, h: number, rot: { x: number; y: number }, zoom: number, colors: string[], time: number) {
-  ctx.save();
+function buildFlatFabric(THREE: any, group: any, colors: string[]) {
+  const texture = createFabricTexture(THREE, colors);
 
-  const cx = w / 2;
-  const sz = Math.min(w, h) * 0.35 * zoom;
-  const skew = Math.sin(rot.y) * 0.15;
+  const geom = new THREE.PlaneGeometry(2.5, 3, 40, 50);
+  const mat = new THREE.MeshStandardMaterial({
+    map: texture,
+    roughness: 0.8,
+    metalness: 0.05,
+    side: THREE.DoubleSide,
+  });
 
-  // Mannequin silhouette
-  ctx.strokeStyle = "rgba(255,255,255,0.15)";
-  ctx.lineWidth = 2;
+  const mesh = new THREE.Mesh(geom, mat);
+  mesh.name = "fabric_mesh";
+  mesh.castShadow = true;
+  mesh.rotation.x = -0.3;
 
-  // Head
-  ctx.beginPath();
-  ctx.ellipse(cx + skew * sz, h * 0.12, sz * 0.1, sz * 0.12, 0, 0, Math.PI * 2);
-  ctx.stroke();
+  // Store original positions for wave animation
+  const pos = geom.attributes.position;
+  mesh.userData.originalPositions = new Float32Array(pos.array);
 
-  // Neck
-  ctx.beginPath();
-  ctx.moveTo(cx + skew * sz - sz * 0.04, h * 0.23);
-  ctx.lineTo(cx + skew * sz + sz * 0.04, h * 0.23);
-  ctx.stroke();
+  group.add(mesh);
+
+  // Subtle fold lines
+  for (let i = 0; i < 3; i++) {
+    const y = -1 + i * 1;
+    const foldGeom = new THREE.PlaneGeometry(2.5, 0.01);
+    const foldMat = new THREE.MeshBasicMaterial({ color: "#000000", transparent: true, opacity: 0.1 });
+    const fold = new THREE.Mesh(foldGeom, foldMat);
+    fold.position.set(0, y, 0.01);
+    fold.rotation.x = -0.3;
+    group.add(fold);
+  }
+}
+
+function buildDrapedFabric(THREE: any, group: any, colors: string[]) {
+  const texture = createFabricTexture(THREE, colors);
+
+  const segW = 50;
+  const segH = 60;
+  const geom = new THREE.PlaneGeometry(2.5, 3, segW, segH);
+  const pos = geom.attributes.position;
+
+  // Create catenary drape shape
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+
+    // Catenary curve (drape)
+    const normalizedY = (y + 1.5) / 3; // 0 to 1
+    const drapeZ = -Math.pow(normalizedY, 2) * 0.8 + Math.sin(x * 2) * 0.1 * normalizedY;
+    const foldZ = Math.sin(x * 5 + y * 3) * 0.05 * (1 - normalizedY);
+
+    pos.setZ(i, drapeZ + foldZ);
+  }
+
+  geom.computeVertexNormals();
+
+  const mat = new THREE.MeshStandardMaterial({
+    map: texture,
+    roughness: 0.75,
+    metalness: 0.05,
+    side: THREE.DoubleSide,
+  });
+
+  const mesh = new THREE.Mesh(geom, mat);
+  mesh.name = "fabric_mesh";
+  mesh.castShadow = true;
+  mesh.position.y = 0.5;
+
+  mesh.userData.originalPositions = new Float32Array(pos.array);
+  group.add(mesh);
+}
+
+function buildMannequinFabric(THREE: any, group: any, colors: string[]) {
+  const texture = createFabricTexture(THREE, colors);
+
+  // Simple mannequin body
+  const mannequinMat = new THREE.MeshStandardMaterial({
+    color: "#2a2a35",
+    roughness: 0.7,
+    metalness: 0.3,
+  });
+
+  // Torso
+  const torsoGeom = new THREE.CylinderGeometry(0.35, 0.3, 1.5, 16);
+  const torso = new THREE.Mesh(torsoGeom, mannequinMat);
+  torso.position.y = 0.5;
+  torso.castShadow = true;
+  group.add(torso);
 
   // Shoulders
-  const shoulderY = h * 0.26;
-  const shoulderW = sz * 0.55;
+  const shoulderGeom = new THREE.CylinderGeometry(0.06, 0.06, 1.0, 8);
+  const shoulders = new THREE.Mesh(shoulderGeom, mannequinMat);
+  shoulders.position.y = 1.2;
+  shoulders.rotation.z = Math.PI / 2;
+  group.add(shoulders);
 
-  // Fabric wrapped on body
-  const fabricTop = shoulderY;
-  const fabricBottom = h * 0.85;
-  const fabricCols = 14;
-  const fabricRows = 20;
+  // Neck
+  const neckGeom = new THREE.CylinderGeometry(0.1, 0.12, 0.3, 12);
+  const neck = new THREE.Mesh(neckGeom, mannequinMat);
+  neck.position.y = 1.4;
+  group.add(neck);
 
-  for (let r = 0; r < fabricRows - 1; r++) {
-    for (let c = 0; c < fabricCols - 1; c++) {
-      const u = c / (fabricCols - 1);
-      const v = r / (fabricRows - 1);
+  // Head (simple oval)
+  const headGeom = new THREE.SphereGeometry(0.18, 16, 16);
+  const head = new THREE.Mesh(headGeom, mannequinMat);
+  head.position.y = 1.7;
+  head.scale.y = 1.2;
+  group.add(head);
 
-      // Body shape (hourglass)
-      const bodyWidth = shoulderW * (1 - 0.2 * Math.sin(v * Math.PI));
-      const x0 = cx - bodyWidth + u * bodyWidth * 2 + skew * sz * (1 - v);
-      const y0 = fabricTop + v * (fabricBottom - fabricTop);
-      const x1 = cx - bodyWidth + (u + 1 / (fabricCols - 1)) * bodyWidth * 2 + skew * sz * (1 - v);
-      const y1 = fabricTop + (v + 1 / (fabricRows - 1)) * (fabricBottom - fabricTop);
+  // Stand
+  const standGeom = new THREE.CylinderGeometry(0.04, 0.04, 1.2, 8);
+  const stand = new THREE.Mesh(standGeom, mannequinMat);
+  stand.position.y = -0.85;
+  group.add(stand);
 
-      // Wave for draping
-      const wave = Math.sin(u * 6 + time * 1.5 + v * 4) * 2 * v;
+  const baseGeom = new THREE.CylinderGeometry(0.3, 0.35, 0.08, 16);
+  const base = new THREE.Mesh(baseGeom, mannequinMat);
+  base.position.y = -1.45;
+  group.add(base);
 
-      const colorIdx = (Math.floor(r / 2) + Math.floor(c / 2)) % colors.length;
-      const shade = 0.5 + u * 0.5 + Math.sin(v * Math.PI) * 0.2;
+  // Fabric wrapped around torso
+  const fabricGeom = new THREE.CylinderGeometry(0.38, 0.33, 1.6, 32, 20, true);
+  const pos = fabricGeom.attributes.position;
 
-      ctx.fillStyle = adjustBrightness(colors[colorIdx] || "#1B3A5C", Math.max(0.3, Math.min(1.2, shade)));
+  // Add slight bulge and fold variations
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    const z = pos.getZ(i);
+    const angle = Math.atan2(z, x);
+    const normalizedY = (y + 0.8) / 1.6;
 
-      ctx.beginPath();
-      ctx.moveTo(x0 + wave, y0);
-      ctx.lineTo(x1 + wave, y0);
-      ctx.lineTo(x1 + wave, y1);
-      ctx.lineTo(x0 + wave, y1);
-      ctx.closePath();
-      ctx.fill();
-    }
+    // Fabric folds
+    const fold = Math.sin(angle * 8 + y * 3) * 0.02;
+    const drape = Math.sin(angle * 3) * 0.03 * (1 - normalizedY);
+
+    const r = Math.sqrt(x * x + z * z) + fold + drape;
+    pos.setX(i, Math.cos(angle) * r);
+    pos.setZ(i, Math.sin(angle) * r);
   }
 
-  // Arms outline
-  ctx.strokeStyle = "rgba(255,255,255,0.1)";
-  ctx.lineWidth = 1.5;
-  // Left arm
-  ctx.beginPath();
-  ctx.moveTo(cx - shoulderW + skew * sz, shoulderY);
-  ctx.quadraticCurveTo(cx - shoulderW - sz * 0.1, h * 0.55, cx - shoulderW + sz * 0.05, h * 0.75);
-  ctx.stroke();
-  // Right arm
-  ctx.beginPath();
-  ctx.moveTo(cx + shoulderW + skew * sz, shoulderY);
-  ctx.quadraticCurveTo(cx + shoulderW + sz * 0.1, h * 0.55, cx + shoulderW - sz * 0.05, h * 0.75);
-  ctx.stroke();
+  fabricGeom.computeVertexNormals();
 
-  ctx.restore();
-}
+  const fabricMat = new THREE.MeshStandardMaterial({
+    map: texture,
+    roughness: 0.7,
+    metalness: 0.05,
+    side: THREE.DoubleSide,
+  });
 
-function adjustBrightness(hex: string, factor: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  const fabric = new THREE.Mesh(fabricGeom, fabricMat);
+  fabric.name = "fabric_mesh";
+  fabric.position.y = 0.5;
+  fabric.castShadow = true;
+  fabric.userData.originalPositions = new Float32Array(pos.array);
 
-  const nr = Math.round(Math.min(255, r * factor));
-  const ng = Math.round(Math.min(255, g * factor));
-  const nb = Math.round(Math.min(255, b * factor));
-
-  return `rgb(${nr},${ng},${nb})`;
+  group.add(fabric);
 }

@@ -44,7 +44,7 @@ export function LandingSolution() {
   ];
 
   return (
-    <section className="py-20 md:py-32 bg-gradient-to-b from-earth-50 to-white relative overflow-hidden">
+    <section className="py-20 md:py-32 bg-linear-to-b from-earth-50 to-white relative overflow-hidden">
       {/* Motif de fond */}
       <div className="absolute inset-0 african-pattern-kente opacity-10" />
 
@@ -64,7 +64,7 @@ export function LandingSolution() {
 
           {/* Titre avec logo stylisé */}
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            <span className="text-gradient-african">SANDJA</span>, {t("title").replace("SANDJA, ", "")}
+            <span className="text-linear-african">SANDJA</span>, {t("title").replace("SANDJA, ", "")}
           </h2>
         </motion.div>
 
@@ -96,7 +96,7 @@ export function LandingSolution() {
                 </p>
 
                 {/* Ligne décorative au hover */}
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.color} rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity`} />
+                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r ${feature.color} rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity`} />
               </div>
             </motion.div>
           ))}
@@ -112,8 +112,8 @@ export function LandingSolution() {
         >
           <div className="relative">
             {/* Phone mockup */}
-            <div className="w-64 h-[500px] bg-gray-900 rounded-[3rem] p-3 shadow-2xl">
-              <div className="w-full h-full bg-gradient-to-b from-primary-500 to-secondary-500 rounded-[2.5rem] flex flex-col items-center justify-center text-white p-6">
+            <div className="w-64 h-125 bg-gray-900 rounded-[3rem] p-3 shadow-2xl">
+              <div className="w-full h-full bg-linear-to-b from-primary-500 to-secondary-500 rounded-[2.5rem] flex flex-col items-center justify-center text-white p-6">
                 <div className="text-6xl mb-4">📱</div>
                 <div className="text-center">
                   <div className="font-heading text-xl font-bold mb-2">SANDJA App</div>
