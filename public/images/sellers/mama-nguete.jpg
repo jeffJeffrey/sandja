@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Mama Nguété Avatar -->
+  <defs>
+    <radialGradient id="face-grad-mama">
+      <stop offset="0%" style="stop-color:#A0826D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6F5436;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#E8D5B7"/>
+  
+  <!-- Traditional headwrap (colorful) -->
+  <g>
+    <!-- Main wrap -->
+    <ellipse cx="100" cy="55" rx="55" ry="30" fill="#FF6347"/>
+    <ellipse cx="100" cy="50" rx="50" ry="25" fill="#FFD700"/>
+    
+    <!-- Wrap knot -->
+    <ellipse cx="120" cy="45" rx="15" ry="20" fill="#228B22" transform="rotate(30 120 45)"/>
+    <ellipse cx="115" cy="40" rx="12" ry="16" fill="#FF6347" transform="rotate(30 115 40)"/>
+  </g>
+  
+  <!-- Decorative patterns on wrap -->
+  <g opacity="0.6">
+    <circle cx="75" cy="50" r="4" fill="#FFFFFF"/>
+    <circle cx="90" cy="48" r="4" fill="#FFFFFF"/>
+    <circle cx="105" cy="47" r="4" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- Face -->
+  <ellipse cx="100" cy="115" rx="42" ry="50" fill="url(#face-grad-mama)"/>
+  
+  <!-- Eyes (kind, wise) -->
+  <ellipse cx="85" cy="108" rx="7" ry="9" fill="#FFFFFF"/>
+  <ellipse cx="115" cy="108" rx="7" ry="9" fill="#FFFFFF"/>
+  <circle cx="85" cy="109" r="5" fill="#3D2817"/>
+  <circle cx="115" cy="109" r="5" fill="#3D2817"/>
+  
+  <!-- Eyebrows -->
+  <path d="M 75 100 Q 85 97 92 100" fill="none" stroke="#3D2817" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 108 100 Q 115 97 125 100" fill="none" stroke="#3D2817" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Nose -->
+  <path d="M 100 118 L 96 130 L 100 132 L 104 130 Z" fill="#6F5436"/>
+  
+  <!-- Warm smile -->
+  <path d="M 82 140 Q 100 150 118 140" fill="none" stroke="#3D2817" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 85 142 Q 100 148 115 142" fill="#8B4513" opacity="0.3"/>
+  
+  <!-- Earrings (traditional) -->
+  <circle cx="60" cy="120" r="8" fill="#FFD700" stroke="#D4A574" stroke-width="2"/>
+  <circle cx="140" cy="120" r="8" fill="#FFD700" stroke="#D4A574" stroke-width="2"/>
+  <circle cx="60" cy="120" r="4" fill="#D4A574"/>
+  <circle cx="140" cy="120" r="4" fill="#D4A574"/>
+  
+  <!-- Necklace -->
+  <g fill="#FFD700">
+    <circle cx="90" cy="158" r="4"/>
+    <circle cx="100" cy="160" r="4"/>
+    <circle cx="110" cy="158" r="4"/>
+  </g>
+  
+  <!-- Verified badge -->
+  <g transform="translate(150, 150)">
+    <circle r="15" fill="#FFD700"/>
+    <path d="M -5 0 L 0 8 L 8 -5" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#FFF8E7"/>
+  
+  <!-- Dwennimmen - Ram's Horns - Symbol of humility and strength -->
+  
+  <!-- Outer decorative circle -->
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.5"/>
+  
+  <!-- Left horn (curved spiral) -->
+  <g id="left-horn">
+    <!-- Outer curve -->
+    <path d="M 100 100 Q 60 80 50 60 Q 45 45 48 35 Q 52 28 58 30" 
+          fill="none" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+    
+    <!-- Inner curve -->
+    <path d="M 100 100 Q 65 85 58 68 Q 55 55 58 48" 
+          fill="none" stroke="#8B0000" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Spiral detail -->
+    <path d="M 58 48 Q 60 42 65 40 Q 70 39 73 42" 
+          fill="none" stroke="#FFD700" stroke-width="2"/>
+    
+    <!-- Horn ridges -->
+    <g opacity="0.6">
+      <path d="M 85 92 Q 75 85 70 78" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+      <path d="M 75 88 Q 68 80 64 72" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+      <path d="M 68 82 Q 62 74 58 66" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+    </g>
+  </g>
+  
+  <!-- Right horn (curved spiral - mirror) -->
+  <g id="right-horn">
+    <!-- Outer curve -->
+    <path d="M 100 100 Q 140 80 150 60 Q 155 45 152 35 Q 148 28 142 30" 
+          fill="none" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+    
+    <!-- Inner curve -->
+    <path d="M 100 100 Q 135 85 142 68 Q 145 55 142 48" 
+          fill="none" stroke="#8B0000" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Spiral detail -->
+    <path d="M 142 48 Q 140 42 135 40 Q 130 39 127 42" 
+          fill="none" stroke="#FFD700" stroke-width="2"/>
+    
+    <!-- Horn ridges -->
+    <g opacity="0.6">
+      <path d="M 115 92 Q 125 85 130 78" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+      <path d="M 125 88 Q 132 80 136 72" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+      <path d="M 132 82 Q 138 74 142 66" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+    </g>
+  </g>
+  
+  <!-- Central ram head (simplified) -->
+  <g id="ram-head">
+    <!-- Head -->
+    <ellipse cx="100" cy="120" rx="18" ry="22" fill="#000000" stroke="#FFD700" stroke-width="2"/>
+    
+    <!-- Eyes -->
+    <circle cx="94" cy="115" r="2.5" fill="#FFD700"/>
+    <circle cx="106" cy="115" r="2.5" fill="#FFD700"/>
+    
+    <!-- Nose -->
+    <ellipse cx="100" cy="128" rx="4" ry="3" fill="#FFD700"/>
+    
+    <!-- Ears -->
+    <ellipse cx="85" cy="110" rx="4" ry="7" fill="#000000" stroke="#FFD700" stroke-width="1" transform="rotate(-20 85 110)"/>
+    <ellipse cx="115" cy="110" rx="4" ry="7" fill="#000000" stroke="#FFD700" stroke-width="1" transform="rotate(20 115 110)"/>
+  </g>
+  
+  <!-- Lower body suggestion (strength) -->
+  <g opacity="0.4">
+    <rect x="92" y="135" width="16" height="25" rx="3" fill="#000000"/>
+    <path d="M 95 160 L 92 175 M 105 160 L 108 175" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Decorative Adinkra border elements -->
+  <g opacity="0.3">
+    <!-- Corner symbols -->
+    <path d="M 20 20 L 30 30 M 20 30 L 30 20" stroke="#000000" stroke-width="2"/>
+    <path d="M 180 20 L 170 30 M 180 30 L 170 20" stroke="#000000" stroke-width="2"/>
+    <path d="M 20 180 L 30 170 M 20 170 L 30 180" stroke="#000000" stroke-width="2"/>
+    <path d="M 180 180 L 170 170 M 180 170 L 170 180" stroke="#000000" stroke-width="2"/>
+  </g>
+  
+  <!-- Philosophical symbols (humility down, strength in horn curves) -->
+  <g opacity="0.2">
+    <!-- Down arrow for humility -->
+    <path d="M 100 155 L 100 170 L 95 165 M 100 170 L 105 165" stroke="#8B0000" stroke-width="2"/>
+  </g>
+  
+  <!-- Golden accent circles -->
+  <g opacity="0.4">
+    <circle cx="58" cy="30" r="4" fill="#FFD700"/>
+    <circle cx="142" cy="30" r="4" fill="#FFD700"/>
+  </g>
+</svg>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <!-- Ndop Marriage Ceremonial -->
+  <defs>
+    <pattern id="ndop-bg" patternUnits="userSpaceOnUse" width="30" height="30">
+      <rect width="30" height="30" fill="#1B3A5C"/>
+      <circle cx="15" cy="15" r="2" fill="#E8D5B7" opacity="0.3"/>
+    </pattern>
+  </defs>
+  
+  <!-- Base -->
+  <rect width="400" height="300" fill="url(#ndop-bg)"/>
+  
+  <!-- White sections (traditional Ndop style) -->
+  <g fill="#FFFFFF">
+    <rect x="0" y="0" width="400" height="50"/>
+    <rect x="0" y="125" width="400" height="50"/>
+    <rect x="0" y="250" width="400" height="50"/>
+  </g>
+  
+  <!-- Lizard symbols (fertility) -->
+  <g fill="#228B22" opacity="0.8">
+    <ellipse cx="80" cy="25" rx="15" ry="8"/>
+    <ellipse cx="200" cy="25" rx="15" ry="8"/>
+    <ellipse cx="320" cy="25" rx="15" ry="8"/>
+    
+    <ellipse cx="80" cy="150" rx="15" ry="8"/>
+    <ellipse cx="200" cy="150" rx="15" ry="8"/>
+    <ellipse cx="320" cy="150" rx="15" ry="8"/>
+    
+    <ellipse cx="80" cy="275" rx="15" ry="8"/>
+    <ellipse cx="200" cy="275" rx="15" ry="8"/>
+    <ellipse cx="320" cy="275" rx="15" ry="8"/>
+  </g>
+  
+  <!-- Comb symbols (unity) -->
+  <g stroke="#D4A574" stroke-width="2" fill="none">
+    <path d="M 100 80 L 100 110 M 110 80 L 110 110 M 120 80 L 120 110 M 130 80 L 130 110"/>
+    <rect x="95" y="75" width="40" height="8" fill="#D4A574"/>
+    
+    <path d="M 270 80 L 270 110 M 280 80 L 280 110 M 290 80 L 290 110 M 300 80 L 300 110"/>
+    <rect x="265" y="75" width="40" height="8" fill="#D4A574"/>
+    
+    <path d="M 100 205 L 100 235 M 110 205 L 110 235 M 120 205 L 120 235 M 130 205 L 130 235"/>
+    <rect x="95" y="200" width="40" height="8" fill="#D4A574"/>
+    
+    <path d="M 270 205 L 270 235 M 280 205 L 280 235 M 290 205 L 290 235 M 300 205 L 300 235"/>
+    <rect x="265" y="200" width="40" height="8" fill="#D4A574"/>
+  </g>
+  
+  <!-- Border decoration -->
+  <rect x="5" y="5" width="390" height="290" fill="none" stroke="#E8D5B7" stroke-width="2"/>
+  
+  <!-- Corner symbols -->
+  <g fill="#D4A574">
+    <circle cx="15" cy="15" r="5"/>
+    <circle cx="385" cy="15" r="5"/>
+    <circle cx="15" cy="285" r="5"/>
+    <circle cx="385" cy="285" r="5"/>
+  </g>
+</svg>

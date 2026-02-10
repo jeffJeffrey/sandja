@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background - mud cloth style -->
+  <rect width="200" height="200" fill="#F5DEB3"/>
+  
+  <!-- Traditional Bogolan pattern background -->
+  <g opacity="0.2">
+    <line x1="0" y1="50" x2="200" y2="50" stroke="#8B4513" stroke-width="1"/>
+    <line x1="0" y1="100" x2="200" y2="100" stroke="#8B4513" stroke-width="1"/>
+    <line x1="0" y1="150" x2="200" y2="150" stroke="#8B4513" stroke-width="1"/>
+  </g>
+  
+  <!-- Crocodile - stylized Dogon/Bambara style -->
+  
+  <!-- Tail -->
+  <path d="M 20 110 L 40 108 L 45 105" fill="#2F4F4F" stroke="#8B4513" stroke-width="2.5"/>
+  <path d="M 20 110 L 25 115 L 30 112" fill="#2F4F4F" stroke="#8B4513" stroke-width="2"/>
+  
+  <!-- Body -->
+  <ellipse cx="85" cy="100" rx="35" ry="18" fill="#2F4F4F" stroke="#8B4513" stroke-width="3"/>
+  
+  <!-- Back scales/ridges -->
+  <g>
+    <path d="M 55 95 L 58 88 L 61 95" fill="#8B4513" stroke="#8B4513" stroke-width="1"/>
+    <path d="M 70 93 L 73 86 L 76 93" fill="#8B4513" stroke="#8B4513" stroke-width="1"/>
+    <path d="M 85 92 L 88 85 L 91 92" fill="#8B4513" stroke="#8B4513" stroke-width="1"/>
+    <path d="M 100 93 L 103 86 L 106 93" fill="#8B4513" stroke="#8B4513" stroke-width="1"/>
+  </g>
+  
+  <!-- Belly pattern -->
+  <g opacity="0.6">
+    <ellipse cx="70" cy="105" rx="4" ry="6" fill="#F5DEB3"/>
+    <ellipse cx="85" cy="107" rx="4" ry="6" fill="#F5DEB3"/>
+    <ellipse cx="100" cy="105" rx="4" ry="6" fill="#F5DEB3"/>
+  </g>
+  
+  <!-- Head and snout -->
+  <path d="M 120 100 L 150 95 L 165 97 L 168 100 L 165 103 L 150 105 Z" 
+        fill="#2F4F4F" stroke="#8B4513" stroke-width="3"/>
+  
+  <!-- Nostril -->
+  <circle cx="160" cy="99" r="2" fill="#8B4513"/>
+  
+  <!-- Eye -->
+  <circle cx="145" cy="98" r="4" fill="#F5DEB3" stroke="#8B4513" stroke-width="1.5"/>
+  <circle cx="145" cy="98" r="2" fill="#000000"/>
+  
+  <!-- Teeth -->
+  <g>
+    <path d="M 152 97 L 152 93" stroke="#F5DEB3" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 157 97 L 157 93" stroke="#F5DEB3" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 152 103 L 152 107" stroke="#F5DEB3" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 157 103 L 157 107" stroke="#F5DEB3" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Front legs -->
+  <g>
+    <!-- Left front leg -->
+    <path d="M 95 112 L 90 125 L 88 130" stroke="#2F4F4F" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M 88 130 L 84 132 M 88 130 L 90 133 M 88 130 L 86 134" stroke="#2F4F4F" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Right front leg -->
+    <path d="M 110 112 L 115 125 L 117 130" stroke="#2F4F4F" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M 117 130 L 121 132 M 117 130 L 115 133 M 117 130 L 119 134" stroke="#2F4F4F" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Back legs -->
+  <g>
+    <!-- Left back leg -->
+    <path d="M 70 112 L 65 125 L 63 130" stroke="#2F4F4F" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M 63 130 L 59 132 M 63 130 L 65 133 M 63 130 L 61 134" stroke="#2F4F4F" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Right back leg -->
+    <path d="M 85 112 L 90 125 L 92 130" stroke="#2F4F4F" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M 92 130 L 96 132 M 92 130 L 90 133 M 92 130 L 94 134" stroke="#2F4F4F" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Water symbols (waves) -->
+  <g opacity="0.4">
+    <path d="M 20 140 Q 30 135 40 140 Q 50 145 60 140" fill="none" stroke="#2F4F4F" stroke-width="2"/>
+    <path d="M 70 145 Q 80 140 90 145 Q 100 150 110 145" fill="none" stroke="#2F4F4F" stroke-width="2"/>
+    <path d="M 120 140 Q 130 135 140 140 Q 150 145 160 140" fill="none" stroke="#2F4F4F" stroke-width="2"/>
+  </g>
+  
+  <!-- Bogolan decorative patterns -->
+  <g opacity="0.3">
+    <rect x="15" y="15" width="10" height="10" fill="#8B4513"/>
+    <rect x="175" y="15" width="10" height="10" fill="#8B4513"/>
+    <rect x="15" y="175" width="10" height="10" fill="#8B4513"/>
+    <rect x="175" y="175" width="10" height="10" fill="#8B4513"/>
+  </g>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <!-- Ndop Royal variation 3 - close-up texture -->
+  <rect width="400" height="300" fill="#1B3A5C"/>
+  
+  <!-- Weave texture -->
+  <defs>
+    <pattern id="weave" patternUnits="userSpaceOnUse" width="4" height="4">
+      <rect width="4" height="4" fill="#1B3A5C"/>
+      <rect width="2" height="2" fill="#2C5078"/>
+      <rect x="2" y="2" width="2" height="2" fill="#2C5078"/>
+    </pattern>
+  </defs>
+  
+  <rect width="400" height="300" fill="url(#weave)"/>
+  
+  <!-- Large spider motif center -->
+  <g transform="translate(200, 150)">
+    <ellipse rx="40" ry="55" fill="#D4A574" opacity="0.9"/>
+    <circle cy="-30" r="25" fill="#D4A574" opacity="0.9"/>
+    
+    <!-- Legs -->
+    <g stroke="#D4A574" stroke-width="6" fill="none" opacity="0.9">
+      <path d="M -30 -10 Q -60 -30 -80 -50"/>
+      <path d="M -30 0 Q -65 0 -85 0"/>
+      <path d="M -30 10 Q -60 30 -80 50"/>
+      
+      <path d="M 30 -10 Q 60 -30 80 -50"/>
+      <path d="M 30 0 Q 65 0 85 0"/>
+      <path d="M 30 10 Q 60 30 80 50"/>
+    </g>
+    
+    <!-- Pattern on body -->
+    <path d="M -20 -5 Q 0 0 20 -5 M -20 10 Q 0 15 20 10" stroke="#1B3A5C" stroke-width="3" fill="none"/>
+  </g>
+  
+  <!-- Corner decorations -->
+  <g fill="#FFFFFF" opacity="0.3">
+    <circle cx="30" cy="30" r="10"/>
+    <circle cx="370" cy="30" r="10"/>
+    <circle cx="30" cy="270" r="10"/>
+    <circle cx="370" cy="270" r="10"/>
+  </g>
+</svg>

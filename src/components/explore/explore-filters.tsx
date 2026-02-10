@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Filter, X, ChevronDown, Grid3X3, LayoutGrid, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSymbolFilterStore } from "@/stores/filter-store";
-import type { SymbolCategory, SymbolTheme } from "@/types";
+import type { SymbolCategory } from "@/types";
+import type { SymbolTheme } from "@/types/explore";
 
 const categories: { value: SymbolCategory; labelKey: string; emoji: string }[] = [
   { value: "GEOMETRIC", labelKey: "geometric", emoji: "◇" },
@@ -29,7 +30,7 @@ const themes: { value: SymbolTheme; labelKey: string; color: string }[] = [
   { value: "PROTECTION", labelKey: "protection", color: "bg-amber-100 text-amber-700" },
   { value: "UNITY", labelKey: "unity", color: "bg-cyan-100 text-cyan-700" },
   { value: "PROSPERITY", labelKey: "prosperity", color: "bg-yellow-100 text-yellow-700" },
-];
+] as const;
 
 const regions = [
   { id: "cameroon-west", name: "Cameroun Ouest" },

@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#FAF8F3"/>
+  
+  <!-- Royal Comb - Symbol of unity and beauty -->
+  
+  <!-- Comb handle (decorative top) -->
+  <rect x="60" y="30" width="80" height="25" rx="12" fill="#D4A574" stroke="#1B3A5C" stroke-width="2.5"/>
+  
+  <!-- Handle decoration -->
+  <circle cx="100" cy="42.5" r="6" fill="#1B3A5C"/>
+  <circle cx="100" cy="42.5" r="3" fill="#E8D5B7"/>
+  
+  <!-- Decorative patterns on handle -->
+  <g opacity="0.7">
+    <line x1="70" y1="35" x2="70" y2="50" stroke="#1B3A5C" stroke-width="1.5"/>
+    <line x1="80" y1="35" x2="80" y2="50" stroke="#1B3A5C" stroke-width="1.5"/>
+    <line x1="90" y1="35" x2="90" y2="50" stroke="#1B3A5C" stroke-width="1.5"/>
+    <line x1="110" y1="35" x2="110" y2="50" stroke="#1B3A5C" stroke-width="1.5"/>
+    <line x1="120" y1="35" x2="120" y2="50" stroke="#1B3A5C" stroke-width="1.5"/>
+    <line x1="130" y1="35" x2="130" y2="50" stroke="#1B3A5C" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Comb base (connecting handle to teeth) -->
+  <rect x="55" y="55" width="90" height="15" rx="3" fill="#D4A574" stroke="#1B3A5C" stroke-width="2.5"/>
+  
+  <!-- Base decoration -->
+  <g opacity="0.6">
+    <circle cx="70" cy="62.5" r="2.5" fill="#1B3A5C"/>
+    <circle cx="85" cy="62.5" r="2.5" fill="#1B3A5C"/>
+    <circle cx="100" cy="62.5" r="2.5" fill="#1B3A5C"/>
+    <circle cx="115" cy="62.5" r="2.5" fill="#1B3A5C"/>
+    <circle cx="130" cy="62.5" r="2.5" fill="#1B3A5C"/>
+  </g>
+  
+  <!-- Comb teeth (representing unity - each member of community) -->
+  <g id="teeth">
+    <!-- Tooth 1 -->
+    <rect x="58" y="70" width="8" height="90" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+    
+    <!-- Tooth 2 -->
+    <rect x="70" y="70" width="8" height="95" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+    
+    <!-- Tooth 3 -->
+    <rect x="82" y="70" width="8" height="100" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+    
+    <!-- Tooth 4 (center - tallest) -->
+    <rect x="94" y="70" width="8" height="105" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+    
+    <!-- Tooth 5 (center) -->
+    <rect x="106" y="70" width="8" height="105" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+    
+    <!-- Tooth 6 -->
+    <rect x="118" y="70" width="8" height="100" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+    
+    <!-- Tooth 7 -->
+    <rect x="130" y="70" width="8" height="95" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+    
+    <!-- Tooth 8 -->
+    <rect x="142" y="70" width="8" height="90" rx="4" fill="#D4A574" stroke="#1B3A5C" stroke-width="2"/>
+  </g>
+  
+  <!-- Decorative highlights on teeth -->
+  <g opacity="0.5">
+    <line x1="62" y1="75" x2="62" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+    <line x1="74" y1="75" x2="74" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+    <line x1="86" y1="75" x2="86" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+    <line x1="98" y1="75" x2="98" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+    <line x1="110" y1="75" x2="110" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+    <line x1="122" y1="75" x2="122" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+    <line x1="134" y1="75" x2="134" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+    <line x1="146" y1="75" x2="146" y2="85" stroke="#E8D5B7" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Royal symbols in corners -->
+  <g opacity="0.3">
+    <!-- Top corners -->
+    <circle cx="25" cy="25" r="8" fill="none" stroke="#D4A574" stroke-width="2"/>
+    <circle cx="175" cy="25" r="8" fill="none" stroke="#D4A574" stroke-width="2"/>
+    
+    <!-- Bottom corners -->
+    <circle cx="25" cy="175" r="8" fill="none" stroke="#D4A574" stroke-width="2"/>
+    <circle cx="175" cy="175" r="8" fill="none" stroke="#D4A574" stroke-width="2"/>
+  </g>
+  
+  <!-- Decorative border pattern -->
+  <g opacity="0.2">
+    <rect x="10" y="10" width="180" height="180" fill="none" stroke="#1B3A5C" stroke-width="1" stroke-dasharray="5,5"/>
+  </g>
+</svg>

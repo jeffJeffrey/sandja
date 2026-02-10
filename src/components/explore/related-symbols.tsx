@@ -1,4 +1,3 @@
-// src/components/explore/related-symbols.tsx
 "use client";
 
 import { useTranslations } from "next-intl";

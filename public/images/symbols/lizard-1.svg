@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#F0EDE5"/>
+  
+  <!-- Lizard - Symbol of fertility and regeneration -->
+  
+  <!-- Tail (curved) -->
+  <path d="M 30 120 Q 40 140 55 145 Q 70 148 85 140 Q 95 135 100 125" 
+        fill="#228B22" stroke="#1B3A5C" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Tail pattern -->
+  <g opacity="0.6">
+    <ellipse cx="45" cy="135" rx="4" ry="6" fill="#D4A574"/>
+    <ellipse cx="60" cy="143" rx="4" ry="6" fill="#D4A574"/>
+    <ellipse cx="75" cy="142" rx="4" ry="6" fill="#D4A574"/>
+    <ellipse cx="90" cy="135" rx="4" ry="6" fill="#D4A574"/>
+  </g>
+  
+  <!-- Body -->
+  <ellipse cx="115" cy="105" rx="28" ry="18" fill="#228B22" stroke="#1B3A5C" stroke-width="3"/>
+  
+  <!-- Body patterns (scales) -->
+  <g opacity="0.7">
+    <ellipse cx="105" cy="100" rx="5" ry="7" fill="#D4A574"/>
+    <ellipse cx="115" cy="98" rx="5" ry="7" fill="#D4A574"/>
+    <ellipse cx="125" cy="100" rx="5" ry="7" fill="#D4A574"/>
+    <ellipse cx="110" cy="108" rx="5" ry="7" fill="#D4A574"/>
+    <ellipse cx="120" cy="110" rx="5" ry="7" fill="#D4A574"/>
+  </g>
+  
+  <!-- Head -->
+  <path d="M 143 105 Q 155 100 160 105 Q 162 110 160 115 Q 155 120 145 118 Z" 
+        fill="#228B22" stroke="#1B3A5C" stroke-width="3"/>
+  
+  <!-- Eye -->
+  <circle cx="152" cy="108" r="3" fill="#FFFFFF"/>
+  <circle cx="152" cy="108" r="1.5" fill="#000000"/>
+  
+  <!-- Mouth -->
+  <path d="M 158 112 Q 162 113 164 111" fill="none" stroke="#1B3A5C" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Left front leg -->
+  <path d="M 105 115 L 95 130 L 92 135" stroke="#228B22" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M 92 135 L 88 137 M 92 135 L 94 138 M 92 135 L 90 139" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Right front leg -->
+  <path d="M 125 115 L 135 130 L 138 135" stroke="#228B22" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M 138 135 L 142 137 M 138 135 L 136 138 M 138 135 L 140 139" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Left back leg -->
+  <path d="M 100 110 L 85 125 L 80 130" stroke="#228B22" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M 80 130 L 76 132 M 80 130 L 78 133 M 80 130 L 82 134" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Right back leg -->
+  <path d="M 130 110 L 145 125 L 150 130" stroke="#228B22" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M 150 130 L 154 132 M 150 130 L 152 133 M 150 130 L 148 134" stroke="#228B22" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Decorative background elements (leaves/plants for fertility) -->
+  <g opacity="0.2">
+    <ellipse cx="40" cy="60" rx="8" ry="15" fill="#228B22" transform="rotate(-30 40 60)"/>
+    <ellipse cx="160" cy="60" rx="8" ry="15" fill="#228B22" transform="rotate(30 160 60)"/>
+    <ellipse cx="50" cy="160" rx="8" ry="15" fill="#228B22" transform="rotate(20 50 160)"/>
+    <ellipse cx="150" cy="160" rx="8" ry="15" fill="#228B22" transform="rotate(-20 150 160)"/>
+  </g>
+  
+  <!-- Tribal pattern border -->
+  <g opacity="0.3">
+    <rect x="10" y="10" width="180" height="180" fill="none" stroke="#1B3A5C" stroke-width="2"/>
+    <circle cx="30" cy="30" r="4" fill="#D4A574"/>
+    <circle cx="170" cy="30" r="4" fill="#D4A574"/>
+    <circle cx="30" cy="170" r="4" fill="#D4A574"/>
+    <circle cx="170" cy="170" r="4" fill="#D4A574"/>
+  </g>
+</svg>

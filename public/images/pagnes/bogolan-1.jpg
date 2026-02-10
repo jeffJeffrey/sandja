@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <!-- Bogolan (Mud Cloth) Pattern -->
+  
+  <!-- Base cloth color -->
+  <rect width="400" height="300" fill="#F5DEB3"/>
+  
+  <!-- Mud dye patterns - traditional geometric -->
+  <defs>
+    <pattern id="mud-texture" patternUnits="userSpaceOnUse" width="20" height="20">
+      <rect width="20" height="20" fill="#F5DEB3"/>
+      <circle cx="10" cy="10" r="1" fill="#8B4513" opacity="0.3"/>
+    </pattern>
+  </defs>
+  
+  <rect width="400" height="300" fill="url(#mud-texture)"/>
+  
+  <!-- Dark mud sections -->
+  <g fill="#8B4513">
+    <!-- Top border -->
+    <rect x="0" y="0" width="400" height="40"/>
+    
+    <!-- Bottom border -->
+    <rect x="0" y="260" width="400" height="40"/>
+    
+    <!-- Vertical bands -->
+    <rect x="0" y="0" width="40" height="300" opacity="0.8"/>
+    <rect x="360" y="0" width="40" height="300" opacity="0.8"/>
+    
+    <!-- Central geometric patterns -->
+    <path d="M 80 100 L 120 100 L 120 140 L 80 140 Z" opacity="0.9"/>
+    <path d="M 160 100 L 200 100 L 200 140 L 160 140 Z" opacity="0.9"/>
+    <path d="M 240 100 L 280 100 L 280 140 L 240 140 Z" opacity="0.9"/>
+    
+    <path d="M 80 160 L 120 160 L 120 200 L 80 200 Z" opacity="0.9"/>
+    <path d="M 160 160 L 200 160 L 200 200 L 160 200 Z" opacity="0.9"/>
+    <path d="M 240 160 L 280 160 L 280 200 L 240 200 Z" opacity="0.9"/>
+  </g>
+  
+  <!-- White/light mud patterns -->
+  <g fill="#2F4F4F" opacity="0.6">
+    <circle cx="100" cy="70" r="8"/>
+    <circle cx="200" cy="70" r="8"/>
+    <circle cx="300" cy="70" r="8"/>
+    
+    <circle cx="100" cy="230" r="8"/>
+    <circle cx="200" cy="230" r="8"/>
+    <circle cx="300" cy="230" r="8"/>
+    
+    <!-- Diagonal lines -->
+    <line x1="80" y1="100" x2="120" y2="140" stroke="#2F4F4F" stroke-width="3"/>
+    <line x1="120" y1="100" x2="80" y2="140" stroke="#2F4F4F" stroke-width="3"/>
+    
+    <line x1="160" y1="100" x2="200" y2="140" stroke="#2F4F4F" stroke-width="3"/>
+    <line x1="200" y1="100" x2="160" y2="140" stroke="#2F4F4F" stroke-width="3"/>
+    
+    <line x1="240" y1="100" x2="280" y2="140" stroke="#2F4F4F" stroke-width="3"/>
+    <line x1="280" y1="100" x2="240" y2="140" stroke="#2F4F4F" stroke-width="3"/>
+  </g>
+  
+  <!-- Traditional symbols -->
+  <g stroke="#8B4513" stroke-width="2" fill="none" opacity="0.7">
+    <path d="M 50 120 Q 60 110 70 120"/>
+    <path d="M 50 180 Q 60 170 70 180"/>
+    
+    <path d="M 330 120 Q 340 110 350 120"/>
+    <path d="M 330 180 Q 340 170 350 180"/>
+  </g>
+</svg>

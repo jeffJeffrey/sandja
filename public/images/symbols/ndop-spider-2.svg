@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#F5F5F0"/>
+  
+  <!-- Decorative border -->
+  <rect x="10" y="10" width="180" height="180" fill="none" stroke="#D4A574" stroke-width="2"/>
+  
+  <!-- Spider stylized geometric -->
+  <!-- Central diamond body -->
+  <path d="M 100 60 L 130 100 L 100 140 L 70 100 Z" fill="#1B3A5C" stroke="#D4A574" stroke-width="2"/>
+  
+  <!-- Inner pattern -->
+  <circle cx="100" cy="100" r="12" fill="#D4A574"/>
+  <circle cx="100" cy="100" r="8" fill="#1B3A5C"/>
+  <circle cx="100" cy="100" r="4" fill="#FFFFFF"/>
+  
+  <!-- Geometric legs pattern -->
+  <!-- Top left -->
+  <path d="M 70 80 L 35 50 L 30 45 L 25 50" fill="none" stroke="#1B3A5C" stroke-width="3" stroke-linejoin="miter"/>
+  <circle cx="25" cy="50" r="4" fill="#D4A574"/>
+  
+  <!-- Middle left -->
+  <path d="M 65 100 L 25 100 L 20 100 L 15 105" fill="none" stroke="#1B3A5C" stroke-width="3" stroke-linejoin="miter"/>
+  <circle cx="15" cy="105" r="4" fill="#D4A574"/>
+  
+  <!-- Bottom left -->
+  <path d="M 70 120 L 35 150 L 30 155 L 25 150" fill="none" stroke="#1B3A5C" stroke-width="3" stroke-linejoin="miter"/>
+  <circle cx="25" cy="150" r="4" fill="#D4A574"/>
+  
+  <!-- Top right -->
+  <path d="M 130 80 L 165 50 L 170 45 L 175 50" fill="none" stroke="#1B3A5C" stroke-width="3" stroke-linejoin="miter"/>
+  <circle cx="175" cy="50" r="4" fill="#D4A574"/>
+  
+  <!-- Middle right -->
+  <path d="M 135 100 L 175 100 L 180 100 L 185 105" fill="none" stroke="#1B3A5C" stroke-width="3" stroke-linejoin="miter"/>
+  <circle cx="185" cy="105" r="4" fill="#D4A574"/>
+  
+  <!-- Bottom right -->
+  <path d="M 130 120 L 165 150 L 170 155 L 175 150" fill="none" stroke="#1B3A5C" stroke-width="3" stroke-linejoin="miter"/>
+  <circle cx="175" cy="150" r="4" fill="#D4A574"/>
+  
+  <!-- Decorative corner symbols -->
+  <g opacity="0.4">
+    <circle cx="30" cy="30" r="5" fill="#D4A574"/>
+    <circle cx="170" cy="30" r="5" fill="#D4A574"/>
+    <circle cx="30" cy="170" r="5" fill="#D4A574"/>
+    <circle cx="170" cy="170" r="5" fill="#D4A574"/>
+  </g>
+</svg>
