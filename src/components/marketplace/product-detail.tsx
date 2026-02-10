@@ -1,5 +1,5 @@
 "use client";
-
+import { usePurchase } from "@/hooks/usePurchase";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -19,6 +19,27 @@ import { useCartStore } from "@/stores/cart-store";
 import { toast } from "sonner";
 
 type ViewMode = "images" | "3d";
+
+function BuyButton({ productId, price }: { productId: string; price: number }) {
+  const { purchase, status, result, isProcessing } = usePurchase();
+  
+  const handleBuy = async () => {
+    const res = await purchase("nft", productId, price);
+    if (res) {
+      console.log("Achat réussi!", res.txHash);
+      window.open(res.explorerUrl, "_blank");
+    }
+  };
+
+  return (
+    <Button onClick={handleBuy} disabled={isProcessing}>
+      {status === "signing" ? "Confirmez dans le wallet..." :
+       status === "submitting" ? "Soumission..." :
+       status === "success" ? "✅ Acheté !" :
+       `Acheter (${price} ADA)`}
+    </Button>
+  );
+}
 
 export function ProductDetail({ slug }: { slug: string }) {
   const t = useTranslations("marketplace");
@@ -257,14 +278,7 @@ export function ProductDetail({ slug }: { slug: string }) {
 
                 {/* Action buttons */}
                 <div className="flex gap-3">
-                  <Button onClick={handleBuyNow} disabled={!connected || isPurchasing}
-                    className="flex-1 gap-2 bg-primary-600 hover:bg-primary-700 text-white py-6">
-                    {isPurchasing ? (
-                      <><span className="animate-spin">⏳</span> Transaction en cours...</>
-                    ) : (
-                      <><Wallet className="w-5 h-5" /> Acheter maintenant</>
-                    )}
-                  </Button>
+                  <BuyButton productId={product.id} price={product.price} />
                   <Button variant="outline" onClick={handleAddToCart} className="gap-2 py-6">
                     <ShoppingCart className="w-5 h-5" />
                   </Button>

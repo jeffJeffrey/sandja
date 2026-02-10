@@ -1,9 +1,18 @@
 // src/config/blockchain.ts
+// ============================================
+// SANDJA Blockchain Configuration
+// Network: Preview Testnet
+// ============================================
 
 export type CardanoNetwork = "preview" | "preprod" | "mainnet";
 
 export const blockchainConfig = {
   network: (process.env.NEXT_PUBLIC_CARDANO_NETWORK || "preview") as CardanoNetwork,
+
+  // Platform wallet — receives ADA payments
+  sellerAddress:
+    process.env.SELLER_WALLET_ADDRESS ||
+    "addr_test1qrnacf9s53uce4u0nq72mut2qlszrxlpmpu8z2zdx80xywq5xs7n49j8yh36pl44hgp7kf6vfak2wppy98cst5ru0z7qg3enuq",
 
   networks: {
     preview: {
@@ -32,127 +41,43 @@ export const blockchainConfig = {
   token: {
     name: "SandjaCoin",
     symbol: "SNDJ",
-    decimals: 6,
-    policyId: process.env.NEXT_PUBLIC_SANDJA_POLICY_ID || "",
-    logo: "/images/token/sandja-coin.svg",
-    description: {
-      fr: "Token natif de l'écosystème SANDJA pour récompenser les contributions culturelles",
-      en: "Native token of the SANDJA ecosystem to reward cultural contributions",
-    },
+    policyId: process.env.NEXT_PUBLIC_SANDJA_POLICY_ID || "9ea1975866f677abac205447e4419ffe709c84dadacef658fc57c7dd",
+    assetName: "SNDJ",
   },
 
   nft: {
-    collection: {
-      name: "SANDJA Pagnes Collection",
-      policyId: process.env.NEXT_PUBLIC_NFT_POLICY_ID || "",
-      description: {
-        fr: "Collection de pagnes africains certifiés et numérisés",
-        en: "Collection of certified and digitized African cloths",
-      },
-    },
-    metadataStandard: "CIP-25" as const,
-    ipfs: {
-      gateway: "https://ipfs.io/ipfs/",
-      pinataApiUrl: "https://api.pinata.cloud",
-      nftStorageUrl: "https://api.nft.storage",
-    },
-    royalties: {
-      creator: 5,
-      platform: 2.5,
-      community: 2.5,
-    },
+    policyId: process.env.NEXT_PUBLIC_NFT_POLICY_ID || "1b7e22543fea82834cd28393ebca7a7f735b64089b3008b7995c9ada",
   },
 
-  supportedWallets: [
-    {
-      id: "nami",
-      name: "Nami",
-      icon: "/images/wallets/nami.svg",
-      downloadUrl: "https://namiwallet.io",
-    },
-    {
-      id: "eternl",
-      name: "Eternl",
-      icon: "/images/wallets/eternl.svg",
-      downloadUrl: "https://eternl.io",
-    },
-    {
-      id: "flint",
-      name: "Flint",
-      icon: "/images/wallets/flint.svg",
-      downloadUrl: "https://flint-wallet.com",
-    },
-    {
-      id: "yoroi",
-      name: "Yoroi",
-      icon: "/images/wallets/yoroi.svg",
-      downloadUrl: "https://yoroi-wallet.com",
-    },
-    {
-      id: "lace",
-      name: "Lace",
-      icon: "/images/wallets/lace.svg",
-      downloadUrl: "https://www.lace.io",
-    },
-  ],
-
-  fees: {
-    minFee: 0.17,
-    nftMint: 2,
-    marketplaceListing: 1,
-    tokenTransfer: 0.2,
-  },
-
-  contracts: {
-    marketplace: {
-      address: process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT || "",
-      scriptHash: "",
-    },
-    ticketing: {
-      address: process.env.NEXT_PUBLIC_TICKETING_CONTRACT || "",
-      scriptHash: "",
-    },
-    rewards: {
-      address: process.env.NEXT_PUBLIC_REWARDS_CONTRACT || "",
-      scriptHash: "",
-    },
+  // Prices in ADA for Preview testnet
+  pricing: {
+    nftPriceAda: 10,
+    pagnePriceAda: 5,
+    sndjClaimAmount: 100,
   },
 } as const;
 
-// ============================================
-// TYPES
-// ============================================
-
-export interface WalletInfo {
-  id: string;
-  name: string;
-  icon: string;
-  downloadUrl: string;
+export function getCurrentNetwork() {
+  return blockchainConfig.networks[blockchainConfig.network];
 }
 
-export interface NFTMetadata {
-  name: string;
-  description: string;
-  image: string;
-  mediaType: string;
-  attributes: {
-    trait_type: string;
-    value: string;
-  }[];
-  sandja: {
-    pagneId?: string;
-    designId?: string;
-    symbolIds?: string[];
-    regionId?: string;
-    ceremonyType?: string;
-    artisanId?: string;
-    createdAt: string;
-    edition?: number;
-    maxEdition?: number;
-  };
+export function getExplorerTxUrl(txHash: string) {
+  return `${getCurrentNetwork().explorerUrl}/transaction/${txHash}`;
 }
 
-export function getCurrentNetworkConfig() {
-  const network = blockchainConfig.network;
-  return blockchainConfig.networks[network];
+export function getExplorerAddressUrl(address: string) {
+  return `${getCurrentNetwork().explorerUrl}/address/${address}`;
+}
+
+export function stringToHex(str: string): string {
+  return Buffer.from(str, "utf-8").toString("hex");
+}
+
+/** Full asset unit = policyId + hex(assetName) */
+export function getSndjUnit(): string {
+  return blockchainConfig.token.policyId + stringToHex(blockchainConfig.token.assetName);
+}
+
+export function getNftUnit(assetName: string): string {
+  return blockchainConfig.nft.policyId + stringToHex(assetName);
 }
