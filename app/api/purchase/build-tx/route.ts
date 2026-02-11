@@ -12,18 +12,22 @@ import {
   getBlockfrostApi,
 } from "@/services/blockfrost";
 import { getCurrentNetwork } from "@/config/blockchain";
-import { Lucid, Blockfrost } from "lucid-cardano";
 
 export async function POST(request: NextRequest) {
+  let sellerAddress: string | undefined;
+  let lovelaceAmount: number | string | undefined;
+  let requiredAda: number | undefined;
   try {
     const body = await request.json();
-    const { senderAddress, sellerAddress, lovelaceAmount, message } = body;
+    const { senderAddress, sellerAddress: sellerAddr, lovelaceAmount: lovelaceAmt, message } = body;
+    sellerAddress = sellerAddr;
+    lovelaceAmount = lovelaceAmt;
     if (!senderAddress || !sellerAddress || !lovelaceAmount) {
       return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
     }
 
     // 1. Check funds with Blockfrost SDK
-    const requiredAda = Number(lovelaceAmount) / 1_000_000;
+    requiredAda = Number(lovelaceAmount) / 1_000_000;
     const fundsCheck = await checkSufficientFunds(senderAddress, requiredAda);
     if (!fundsCheck.sufficient) {
       return NextResponse.json(
@@ -44,7 +48,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Initialize Lucid with Blockfrost provider
+    // 3. Dynamic import Lucid to avoid ESM issues in Next.js build
+    const { Lucid, Blockfrost: LucidBlockfrost } = await import("lucid-cardano");
+
+    // 4. Initialize Lucid with Blockfrost provider
     const api = getBlockfrostApi();
     const apiUrl = (api as any).apiUrl || 'https://cardano-preview.blockfrost.io/api/v0';
     const projectId = process.env.BLOCKFROST_API_KEY;
@@ -52,25 +59,28 @@ export async function POST(request: NextRequest) {
       throw new Error("BLOCKFROST_API_KEY is not set");
     }
     const lucid = await Lucid.new(
-      new Blockfrost(apiUrl, projectId),
+      new LucidBlockfrost(apiUrl, projectId),
       "Preview"
     );
 
-    // 4. Convert Blockfrost UTxOs to Lucid UTxOs (use first 5 max)
+    // 5. Convert Blockfrost UTxOs to Lucid UTxOs (use first 5 max)
     const selectedUtxos = utxos.slice(0, 5).map((utxo) => ({
       txHash: utxo.tx_hash,
       outputIndex: utxo.tx_index,
-      assets: utxo.amount.reduce((acc: { [key: string]: BigInt }, a) => {
+      assets: utxo.amount.reduce((acc: { [key: string]: bigint }, a) => {
         acc[a.unit] = BigInt(a.quantity);
         return acc;
       }, {}),
-      address: senderAddress, // Note: Blockfrost utxo.address may not be needed, but set to sender
+      address: utxo.address,
       datumHash: utxo.data_hash || undefined,
       datum: utxo.inline_datum || undefined,
-      // scriptRef: omitted for simplicity, assume no script UTxOs
+      scriptRef: utxo.reference_script_hash
+        ? { type: "PlutusV1" as const, script: "" }
+        : undefined, // Simplified, adjust if needed
     }));
 
-    // 5. Build the transaction with Lucid
+    // 6. Build the transaction with Lucid
+    lucid.selectWalletFrom({ address: senderAddress, utxos: selectedUtxos });
     let tx = lucid.newTx()
       .payToAddress(sellerAddress, { lovelace: BigInt(lovelaceAmount) });
 
@@ -80,10 +90,9 @@ export async function POST(request: NextRequest) {
 
     const txComplete = await tx.complete({
       change: { address: senderAddress },
-      coinSelection: false,
     });
 
-    // 6. Get unsigned CBOR and estimated fee
+    // 7. Get unsigned CBOR and estimated fee
     const unsignedTxCbor = txComplete.toString();
     const estimatedFee = txComplete.fee.toString();
     const inputCount = txComplete.txComplete.body().inputs().len();
@@ -95,17 +104,16 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error("Build TX error:", error);
-    // Fallback: return manual payment instructions
     return NextResponse.json({
       fallback: true,
       manualTx: {
-        sellerAddress: error.sellerAddress || '', // Note: may need to adjust
-        lovelaceAmount: error.lovelaceAmount || '',
-        adaAmount: error.requiredAda || 0,
+        sellerAddress,
+        lovelaceAmount,
+        adaAmount: requiredAda,
         instructions: [
           "Ouvrez votre wallet Cardano",
-          `Envoyez ${error.requiredAda || ''} ADA à:`,
-          error.sellerAddress || '',
+          `Envoyez ${requiredAda} ADA à:`,
+          sellerAddress,
         ],
       },
       error: error.message,
