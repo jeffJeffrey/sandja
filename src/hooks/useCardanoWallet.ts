@@ -1,23 +1,26 @@
-// src/hooks/useCardanoWallet.ts
 "use client";
-
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   type CIP30WalletAPI,
   type CIP30WalletInfo,
   getInstalledWallets,
   connectWallet,
   isWalletEnabled,
-  isMobileDevice,
-  isInsideDAppBrowser,
-  isCIP30Available,
-  getMobileWallets,
-  openWalletDAppBrowser,
   decodeCborBalance,
   formatLovelace,
+  shortenAddress,
+  isMobileDevice,
+  isCIP30Available,
+  isInsideDAppBrowser,
+  openWalletDAppBrowser,
+  getMobileWallets,
+  getWalletStoreUrl,
+  SUPPORTED_WALLETS,
   lovelaceToAda,
 } from "@/services/cardano-wallet";
-import { ensureBech32, hexToBech32Address } from "@/lib/bech32";
+import { ensureBech32 } from "@/lib/bech32";
+import { useAuthStore } from "@/stores/auth-store";
+import { toast } from "sonner";
 
 export interface WalletBalance {
   lovelace: string;
@@ -26,209 +29,176 @@ export interface WalletBalance {
   assets: { unit: string; quantity: string }[];
 }
 
-export interface UseCardanoWalletReturn {
-  // State
-  connected: boolean;
-  connecting: boolean;
-  walletId: string | null;
-  walletApi: CIP30WalletAPI | null;
-  address: string | null;       // bech32 format (addr_test1... or addr1...)
-  addressHex: string | null;    // raw hex from CIP-30
-  balance: WalletBalance | null;
-  installedWallets: CIP30WalletInfo[];
-  error: string | null;
-
-  // Mobile
-  isMobile: boolean;
-  isInDAppBrowser: boolean;
-
-  // Actions
-  connect: (walletId: string) => Promise<boolean>;
-  disconnect: () => void;
-  refreshBalance: () => Promise<void>;
-  openMobileWallet: (walletId: string) => void;
-}
-
-export function useCardanoWallet(): UseCardanoWalletReturn {
+export function useCardanoWallet() {
+  const [walletApi, setWalletApi] = useState<CIP30WalletAPI | null>(null);
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(false);
-  const [walletId, setWalletId] = useState<string | null>(null);
-  const [walletApi, setWalletApi] = useState<CIP30WalletAPI | null>(null);
-  const [address, setAddress] = useState<string | null>(null);
-  const [addressHex, setAddressHex] = useState<string | null>(null);
+  const [walletName, setWalletName] = useState("");
+  const [walletIcon, setWalletIcon] = useState("");
+  const [address, setAddress] = useState("");
   const [balance, setBalance] = useState<WalletBalance | null>(null);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false);
   const [installedWallets, setInstalledWallets] = useState<CIP30WalletInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
+  // Mobile-specific state
   const [isMobile, setIsMobile] = useState(false);
   const [isInDAppBrowser, setIsInDAppBrowser] = useState(false);
+  const { setWalletAddress } = useAuthStore();
+  const hasAutoConnected = useRef(false);
 
-  const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Detect wallets on mount
+  // Detect environment on mount
   useEffect(() => {
-    setIsMobile(isMobileDevice());
-    setIsInDAppBrowser(isInsideDAppBrowser());
+    const mobile = isMobileDevice();
+    setIsMobile(mobile);
 
-    // Small delay for extensions to inject
+    // Delay detection to let wallet extensions/DApp browser inject window.cardano
     const timer = setTimeout(() => {
-      const wallets = getInstalledWallets();
-      setInstalledWallets(wallets);
+      const dappBrowser = isInsideDAppBrowser();
+      const cip30 = isCIP30Available();
+      setIsInDAppBrowser(dappBrowser);
 
-      // Auto-reconnect if previously connected
-      const savedWallet = localStorage.getItem("sandja-wallet");
-      if (savedWallet && wallets.some((w) => w.id === savedWallet)) {
-        connect(savedWallet);
+      // CIP-30 available — either desktop extensions or mobile DApp browser
+      if (cip30) {
+        const wallets = getInstalledWallets();
+        setInstalledWallets(wallets);
+
+        // Auto-reconnect
+        const lastWallet = localStorage.getItem("sandja_wallet_id");
+        if (lastWallet && !hasAutoConnected.current) {
+          hasAutoConnected.current = true;
+          isWalletEnabled(lastWallet).then((enabled) => {
+            if (enabled) {
+              handleConnect(lastWallet, true);
+            }
+          });
+        }
       }
-    }, 500);
+    }, 800); // Slightly longer delay for mobile DApp browsers
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /**
-   * Fetch balance and convert addresses from hex → bech32
-   */
-  const refreshBalance = useCallback(async () => {
-    if (!walletApi) return;
-
+  const fetchBalance = useCallback(async (api: CIP30WalletAPI) => {
+    setIsLoadingBalance(true);
     try {
-      // Get raw hex balance via CIP-30
-      const balanceCbor = await walletApi.getBalance();
-      const decoded = decodeCborBalance(balanceCbor);
-
+      const cborBalance = await api.getBalance();
+      const decoded = decodeCborBalance(cborBalance);
       setBalance({
         lovelace: decoded.lovelace,
         ada: lovelaceToAda(decoded.lovelace),
         adaFormatted: formatLovelace(decoded.lovelace),
         assets: decoded.assets,
       });
+    } catch (err) {
+      console.error("Failed to get balance:", err);
+    } finally {
+      setIsLoadingBalance(false);
+    }
+  }, []);
 
-      // Get address and convert hex → bech32
-      const usedAddresses = await walletApi.getUsedAddresses();
-      if (usedAddresses.length > 0) {
-        const rawHex = usedAddresses[0];
-        setAddressHex(rawHex);
-
-        // ★ KEY FIX: Convert CIP-30 hex address → bech32
+  const fetchAddress = useCallback(
+    async (api: CIP30WalletAPI) => {
+      try {
+        // Prefer used addresses if available, fallback to change address
+        let rawHex = await api.getChangeAddress();
+        const usedAddresses = await api.getUsedAddresses();
+        if (usedAddresses.length > 0) {
+          rawHex = usedAddresses[0];
+        }
+        // Convert hex to bech32
         const bech32Addr = ensureBech32(rawHex);
         setAddress(bech32Addr);
-
+        setWalletAddress(bech32Addr);
         console.log("[SANDJA] Address hex:", rawHex);
         console.log("[SANDJA] Address bech32:", bech32Addr);
-      } else {
-        // Try change address as fallback
-        const changeAddr = await walletApi.getChangeAddress();
-        if (changeAddr) {
-          setAddressHex(changeAddr);
-          setAddress(ensureBech32(changeAddr));
-        }
+      } catch (err) {
+        console.error("Failed to get address:", err);
       }
-    } catch (err) {
-      console.error("[SANDJA] Error refreshing balance:", err);
-    }
-  }, [walletApi]);
+    },
+    [setWalletAddress]
+  );
 
-  /**
-   * Connect to a CIP-30 wallet
-   */
-  const connect = useCallback(
-    async (id: string): Promise<boolean> => {
+  const handleConnect = useCallback(
+    async (walletId: string, silent = false) => {
       setConnecting(true);
       setError(null);
-
       try {
-        const api = await connectWallet(id);
+        const api = await connectWallet(walletId);
         setWalletApi(api);
-        setWalletId(id);
         setConnected(true);
-        localStorage.setItem("sandja-wallet", id);
-
-        // Fetch balance & address immediately
-        const balanceCbor = await api.getBalance();
-        const decoded = decodeCborBalance(balanceCbor);
-        setBalance({
-          lovelace: decoded.lovelace,
-          ada: lovelaceToAda(decoded.lovelace),
-          adaFormatted: formatLovelace(decoded.lovelace),
-          assets: decoded.assets,
-        });
-
-        // Get and convert address
-        const usedAddresses = await api.getUsedAddresses();
-        const rawHex = usedAddresses?.[0] || (await api.getChangeAddress());
-        if (rawHex) {
-          setAddressHex(rawHex);
-          const bech32Addr = ensureBech32(rawHex);
-          setAddress(bech32Addr);
-          console.log("[SANDJA] Connected! Address:", bech32Addr);
-        }
-
-        // Auto-refresh balance every 30s
-        if (refreshTimerRef.current) clearInterval(refreshTimerRef.current);
-        refreshTimerRef.current = setInterval(async () => {
-          try {
-            const b = await api.getBalance();
-            const d = decodeCborBalance(b);
-            setBalance({
-              lovelace: d.lovelace,
-              ada: lovelaceToAda(d.lovelace),
-              adaFormatted: formatLovelace(d.lovelace),
-              assets: d.assets,
-            });
-          } catch {}
-        }, 30_000);
-
-        return true;
+        const walletInfo = getInstalledWallets().find((w) => w.id === walletId);
+        setWalletName(walletInfo?.name || walletId);
+        setWalletIcon(walletInfo?.icon || "");
+        localStorage.setItem("sandja_wallet_id", walletId);
+        await fetchAddress(api);
+        await fetchBalance(api);
+        if (!silent) toast.success("Wallet connecté !");
       } catch (err: any) {
         const msg = err?.message || "Échec de la connexion";
         setError(msg);
-        console.error("[SANDJA] Wallet connection error:", msg);
-        return false;
+        if (!silent) toast.error(msg);
       } finally {
         setConnecting(false);
       }
     },
-    []
+    [fetchAddress, fetchBalance]
   );
 
-  const disconnect = useCallback(() => {
-    setConnected(false);
+  /**
+   * Mobile-specific: open the wallet's DApp browser
+   * The wallet app will open our URL in its built-in browser,
+   * injecting window.cardano automatically
+   */
+  const openInWalletBrowser = useCallback((walletId: string) => {
+    openWalletDAppBrowser(walletId);
+  }, []);
+
+  /**
+   * Mobile-specific: get link to install a wallet from app store
+   */
+  const getInstallUrl = useCallback((walletId: string): string | null => {
+    return getWalletStoreUrl(walletId);
+  }, []);
+
+  const handleDisconnect = useCallback(() => {
     setWalletApi(null);
-    setWalletId(null);
-    setAddress(null);
-    setAddressHex(null);
+    setConnected(false);
+    setWalletName("");
+    setWalletIcon("");
+    setAddress("");
     setBalance(null);
     setError(null);
-    localStorage.removeItem("sandja-wallet");
-    if (refreshTimerRef.current) clearInterval(refreshTimerRef.current);
-  }, []);
+    setWalletAddress(null);
+    localStorage.removeItem("sandja_wallet_id");
+    toast.success("Wallet déconnecté");
+  }, [setWalletAddress]);
 
-  const openMobileWallet = useCallback((id: string) => {
-    openWalletDAppBrowser(id);
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (refreshTimerRef.current) clearInterval(refreshTimerRef.current);
-    };
-  }, []);
+  const refreshBalance = useCallback(async () => {
+    if (walletApi) await fetchBalance(walletApi);
+  }, [walletApi, fetchBalance]);
 
   return {
+    // State
     connected,
     connecting,
-    walletId,
-    walletApi,
-    address,      // ← bech32 (addr_test1...) — safe for Blockfrost
-    addressHex,   // ← raw hex from CIP-30
+    walletName,
+    walletIcon,
+    address,
+    shortAddress: shortenAddress(address),
     balance,
+    isLoadingBalance,
     installedWallets,
     error,
+    walletApi,
     isMobile,
     isInDAppBrowser,
-    connect,
-    disconnect,
+    hasCIP30: installedWallets.length > 0,
+    mobileWallets: getMobileWallets(),
+    supportedWallets: SUPPORTED_WALLETS,
+    connect: handleConnect,
+    disconnect: handleDisconnect,
     refreshBalance,
-    openMobileWallet,
+    openInWalletBrowser,
+    getInstallUrl,
   };
 }
