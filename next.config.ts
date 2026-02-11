@@ -39,7 +39,11 @@ const nextConfig: NextConfig = {
   },
 
   // Configuration expérimentale
-  serverExternalPackages: ['lucid-cardano'],
+  serverExternalPackages: [
+    "lucid-cardano",
+    "@emurgo/cardano-serialization-lib-nodejs",
+    "@emurgo/cardano-message-signing-nodejs",
+  ],
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
