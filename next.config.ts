@@ -39,6 +39,7 @@ const nextConfig: NextConfig = {
   },
 
   // Configuration expérimentale
+  serverExternalPackages: ['lucid-cardano'],
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },

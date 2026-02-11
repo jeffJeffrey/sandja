@@ -14,20 +14,15 @@ import {
 import { getCurrentNetwork } from "@/config/blockchain";
 
 export async function POST(request: NextRequest) {
-  let sellerAddress: string | undefined;
-  let lovelaceAmount: number | string | undefined;
-  let requiredAda: number | undefined;
   try {
     const body = await request.json();
-    const { senderAddress, sellerAddress: sellerAddr, lovelaceAmount: lovelaceAmt, message } = body;
-    sellerAddress = sellerAddr;
-    lovelaceAmount = lovelaceAmt;
+    const { senderAddress, sellerAddress, lovelaceAmount, message } = body;
     if (!senderAddress || !sellerAddress || !lovelaceAmount) {
       return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
     }
 
     // 1. Check funds with Blockfrost SDK
-    requiredAda = Number(lovelaceAmount) / 1_000_000;
+    const requiredAda = Number(lovelaceAmount) / 1_000_000;
     const fundsCheck = await checkSufficientFunds(senderAddress, requiredAda);
     if (!fundsCheck.sufficient) {
       return NextResponse.json(
@@ -105,18 +100,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Build TX error:", error);
     return NextResponse.json({
-      fallback: true,
-      manualTx: {
-        sellerAddress,
-        lovelaceAmount,
-        adaAmount: requiredAda,
-        instructions: [
-          "Ouvrez votre wallet Cardano",
-          `Envoyez ${requiredAda} ADA à:`,
-          sellerAddress,
-        ],
-      },
-      error: error.message,
+      error: error.message || "Échec de la construction de la transaction",
     }, { status: 500 });
   }
 }
