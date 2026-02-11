@@ -1,168 +1,185 @@
-// src/services/blockfrost.ts
-// ============================================
-// Blockfrost REST API (SERVER-SIDE ONLY)
-// No external dependencies — pure fetch
-// ============================================
 
-import { getCurrentNetwork } from "@/config/blockchain";
 
-const API_KEY = process.env.BLOCKFROST_API_KEY!;
+import { BlockFrostAPI, BlockfrostServerError } from "@blockfrost/blockfrost-js";
+import { blockchainConfig, getSndjUnit } from "@/config/blockchain";
 
-function baseUrl() {
-  return getCurrentNetwork().blockfrostUrl;
-}
+let _api: BlockFrostAPI | null = null;
 
-async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${baseUrl()}${path}`, {
-    headers: { project_id: API_KEY },
-    next: { revalidate: 0 }, // No cache for blockchain queries
-  });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Blockfrost GET ${path} [${res.status}]: ${body}`);
+export function getBlockfrostApi(): BlockFrostAPI {
+  if (!_api) {
+    const projectId = process.env.BLOCKFROST_API_KEY;
+    if (!projectId) {
+      throw new Error("BLOCKFROST_API_KEY is not set in environment variables");
+    }
+    _api = new BlockFrostAPI({
+      projectId,
+      network: blockchainConfig.network, 
+    });
   }
-  return res.json();
+  return _api;
 }
 
-async function post<T>(path: string, body: string | Uint8Array, contentType = "application/json"): Promise<T> {
-  const res = await fetch(`${baseUrl()}${path}`, {
-    method: "POST",
-    headers: {
-      project_id: API_KEY,
-      "Content-Type": contentType,
-    },
-    body: body instanceof Uint8Array ? Buffer.from(body) : body,
-  });
-  if (!res.ok) {
-    const errorBody = await res.text();
-    throw new Error(`Blockfrost POST ${path} [${res.status}]: ${errorBody}`);
-  }
-  return res.json();
+
+
+export async function checkHealth() {
+  const api = getBlockfrostApi();
+  const health = await api.health();
+  const clock = await api.healthClock();
+  return { healthy: health.is_healthy, serverTime: clock.server_time };
 }
 
-// ============================================
-// ADDRESS
-// ============================================
 
-export interface AddressAmount {
-  unit: string;
-  quantity: string;
-}
 
 export async function getAddressInfo(address: string) {
-  return get<{
-    address: string;
-    amount: AddressAmount[];
-    stake_address: string | null;
-    type: string;
-  }>(`/addresses/${address}`);
+  const api = getBlockfrostApi();
+  try {
+    return await api.addresses(address);
+  } catch (error) {
+    if (error instanceof BlockfrostServerError && error.status_code === 404) {
+      return {
+        address,
+        amount: [{ unit: "lovelace", quantity: "0" }],
+        stake_address: null,
+        type: "shelley",
+        script: false,
+      };
+    }
+    throw error;
+  }
 }
 
 export async function getAddressUtxos(address: string) {
-  return get<
-    {
-      tx_hash: string;
-      tx_index: number;
-      output_index: number;
-      amount: AddressAmount[];
-      block: string;
-      data_hash: string | null;
-    }[]
-  >(`/addresses/${address}/utxos`);
+  const api = getBlockfrostApi();
+  try {
+    return await api.addressesUtxosAll(address);
+  } catch (error) {
+    if (error instanceof BlockfrostServerError && error.status_code === 404) {
+      return [];
+    }
+    throw error;
+  }
 }
 
-// ============================================
-// ASSETS
-// ============================================
+export async function getAddressExtended(address: string) {
+  const api = getBlockfrostApi();
+  try {
+    return await api.addressesExtended(address);
+  } catch (error) {
+    if (error instanceof BlockfrostServerError && error.status_code === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+export async function getAddressTransactions(address: string) {
+  const api = getBlockfrostApi();
+  try {
+    return await api.addressesTransactions(address, { order: "desc", count: 20 });
+  } catch (error) {
+    if (error instanceof BlockfrostServerError && error.status_code === 404) {
+      return [];
+    }
+    throw error;
+  }
+}
+
 
 export async function getAssetInfo(unit: string) {
-  return get<{
-    asset: string;
-    policy_id: string;
-    asset_name: string;
-    fingerprint: string;
-    quantity: string;
-    onchain_metadata: any;
-  }>(`/assets/${unit}`);
+  const api = getBlockfrostApi();
+  return api.assetsById(unit);
 }
 
 export async function getAssetsByPolicy(policyId: string) {
-  return get<{ asset: string; quantity: string }[]>(`/assets/policy/${policyId}`);
-}
-
-export async function getAddressAssets(address: string) {
+  const api = getBlockfrostApi();
   try {
-    const info = await getAddressInfo(address);
-    return info.amount.filter((a) => a.unit !== "lovelace");
-  } catch {
-    return [];
+    return await api.assetsPolicyById(policyId);
+  } catch (error) {
+    if (error instanceof BlockfrostServerError && error.status_code === 404) {
+      return [];
+    }
+    throw error;
   }
 }
 
-// ============================================
-// TRANSACTIONS
-// ============================================
+
 
 export async function getTransaction(txHash: string) {
-  return get<any>(`/txs/${txHash}`);
+  const api = getBlockfrostApi();
+  return api.txs(txHash);
 }
 
 export async function getTransactionUtxos(txHash: string) {
-  return get<{ hash: string; inputs: any[]; outputs: any[] }>(`/txs/${txHash}/utxos`);
+  const api = getBlockfrostApi();
+  return api.txsUtxos(txHash);
 }
 
-/**
- * Submit a signed CBOR transaction
- * @param cborHex - The signed transaction in CBOR hex format
- * @returns Transaction hash
- */
-export async function submitTransaction(cborHex: string): Promise<string> {
-  const bytes = hexToBytes(cborHex);
-  const res = await fetch(`${baseUrl()}/tx/submit`, {
-    method: "POST",
-    headers: {
-      project_id: API_KEY,
-      "Content-Type": "application/cbor",
-    },
-    body: Buffer.from(bytes),
-  });
-  if (!res.ok) {
-    const error = await res.text();
-    throw new Error(`Submit TX failed: ${error}`);
+export async function getTransactionMetadata(txHash: string) {
+  const api = getBlockfrostApi();
+  try {
+    return await api.txsMetadata(txHash);
+  } catch (error) {
+    if (error instanceof BlockfrostServerError && error.status_code === 404) {
+      return [];
+    }
+    throw error;
   }
-  // Blockfrost returns the txHash as a quoted JSON string
-  const hash = await res.json();
-  return typeof hash === "string" ? hash : hash.toString();
 }
 
-// ============================================
-// PROTOCOL PARAMETERS
-// ============================================
+
+export async function submitTransaction(signedTxCbor: string): Promise<string> {
+  const api = getBlockfrostApi();
+  return api.txSubmit(signedTxCbor);
+}
+
 
 export async function getProtocolParameters() {
-  return get<{
-    min_fee_a: number;
-    min_fee_b: number;
-    max_block_size: number;
-    max_tx_size: number;
-    key_deposit: string;
-    pool_deposit: string;
-    min_utxo: string;
-    coins_per_utxo_size: string;
-    price_mem: number;
-    price_step: number;
-    collateral_percent: number;
-  }>("/epochs/latest/parameters");
+  const api = getBlockfrostApi();
+  return api.epochsLatestParameters();
 }
 
-// ============================================
-// HELPERS
-// ============================================
+export async function getLatestBlock() {
+  const api = getBlockfrostApi();
+  return api.blocksLatest();
+}
 
-function hexToBytes(hex: string): Uint8Array {
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2) {
-    bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
-  }
-  return bytes;
+export async function getNetworkInfo() {
+  const api = getBlockfrostApi();
+  return api.network();
+}
+
+
+export async function getWalletBalance(address: string) {
+  const info = await getAddressInfo(address);
+  const lovelace = info.amount.find((a) => a.unit === "lovelace")?.quantity || "0";
+  const ada = Number(BigInt(lovelace)) / 1_000_000;
+
+  const sndjUnit = getSndjUnit();
+  const sndj = info.amount.find((a) => a.unit === sndjUnit)?.quantity || "0";
+
+  const nftPolicyId = blockchainConfig.nft.policyId;
+  const nfts = info.amount.filter(
+    (a) => a.unit !== "lovelace" && a.unit !== sndjUnit && a.unit.startsWith(nftPolicyId)
+  );
+
+  const otherAssets = info.amount.filter(
+    (a) =>
+      a.unit !== "lovelace" &&
+      a.unit !== sndjUnit &&
+      !a.unit.startsWith(nftPolicyId)
+  );
+
+  return { lovelace, ada, sndj, nfts, otherAssets };
+}
+
+
+export async function checkSufficientFunds(address: string, requiredAda: number) {
+  const { ada } = await getWalletBalance(address);
+  const requiredWithFees = requiredAda + 2; // 2 ADA buffer for fees
+  return {
+    sufficient: ada >= requiredWithFees,
+    currentAda: ada,
+    requiredAda: requiredWithFees,
+    deficit: Math.max(0, requiredWithFees - ada),
+  };
 }

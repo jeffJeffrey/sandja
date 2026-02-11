@@ -1,113 +1,82 @@
-// app/api/wallet-assets/route.ts
-// ============================================
-// Wallet Assets API
-// Fetches real blockchain data for a wallet
-// ============================================
-
 import { NextRequest, NextResponse } from "next/server";
-import { getAddressInfo, getAssetInfo, getAssetsByPolicy } from "@/services/blockfrost";
+import {
+  getAddressInfo,
+  getAssetInfo,
+  getWalletBalance,
+} from "@/services/blockfrost";
 import { blockchainConfig, getSndjUnit } from "@/config/blockchain";
+import { BlockfrostServerError } from "@blockfrost/blockfrost-js";
 
+/**
+ * GET /api/wallet-assets?address=xxx
+ * Fetch real blockchain assets for a connected wallet.
+ */
 export async function GET(request: NextRequest) {
   try {
     const address = request.nextUrl.searchParams.get("address");
-
     if (!address) {
-      return NextResponse.json({ error: "Missing address parameter" }, { status: 400 });
+      return NextResponse.json({ error: "address requis" }, { status: 400 });
     }
 
-    // Fetch address info from Blockfrost
-    let addressInfo;
-    try {
-      addressInfo = await getAddressInfo(address);
-    } catch (error: any) {
-      // Address has no UTxOs (empty wallet)
-      if (error.message?.includes("404")) {
-        return NextResponse.json({
-          address,
-          ada: "0",
-          adaFormatted: "0.00",
-          sndj: "0",
-          nfts: [],
-          assets: [],
-        });
-      }
-      throw error;
-    }
+    const balance = await getWalletBalance(address);
 
-    // Parse balances
-    const lovelace = addressInfo.amount.find((a) => a.unit === "lovelace")?.quantity || "0";
-    const ada = (Number(BigInt(lovelace)) / 1_000_000).toFixed(2);
-
-    // SNDJ balance
-    const sndjUnit = getSndjUnit();
-    const sndjBalance = addressInfo.amount.find((a) => a.unit === sndjUnit)?.quantity || "0";
-
-    // NFTs from our collection
-    const nftPolicyId = blockchainConfig.nft.policyId;
-    const nfts: any[] = [];
-    const otherAssets: any[] = [];
-
-    for (const asset of addressInfo.amount) {
-      if (asset.unit === "lovelace") continue;
-      if (asset.unit === sndjUnit) continue;
-
-      // Check if it's one of our NFTs
-      if (asset.unit.startsWith(nftPolicyId)) {
+    const nftsWithMetadata = await Promise.all(
+      balance.nfts.map(async (nft) => {
         try {
-          const assetDetail = await getAssetInfo(asset.unit);
-          nfts.push({
-            unit: asset.unit,
-            quantity: asset.quantity,
-            policyId: assetDetail.policy_id,
-            assetName: hexToString(assetDetail.asset_name || ""),
-            fingerprint: assetDetail.fingerprint,
-            metadata: assetDetail.onchain_metadata,
-          });
+          const info = await getAssetInfo(nft.unit);
+          return {
+            unit: nft.unit,
+            quantity: nft.quantity,
+            policyId: info.policy_id,
+            assetName: hexToString(info.asset_name || ""),
+            fingerprint: info.fingerprint,
+            metadata: info.onchain_metadata,
+          };
         } catch {
-          nfts.push({
-            unit: asset.unit,
-            quantity: asset.quantity,
-            policyId: nftPolicyId,
-            assetName: hexToString(asset.unit.slice(nftPolicyId.length)),
-          });
+          return {
+            unit: nft.unit,
+            quantity: nft.quantity,
+            policyId: blockchainConfig.nft.policyId,
+            assetName: hexToString(nft.unit.slice(blockchainConfig.nft.policyId.length)),
+          };
         }
-      } else {
-        otherAssets.push({
-          unit: asset.unit,
-          quantity: asset.quantity,
-        });
-      }
-    }
+      })
+    );
 
     return NextResponse.json({
       address,
-      ada,
-      adaFormatted: formatAda(lovelace),
-      lovelace,
-      sndj: sndjBalance,
-      nfts,
-      otherAssets,
-      totalAssets: addressInfo.amount.length - 1, // exclude lovelace
+      ada: balance.ada.toFixed(2),
+      adaFormatted: formatAda(balance.lovelace),
+      lovelace: balance.lovelace,
+      sndj: balance.sndj,
+      nfts: nftsWithMetadata,
+      otherAssets: balance.otherAssets,
+      totalAssets: nftsWithMetadata.length + balance.otherAssets.length,
     });
   } catch (error: any) {
     console.error("Wallet assets error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to fetch wallet assets" },
-      { status: 500 }
-    );
+    if (error instanceof BlockfrostServerError && error.status_code === 404) {
+      const addr = request.nextUrl.searchParams.get("address") || "";
+      return NextResponse.json({
+        address: addr,
+        ada: "0",
+        adaFormatted: "0.00",
+        lovelace: "0",
+        sndj: "0",
+        nfts: [],
+        otherAssets: [],
+        totalAssets: 0,
+      });
+    }
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 function hexToString(hex: string): string {
   if (!hex) return "";
   try {
-    let str = "";
-    for (let i = 0; i < hex.length; i += 2) {
-      const code = parseInt(hex.substring(i, i + 2), 16);
-      if (code >= 32 && code <= 126) str += String.fromCharCode(code);
-    }
-    return str || hex;
+    const bytes = Buffer.from(hex, "hex");
+    return bytes.toString("utf-8").replace(/[^\x20-\x7E]/g, "");
   } catch {
     return hex;
   }

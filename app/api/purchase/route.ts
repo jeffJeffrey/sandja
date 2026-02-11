@@ -1,15 +1,12 @@
 // app/api/purchase/route.ts
-// ============================================
-// Purchase API Route
-// POST: Build transaction params for purchase
-// GET: Verify a purchase transaction
-// ============================================
-
 import { NextRequest, NextResponse } from "next/server";
-import { buildPurchaseParams } from "@/services/transaction-builder";
 import { getTransaction, getTransactionUtxos } from "@/services/blockfrost";
-import { blockchainConfig } from "@/config/blockchain";
+import { blockchainConfig, getCurrentNetwork } from "@/config/blockchain";
 
+/**
+ * POST /api/purchase
+ * Returns transaction parameters for the client to build & sign via CIP-30.
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -17,100 +14,78 @@ export async function POST(request: NextRequest) {
 
     if (!buyerAddress || !itemType || !itemId) {
       return NextResponse.json(
-        { error: "Missing required fields: buyerAddress, itemType, itemId" },
+        { error: "Champs requis: buyerAddress, itemType, itemId" },
         { status: 400 }
       );
     }
 
-    // Determine price
     const price =
-      priceAda ||
+      priceAda ??
       (itemType === "nft"
         ? blockchainConfig.pricing.nftPriceAda
         : blockchainConfig.pricing.pagnePriceAda);
 
-    // Build transaction parameters
-    const txParams = await buildPurchaseParams({
-      buyerAddress,
-      itemType,
-      itemId,
-      priceAda: price,
-    });
+    const sellerAddress = blockchainConfig.sellerAddress;
+    const lovelaceAmount = String(price * 1_000_000);
 
     return NextResponse.json({
       success: true,
-      transaction: txParams,
-      instructions: {
-        step1: "Use CIP-30 wallet to build transaction with these params",
-        step2: "Send the lovelaceAmount to the sellerAddress",
-        step3: "Sign with wallet.signTx()",
-        step4: "Submit with wallet.submitTx()",
-        step5: "Call GET /api/purchase?txHash=xxx to verify",
+      transaction: {
+        sellerAddress,
+        lovelaceAmount,
+        priceAda: price,
+        itemType,
+        itemId,
+        message: `SANDJA ${itemType.toUpperCase()} Purchase: ${itemId}`,
       },
     });
   } catch (error: any) {
     console.error("Purchase API error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to build purchase transaction" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
  * GET /api/purchase?txHash=xxx
- * Verify that a purchase transaction was successful
+ * Verify a purchase transaction on-chain.
  */
 export async function GET(request: NextRequest) {
   try {
     const txHash = request.nextUrl.searchParams.get("txHash");
-
     if (!txHash) {
-      return NextResponse.json({ error: "Missing txHash parameter" }, { status: 400 });
+      return NextResponse.json({ error: "Missing txHash" }, { status: 400 });
     }
 
-    // Query Blockfrost for the transaction
     const tx = await getTransaction(txHash);
     const utxos = await getTransactionUtxos(txHash);
 
-    // Check if payment went to seller
     const sellerAddress = blockchainConfig.sellerAddress;
-    const sellerOutput = utxos.outputs.find(
-      (o: any) => o.address === sellerAddress
-    );
+    const sellerOutput = utxos.outputs.find((o) => o.address === sellerAddress);
 
     if (!sellerOutput) {
-      return NextResponse.json({
-        verified: false,
-        message: "Payment not found to seller address",
-      });
+      return NextResponse.json({ verified: false, message: "Paiement non trouvé" });
     }
 
     const adaPaid =
-      Number(
-        sellerOutput.amount.find((a: any) => a.unit === "lovelace")?.quantity || "0"
-      ) / 1_000_000;
+      Number(sellerOutput.amount.find((a) => a.unit === "lovelace")?.quantity || "0") /
+      1_000_000;
 
     return NextResponse.json({
       verified: true,
       txHash,
       adaPaid,
       block: tx.block,
-      confirmations: tx.block_height ? "confirmed" : "pending",
-      explorerUrl: `${blockchainConfig.networks.preview.explorerUrl}/transaction/${txHash}`,
+      slot: tx.slot,
+      explorerUrl: `${getCurrentNetwork().explorerUrl}/transaction/${txHash}`,
     });
   } catch (error: any) {
-    // If tx not found yet, it might be pending
-    if (error.message?.includes("404")) {
+    if (error?.status_code === 404 || error?.message?.includes("404")) {
       return NextResponse.json({
         verified: false,
-        message: "Transaction not yet confirmed. Please wait a moment.",
         pending: true,
+        message: "Transaction pas encore confirmée. Patientez un moment.",
       });
     }
-    return NextResponse.json(
-      { error: error.message || "Failed to verify transaction" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

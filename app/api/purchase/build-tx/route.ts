@@ -1,19 +1,17 @@
 // app/api/purchase/build-tx/route.ts
 // ============================================
-// Build Transaction API
-// Constructs an unsigned CBOR transaction
-// using Blockfrost UTxO data.
-//
-// This uses the Blockfrost "tx/build" endpoint
-// which is a transaction builder that returns
-// unsigned CBOR ready for CIP-30 signing.
+// Build an unsigned transaction using Blockfrost SDK
+// to get UTxOs + protocol params, then calls
+// Blockfrost's /tx/build REST endpoint for CBOR.
 // ============================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { getAddressUtxos, getProtocolParameters } from "@/services/blockfrost";
-import { getCurrentNetwork, blockchainConfig, stringToHex } from "@/config/blockchain";
-
-const BLOCKFROST_API_KEY = process.env.BLOCKFROST_API_KEY!;
+import {
+  getAddressUtxos,
+  checkSufficientFunds,
+  getBlockfrostApi,
+} from "@/services/blockfrost";
+import { getCurrentNetwork } from "@/config/blockchain";
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,64 +19,43 @@ export async function POST(request: NextRequest) {
     const { senderAddress, sellerAddress, lovelaceAmount, message } = body;
 
     if (!senderAddress || !sellerAddress || !lovelaceAmount) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
     }
 
-    // Get sender's UTxOs from Blockfrost
-    let utxos;
-    try {
-      utxos = await getAddressUtxos(senderAddress);
-    } catch (error: any) {
-      if (error.message?.includes("404")) {
-        return NextResponse.json(
-          { error: "Votre wallet n'a pas de fonds. Utilisez le faucet Cardano pour obtenir des tADA." },
-          { status: 400 }
-        );
-      }
-      throw error;
-    }
+    // 1. Check funds with Blockfrost SDK
+    const requiredAda = Number(lovelaceAmount) / 1_000_000;
+    const fundsCheck = await checkSufficientFunds(senderAddress, requiredAda);
 
-    if (!utxos || utxos.length === 0) {
-      return NextResponse.json(
-        { error: "Pas de UTxO disponibles. Ajoutez des tADA via le faucet." },
-        { status: 400 }
-      );
-    }
-
-    // Check if sender has enough ADA
-    const totalLovelace = utxos.reduce((sum: bigint, utxo: any) => {
-      const lovelace = utxo.amount.find((a: any) => a.unit === "lovelace");
-      return sum + BigInt(lovelace?.quantity || "0");
-    }, BigInt(0));
-
-    const requiredLovelace = BigInt(lovelaceAmount) + BigInt(2_000_000); // amount + fees buffer
-    if (totalLovelace < requiredLovelace) {
-      const adaNeeded = Number(requiredLovelace) / 1_000_000;
-      const adaHave = Number(totalLovelace) / 1_000_000;
+    if (!fundsCheck.sufficient) {
       return NextResponse.json(
         {
-          error: `Fonds insuffisants. Nécessaire: ~${adaNeeded.toFixed(2)} ADA, Disponible: ${adaHave.toFixed(2)} ADA`,
+          error: `Fonds insuffisants. Nécessaire: ~${fundsCheck.requiredAda.toFixed(2)} ADA, Disponible: ${fundsCheck.currentAda.toFixed(2)} ADA. Utilisez le faucet Cardano Preview pour obtenir des tADA.`,
+          faucetUrl: getCurrentNetwork().faucetUrl,
         },
         { status: 400 }
       );
     }
 
-    // ============================================
-    // Use Blockfrost's tx/build endpoint
-    // This is the easiest way to build a transaction
-    // without any SDK dependencies.
-    // ============================================
+    // 2. Get UTxOs via SDK
+    const utxos = await getAddressUtxos(senderAddress);
 
+    if (!utxos.length) {
+      return NextResponse.json(
+        { error: "Aucun UTxO disponible. Ajoutez des tADA via le faucet." },
+        { status: 400 }
+      );
+    }
+
+    // 3. Build tx inputs (use first 5 UTxOs max)
+    const inputs = utxos.slice(0, 5).map((utxo) => ({
+      address: senderAddress,
+      tx_hash: utxo.tx_hash,
+      tx_index: utxo.output_index,
+    }));
+
+    // 4. Build the payload for Blockfrost /tx/build
     const txBuildPayload: any = {
-      inputs: utxos.slice(0, 5).map((utxo: any) => ({
-        // Use enough UTxOs to cover the amount
-        address: senderAddress,
-        tx_hash: utxo.tx_hash,
-        tx_index: utxo.output_index,
-      })),
+      inputs,
       outputs: [
         {
           address: sellerAddress,
@@ -88,21 +65,18 @@ export async function POST(request: NextRequest) {
       change_address: senderAddress,
     };
 
-    // Add metadata if provided
     if (message) {
-      txBuildPayload.metadata = {
-        "674": {
-          msg: [message],
-        },
-      };
+      txBuildPayload.metadata = { "674": { msg: [message] } };
     }
 
-    // Call Blockfrost's transaction build endpoint
-    const buildUrl = `${getCurrentNetwork().blockfrostUrl}/tx/build`;
-    const buildRes = await fetch(buildUrl, {
+    // 5. Call Blockfrost tx/build via the SDK's internal API URL
+    const api = getBlockfrostApi();
+    const apiUrl = (api as any).apiUrl || `https://cardano-${process.env.NEXT_PUBLIC_CARDANO_NETWORK || "preview"}.blockfrost.io/api/v0`;
+
+    const buildRes = await fetch(`${apiUrl}/tx/build`, {
       method: "POST",
       headers: {
-        project_id: BLOCKFROST_API_KEY,
+        project_id: process.env.BLOCKFROST_API_KEY!,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(txBuildPayload),
@@ -110,22 +84,19 @@ export async function POST(request: NextRequest) {
 
     if (!buildRes.ok) {
       const errorText = await buildRes.text();
-      console.error("Blockfrost tx/build error:", errorText);
+      console.error("Blockfrost tx/build error:", buildRes.status, errorText);
 
-      // Fallback: build a simpler transaction
-      // If tx/build fails, provide manual instructions
+      // Fallback: return manual payment instructions
       return NextResponse.json({
-        error: null,
         fallback: true,
         manualTx: {
           sellerAddress,
           lovelaceAmount,
-          message: "L'endpoint tx/build n'est pas disponible. Utilisez la méthode manuelle.",
+          adaAmount: requiredAda,
           instructions: [
             "Ouvrez votre wallet Cardano",
-            `Envoyez ${Number(lovelaceAmount) / 1_000_000} ADA à l'adresse:`,
+            `Envoyez ${requiredAda} ADA à:`,
             sellerAddress,
-            `Ajoutez le message: ${message}`,
           ],
         },
       });
@@ -133,17 +104,13 @@ export async function POST(request: NextRequest) {
 
     const buildData = await buildRes.json();
 
-    // The response contains the unsigned CBOR transaction
     return NextResponse.json({
       unsignedTxCbor: buildData.tx || buildData,
       estimatedFee: buildData.fee || "200000",
-      inputs: txBuildPayload.inputs.length,
+      inputCount: inputs.length,
     });
   } catch (error: any) {
     console.error("Build TX error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to build transaction" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
