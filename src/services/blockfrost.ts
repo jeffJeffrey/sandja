@@ -12,7 +12,7 @@ export function getBlockfrostApi(): BlockFrostAPI {
       throw new Error("BLOCKFROST_API_KEY is not set in environment variables");
     }
     _api = new BlockFrostAPI({
-      projectId,
+      projectId: 'previewtCA3YPAZopRBdljRHRxvCx2471rfNi42',
       network: blockchainConfig.network, 
     });
   }
