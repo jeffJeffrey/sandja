@@ -71,12 +71,12 @@ export async function POST(request: NextRequest) {
 
     // 5. Call Blockfrost tx/build via the SDK's internal API URL
     const api = getBlockfrostApi();
-    const apiUrl = (api as any).apiUrl || `https://cardano-${process.env.NEXT_PUBLIC_CARDANO_NETWORK || "preview"}.blockfrost.io/api/v0`;
+    const apiUrl = (api as any).apiUrl || 'https://cardano-preview.blockfrost.io/api/v0';
 
     const buildRes = await fetch(`${apiUrl}/tx/build`, {
       method: "POST",
       headers: {
-        project_id: process.env.BLOCKFROST_API_KEY!,
+        project_id: 'previewtCA3YPAZopRBdljRHRxvCx2471rfNi42',
         "Content-Type": "application/json",
       },
       body: JSON.stringify(txBuildPayload),
