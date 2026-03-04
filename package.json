@@ -2,6 +2,8 @@
   "name": "sandja",
   "version": "0.1.0",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "KWAN Techs Hub",
   "description": "SANDJA - Redonner sens et valeur au pagne africain par la technologie",
   "scripts": {
     "dev": "next dev",

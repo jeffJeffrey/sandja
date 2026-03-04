@@ -1,0 +1,189 @@
+SANDJA PROPRIETARY SOURCE-AVAILABLE LICENSE
+Version 1.0 — March 2026
+
+Copyright (c) 2026 KWAN Techs Hub.
+All rights reserved.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                            PREAMBLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This software, SANDJA (the "Software"), was conceived, designed, and developed
+by KWAN Techs Hub (collectively, the "Rights Holders") within the
+context of a competitive hackathon. The entirety of its source code,
+architecture, concepts, user interface designs, algorithms, data models,
+business logic, and all other constituent elements constitute original works of
+authorship protected by applicable copyright law, trade secret law, and
+intellectual property regulations.
+
+This repository is made publicly accessible solely for the purpose of
+hackathon evaluation and demonstration. Public availability does NOT constitute
+a grant of any rights beyond those explicitly enumerated in this license.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                        SECTION 1 — DEFINITIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1.1  "Software" refers to the SANDJA project, including all source code,
+     configuration files, scripts, assets, documentation, designs, and any
+     other materials contained in this repository.
+
+1.2  "Rights Holders" refers jointly to KWAN Techs Hub.
+
+1.3  "You" (or "Your") refers to any individual, organization, or legal entity
+     accessing, viewing, or using the Software.
+
+1.4  "Permitted Use" refers exclusively to the uses granted in Section 2.
+
+1.5  "Commercial Use" means any use, direct or indirect, intended for or
+     resulting in commercial advantage, monetary compensation, or other
+     consideration, including but not limited to: selling products or services
+     incorporating or derived from the Software, using the Software in a
+     production environment, or integrating any portion of the Software into
+     a commercial product or service.
+
+1.6  "Derivative Work" means any work that is based on or derived from the
+     Software, including but not limited to: translations, adaptations,
+     modifications, ports, re-implementations, or works that replicate, in
+     whole or in part, the features, functionalities, user flows, or
+     architectural patterns of the Software.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                    SECTION 2 — GRANT OF LIMITED LICENSE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Subject to the terms and conditions of this License, the Rights Holders hereby
+grant You a limited, non-exclusive, non-transferable, non-sublicensable,
+revocable license solely to:
+
+  (a) VIEW the source code for personal reading and study purposes;
+
+  (b) USE the Software for strictly academic, educational, or non-commercial
+      research purposes, provided that no output is deployed, distributed, or
+      made available to third parties.
+
+This license grants no other rights. All rights not expressly granted herein
+are reserved exclusively by the Rights Holders.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                    SECTION 3 — RESTRICTIONS AND PROHIBITIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You are expressly prohibited from, without prior written authorization from
+the Rights Holders:
+
+  3.1  COMMERCIAL USE — Using the Software, in whole or in part, for any
+       Commercial Use.
+
+  3.2  REPRODUCTION OF FUNCTIONALITIES — Reproducing, cloning, re-implementing,
+       or duplicating, in whole or in substantial part, any feature,
+       functionality, algorithm, user interface design, or business logic
+       present in the Software, regardless of the programming language,
+       platform, or technology used.
+
+  3.3  DISTRIBUTION — Copying, distributing, publishing, uploading, or
+       transmitting the Software or any Derivative Work through any channel,
+       medium, or platform.
+
+  3.4  MODIFICATION FOR DEPLOYMENT — Modifying, adapting, or creating
+       Derivative Works of the Software for the purpose of deployment,
+       distribution, or commercial exploitation.
+
+  3.5  SUBLICENSING — Sublicensing, selling, renting, leasing, or transferring
+       any rights in the Software to any third party.
+
+  3.6  REVERSE ENGINEERING FOR COMPETITION — Using the Software as a reference,
+       blueprint, or template to develop a competing product or service.
+
+  3.7  REMOVAL OF NOTICES — Removing, altering, or obscuring any copyright
+       notice, trademark, proprietary legend, or attribution contained in the
+       Software.
+
+  3.8  TRAINING AI MODELS — Using the Software or any portion thereof as
+       training data for machine learning models, artificial intelligence
+       systems, or large language models.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                   SECTION 4 — EXCLUSIVE COMMERCIAL RIGHTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KWAN Techs Hub jointly hold exclusive, worldwide, irrevocable
+rights to exploit the Software for commercial purposes, including but not
+limited to:
+
+  - Commercializing, licensing, and monetizing the Software;
+  - Developing and distributing products or services based on the Software;
+  - Granting commercial sub-licenses to third parties;
+  - Transferring, assigning, or selling commercial rights to third parties.
+
+No provision of this License shall be construed as limiting, waiving, or
+transferring any of the Rights Holders' exclusive commercial rights.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                       SECTION 5 — ATTRIBUTION REQUIREMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Any Permitted Use of the Software must retain, in all copies and in any
+accompanying documentation:
+
+  (a) This complete License notice;
+  (b) The copyright notice: "Copyright (c) 2026 KWAN Techs Hub.
+      All rights reserved.";
+  (c) A clear indication that the original work is the exclusive property of
+      KWAN Techs Hub.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                    SECTION 6 — INTELLECTUAL PROPERTY OWNERSHIP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This License does not transfer or assign any intellectual property rights.
+The Software, including all copies and Derivative Works thereof, remains the
+exclusive intellectual property of KWAN Techs Hub. Any
+contributions, suggestions, or feedback submitted to this repository shall be
+deemed assigned to the Rights Holders without further consideration.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            SECTION 7 — DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+RIGHTS HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                         SECTION 8 — TERMINATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This License and all rights granted hereunder terminate automatically and
+immediately upon any breach of its terms by You. Upon termination, You must
+cease all use of the Software and destroy all copies in Your possession.
+Termination does not limit the Rights Holders' right to seek legal remedies
+for any breach.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                      SECTION 9 — GOVERNING LAW AND ENFORCEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This License shall be governed by and construed in accordance with applicable
+intellectual property law. Any violation of this License may result in civil
+and/or criminal liability under applicable copyright law. The Rights Holders
+reserve the right to pursue all available legal remedies against any party
+found in breach of this License.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                         SECTION 10 — CONTACT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For licensing inquiries, commercial partnerships, or permissions beyond the
+scope of this License, contact:
+
+  KWAN Techs Hub
+  [Contact information to be provided]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Copyright (c) 2026 KWAN Techs Hub. All rights reserved.
+SANDJA — Proprietary Source-Available License v1.0
