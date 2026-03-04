@@ -13,7 +13,7 @@ export const siteConfig = {
 
   contact: {
     email: "contact@sandja.app",
-    phone: "+237 6XX XXX XXX",
+    phone: "+237 691594727",
     address: "Dschang, Cameroun",
   },
 

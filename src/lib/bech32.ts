@@ -97,9 +97,6 @@ export function bech32Encode(hrp: string, data5bit: number[]): string {
   return result;
 }
 
-/**
- * Decode a bech32 string
- */
 export function bech32Decode(str: string): { hrp: string; data: number[] } | null {
   const lowered = str.toLowerCase();
   const pos = lowered.lastIndexOf("1");
@@ -117,24 +114,7 @@ export function bech32Decode(str: string): { hrp: string; data: number[] } | nul
   return { hrp, data: data.slice(0, data.length - 6) };
 }
 
-// ============================================
-// CARDANO-SPECIFIC ADDRESS FUNCTIONS
-// ============================================
 
-/**
- * Convert a CIP-30 hex address to bech32 (addr / addr_test1)
- *
- * CIP-30's getUsedAddresses() returns hex-encoded binary addresses.
- * Blockfrost and most tools expect bech32-encoded addresses.
- *
- * The first nibble of the first byte determines the address type:
- * - 0x0..0x7 = Shelley addresses → bech32 with addr/addr_test
- * - 0x8      = Byron address → base58 (we don't handle this)
- *
- * The second nibble of the first byte determines the network:
- * - 0x0 = testnet → addr_test
- * - 0x1 = mainnet → addr
- */
 export function hexToBech32Address(hexAddress: string): string {
   if (!hexAddress || hexAddress.length < 2) return hexAddress;
 
