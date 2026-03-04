@@ -56,3 +56,5 @@ logs
 # Cache
 .cache
 .turbo
+
+.claude
