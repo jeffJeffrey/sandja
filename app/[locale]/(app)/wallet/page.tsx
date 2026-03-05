@@ -2,6 +2,9 @@ import { setRequestLocale } from "next-intl/server";
 import { WalletContent } from "@/components/wallet/wallet-content";
 import type { Metadata } from "next";
 
+// Page protégée par auth — rendu dynamique uniquement
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ locale: string }>;
 };

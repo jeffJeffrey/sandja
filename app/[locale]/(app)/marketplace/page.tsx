@@ -2,6 +2,9 @@ import { setRequestLocale } from "next-intl/server";
 import { MarketplaceHero, MarketplaceFilters, ProductsGrid, FeaturedProducts } from "@/components/marketplace";
 import type { Metadata } from "next";
 
+// Page protégée par auth — rendu dynamique uniquement
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ locale: string }> };
 
 export const metadata: Metadata = {

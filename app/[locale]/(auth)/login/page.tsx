@@ -2,6 +2,9 @@ import { setRequestLocale } from "next-intl/server";
 import { LoginForm } from "@/components/forms/login-form";
 import type { Metadata } from "next";
 
+// Rendu dynamique : dépend de la session utilisateur
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ locale: string }>;
 };

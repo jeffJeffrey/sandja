@@ -1,5 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
-import { getTranslations } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { ExploreFilters, SymbolsGrid } from "@/components/explore";
 import type { Metadata } from "next";
 
@@ -17,7 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ExplorePage({ params }: Props) {
   const { locale } = await params;
+
+  // setRequestLocale DOIT être appelé avant tout appel next-intl
   setRequestLocale(locale);
+
   const t = await getTranslations("explore");
 
   return (

@@ -1,17 +1,14 @@
 import { PrismaClient } from "@/generated/prisma";
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { withAccelerate } from "@prisma/extension-accelerate";
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+  prisma: ReturnType<typeof createPrismaClient> | undefined;
 };
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL!;
-  const pool = new Pool({ connectionString });
-  const adapter = new PrismaPg(pool);
-  
-  return new PrismaClient({ adapter });
+  return new PrismaClient({
+    accelerateUrl: process.env.DATABASE_URL!,
+  }).$extends(withAccelerate());
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();

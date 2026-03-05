@@ -1,12 +1,12 @@
 // src/components/common/page-transitions.tsx
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 // Variantes d'animation pour les transitions de page
-const pageVariants = {
+const pageVariants: Variants = {
   initial: {
     opacity: 0,
     y: 20,
@@ -18,7 +18,7 @@ const pageVariants = {
     scale: 1,
     transition: {
       duration: 0.4,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.42, 0, 0.58, 1] as [number, number, number, number],
       when: "beforeChildren",
       staggerChildren: 0.1,
     },
@@ -29,27 +29,27 @@ const pageVariants = {
     scale: 0.98,
     transition: {
       duration: 0.3,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.42, 0, 0.58, 1] as [number, number, number, number],
     },
   },
 };
 
 // Variantes pour les éléments enfants
-export const childVariants = {
+export const childVariants: Variants = {
   initial: { opacity: 0, y: 20 },
   enter: { 
     opacity: 1, 
     y: 0,
     transition: {
       duration: 0.4,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: "easeInOut",
     }
   },
   exit: { opacity: 0, y: -10 },
 };
 
 // Variantes pour fade in simple
-export const fadeInVariants = {
+export const fadeInVariants: Variants = {
   initial: { opacity: 0 },
   enter: { 
     opacity: 1,
@@ -59,21 +59,21 @@ export const fadeInVariants = {
 };
 
 // Variantes pour slide in from left
-export const slideInLeftVariants = {
+export const slideInLeftVariants: Variants = {
   initial: { opacity: 0, x: -50 },
   enter: { 
     opacity: 1, 
     x: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut",
+      ease: [0.0, 0.0, 0.58, 1.0] as [number, number, number, number],
     }
   },
   exit: { opacity: 0, x: -30 },
 };
 
 // Variantes pour slide in from right
-export const slideInRightVariants = {
+export const slideInRightVariants: Variants = {
   initial: { opacity: 0, x: 50 },
   enter: { 
     opacity: 1, 
@@ -87,14 +87,14 @@ export const slideInRightVariants = {
 };
 
 // Variantes pour scale up
-export const scaleUpVariants = {
+export const scaleUpVariants: Variants = {
   initial: { opacity: 0, scale: 0.8 },
   enter: { 
     opacity: 1, 
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
     }
   },
   exit: { opacity: 0, scale: 0.9 },
@@ -157,7 +157,7 @@ export function ScrollReveal({
       transition={{ 
         duration: 0.6, 
         delay,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
       }}
       className={className}
     >
